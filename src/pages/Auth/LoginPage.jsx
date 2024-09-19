@@ -1,6 +1,10 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom"
 
 export const LoginPage = () => {
+    useEffect(() => {
+        document.title = "Login";
+    }, []);
     return (
         <div className="relative">
             <div className="absolute inset-x-0 top-0 transform -translate-y-1/2 bg-indigo-600 text-white px-4 py-2 rounded-t-lg">
