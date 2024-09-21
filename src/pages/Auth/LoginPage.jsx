@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import {  toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 export const LoginPage = () => {
@@ -10,7 +10,7 @@ export const LoginPage = () => {
     }
     const [formData, setFormData] = useState(initialState)
     const [errors, setErrors] = useState({})
-    
+    const navigate=useNavigate()
     useEffect(() => {
         document.title = "Login";
     }, []);
@@ -36,8 +36,13 @@ export const LoginPage = () => {
             localStorage.setItem('representante', JSON.stringify(response.data.representante))
             localStorage.setItem('token', token)
             toast.success('Bienvenido, ' + representante.name)
+            setTimeout(() => {
+                navigate('/')
+            }, 1500);
         } catch (error) {
-            console.log(error)
+            if(!error.response){
+                toast.error('Ocurrio un error en el servidor')
+            }
             if(error.response.data.fail){
                 toast.error(error.response.data.fail[0])
                 

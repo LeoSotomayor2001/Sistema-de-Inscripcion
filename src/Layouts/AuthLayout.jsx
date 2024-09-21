@@ -1,7 +1,20 @@
-import { Outlet } from "react-router-dom"
+import { useEffect } from "react";
+import { Outlet, useNavigate } from "react-router-dom"
 import { ToastContainer } from "react-toastify"
 import { ReactTyped } from "react-typed";
 export const AuthLayout = () => {
+    const navigate = useNavigate()
+    const representante = JSON.parse(localStorage.getItem("representante"))
+    const token = localStorage.getItem("token")
+
+    useEffect(() => {
+        if (representante && token) {
+            navigate("/")
+        }
+        
+
+    }, [token, representante, navigate])
+
     return (
         <main className='flex items-center justify-center h-screen bg-univercity bg-cover bg-center flex-col '>
             <div className="relative p-10 bg-white/30 backdrop-blur-lg border border-white/50 rounded-xl shadow-lg mb-10">

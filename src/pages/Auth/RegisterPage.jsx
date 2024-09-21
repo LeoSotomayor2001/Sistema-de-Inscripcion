@@ -42,7 +42,12 @@ export const RegisterPage = () => {
             setFormData(initialState)
             console.log(response)
             setErrors([])
-             navigate('/auth/')
+            localStorage.setItem('representante', JSON.stringify(response.data.representante))
+            localStorage.setItem('token', response.data.token)
+            setTimeout(() => {
+                navigate('/')
+                
+            }, 2000);
             
         } catch (error) {
             if(error.response){
