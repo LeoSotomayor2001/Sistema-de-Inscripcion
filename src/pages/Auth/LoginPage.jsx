@@ -31,8 +31,11 @@ export const LoginPage = () => {
                     'Content-Type': 'application/json'
                 }
             });
-            console.log(response)
-            toast.success('Bienvenido, ' + response.data.representante.name)
+            const { token } = response.data
+            const { representante } = response.data
+            localStorage.setItem('representante', JSON.stringify(response.data.representante))
+            localStorage.setItem('token', token)
+            toast.success('Bienvenido, ' + representante.name)
         } catch (error) {
             console.log(error)
             if(error.response.data.fail){
