@@ -31,7 +31,7 @@ export const RegisterPage = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const url = "http://127.0.0.1:8000/api/representantes";
+        const url = "http://127.0.0.1:8000/api/register/representante";
         try {
             const response = await axios.post(url, formData, {
                 headers: {
@@ -40,9 +40,9 @@ export const RegisterPage = () => {
             });
             toast.success(response.data.message)
             setFormData(initialState)
+            console.log(response)
             setErrors([])
              navigate('/auth/')
-            
             
         } catch (error) {
             if(error.response){
