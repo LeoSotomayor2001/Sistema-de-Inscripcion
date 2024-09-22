@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
 import { Spinner } from "../../components/Spinner"
 import '../../components/Spinner.css'
+import { Link } from "react-router-dom"
 export const Index = () => {
     const token = localStorage.getItem("token")
     const representante = JSON.parse(localStorage.getItem("representante"))
@@ -42,16 +43,16 @@ export const Index = () => {
     return (
         <>
             <header className="my-5">
-                <ul className="flex justify-center gap-4">
+                <ul className="flex justify-center gap-4 items-center">
                     <li>
-                        <button className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                        <Link to={"/registrar-estudiante"} className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ">
                             Registrar estudiante
-                        </button>
+                        </Link>
                     </li>
                     <li>
-                        <button className="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded">
+                        <Link to={"/ver-estudiantes"} className="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded">
                             Ver estudiantes inscritos
-                        </button>
+                        </Link>
                     </li>
                 </ul>
             </header>

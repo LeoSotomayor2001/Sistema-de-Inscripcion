@@ -4,6 +4,7 @@ import { LoginPage } from "./pages/Auth/LoginPage";
 import { RegisterPage } from "./pages/Auth/RegisterPage";
 import { RepresentanteLayout } from "./Layouts/RepresentanteLayout";
 import { Index } from "./pages/Representantes/Index";
+import { Formulario } from "./pages/Estudiantes/Formulario";
 
 
 const router = createBrowserRouter([
@@ -33,7 +34,16 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: <h1>Profile</h1>
+      },
+      {
+        path: "/registrar-estudiante",
+        element: <Formulario />
+      },
+      {
+        path: "/ver-estudiantes",
+        element: <h1>Ver Estudiantes</h1>
       }
+
     ]
   },
   {

@@ -1,36 +1,33 @@
-import axios from "axios"
-import { useEffect } from "react"
-import { NavLink, useNavigate } from "react-router-dom"
-import { toast } from "react-toastify"
+import axios from "axios";
+import { useEffect } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { Accordion, AccordionSummary, AccordionDetails, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export const Sidebar = () => {
-    const representante = JSON.parse(localStorage.getItem("representante"))
+    const representante = JSON.parse(localStorage.getItem("representante"));
     const token = localStorage.getItem("token");
-    const navigate = useNavigate()
+    const location=useLocation()
+    const navigate = useNavigate();
+
     useEffect(() => {
-        document.title = "Sistema de Inscripción"
-    })
+        document.title = "Sistema de Inscripción";
+    });
 
     const cerrarSesion = async () => {
         try {
-
-            // Realiza la solicitud a la API con el token en la cabecera
             const response = await axios.post("http://127.0.0.1:8000/api/logout-representante", {}, {
                 headers: {
-                    Authorization: `Bearer ${token}` // Agregar el token aquí
+                    Authorization: `Bearer ${token}`
                 }
             });
 
-            // Muestra la respuesta
             console.log(response);
-            // Elimina los datos del representante y token del localStorage
             localStorage.removeItem("representante");
             localStorage.removeItem("token");
 
-            // Muestra el mensaje de éxito
             toast.success(response.data.mensaje);
-
-            // Redirige a la página de autenticación después de 2 segundos
             setTimeout(() => {
                 navigate("/auth");
             }, 2000);
@@ -40,13 +37,14 @@ export const Sidebar = () => {
         }
     };
 
-
     return (
-        <aside className=" md:w-72 w-full md:shadow-xl shadow-md bg-white" aria-label="Sidebar">
+        <aside className="md:w-72 w-full md:shadow-xl shadow-md bg-white" aria-label="Sidebar">
             <div className="px-3 py-4">
                 <img src="img/usuario.svg" alt="imagen-representante" className="w-24 h-24 mx-auto" />
             </div>
-            <h1 className="text-2xl font-bold text-center">{representante && representante.name + " " + representante.apellido}</h1>
+            <h1 className="text-2xl font-bold text-center">
+                {representante && representante.name + " " + representante.apellido}
+            </h1>
             <div className="h-full px-3 py-4 overflow-y-auto">
                 <ul className="space-y-4">
                     <li className="mb-2">
@@ -87,9 +85,56 @@ export const Sidebar = () => {
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                             </svg>
-
                             <span className="ml-4">Perfil</span>
                         </NavLink>
+                    </li>
+                    <li className="mb-2">
+                        <Accordion>
+                            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.5}
+                                    stroke="currentColor"
+                                    className="w-6 h-6"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+                                    />
+                                </svg>
+                                <span className="ml-4">Estudiantes</span>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <List>
+                                    <ListItem disablePadding className={location.pathname === "/registrar-estudiante"
+                                                ? "bg-indigo-600 text-white font-medium rounded-lg transition-all duration-300 mb-2"
+                                                : "text-gray-700 hover:bg-indigo-600 hover:text-white font-medium rounded-lg transition-all duration-300 mb-2"}
+                                        >
+                                        <ListItemButton
+                                            component={NavLink}
+                                            to="/registrar-estudiante"
+                                            >
+                                            <ListItemText primary="Crear Estudiante" />
+                                        </ListItemButton>
+                                    </ListItem>
+
+                                    <ListItem disablePadding className={location.pathname === "/ver-estudiantes"
+                                                ? "bg-indigo-600 text-white font-medium rounded-lg transition-all duration-300"
+                                                : "text-gray-700 hover:bg-indigo-600 hover:text-white font-medium rounded-lg transition-all duration-300"}
+                                        >
+                                        <ListItemButton
+                                            component={NavLink}
+                                            to="/ver-estudiantes"
+                                        >
+                                            <ListItemText primary="Ver Estudiantes Inscritos" />
+                                        </ListItemButton>
+                                    </ListItem>
+                                </List>
+                            </AccordionDetails>
+                        </Accordion>
                     </li>
                     <li className="mb-2">
                         <button
@@ -97,12 +142,11 @@ export const Sidebar = () => {
                             className="bg-red-600 text-white font-bold py-2 px-4 rounded my-5 w-full hover:bg-red-700 transition-all duration-300 ease-in-out"
                             onClick={cerrarSesion}
                         >
-                            Cerrar sesión
+                            Cerrar sesión
                         </button>
                     </li>
                 </ul>
             </div>
         </aside>
-
-    )
-}
+    );
+};
