@@ -3,6 +3,7 @@ import { AuthLayout } from "./Layouts/AuthLayout";
 import { LoginPage } from "./pages/Auth/LoginPage";
 import { RegisterPage } from "./pages/Auth/RegisterPage";
 import { RepresentanteLayout } from "./Layouts/RepresentanteLayout";
+import { Index } from "./pages/Representantes/Index";
 
 
 const router = createBrowserRouter([
@@ -27,7 +28,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <h1>Home</h1>
+        element: <Index />
       },
       {
         path: "/profile",

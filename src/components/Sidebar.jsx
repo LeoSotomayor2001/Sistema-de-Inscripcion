@@ -49,7 +49,7 @@ export const Sidebar = () => {
             <h1 className="text-2xl font-bold text-center">{representante && representante.name + " " + representante.apellido}</h1>
             <div className="h-full px-3 py-4 overflow-y-auto">
                 <ul className="space-y-4">
-                    <li>
+                    <li className="mb-2">
                         <NavLink
                             to="/"
                             className={({ isActive }) =>
@@ -74,7 +74,8 @@ export const Sidebar = () => {
                             </svg>
                             <span className="ml-4">Inicio</span>
                         </NavLink>
-
+                    </li>
+                    <li className="mb-2">
                         <NavLink
                             to="/profile"
                             className={({ isActive }) =>
@@ -89,7 +90,8 @@ export const Sidebar = () => {
 
                             <span className="ml-4">Perfil</span>
                         </NavLink>
-
+                    </li>
+                    <li className="mb-2">
                         <button
                             type="button"
                             className="bg-red-600 text-white font-bold py-2 px-4 rounded my-5 w-full hover:bg-red-700 transition-all duration-300 ease-in-out"
