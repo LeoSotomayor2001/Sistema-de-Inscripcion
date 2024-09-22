@@ -28,6 +28,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <h1>Home</h1>
+      },
+      {
+        path: "/profile",
+        element: <h1>Profile</h1>
       }
     ]
   },
