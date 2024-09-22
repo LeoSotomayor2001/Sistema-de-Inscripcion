@@ -1,12 +1,13 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { toast } from "react-toastify"
-
+import { Spinner } from "../../components/Spinner"
+import '../../components/Spinner.css'
 export const Index = () => {
     const token = localStorage.getItem("token")
     const representante = JSON.parse(localStorage.getItem("representante"))
     const [listadoEstudiantes, setListadoEstudiantes] = useState([])
-
+    const [loading, setLoading] = useState(true)
     const mostrarEstudiantes = async () => {
         try {
             if (!token) {
@@ -25,12 +26,19 @@ export const Index = () => {
             console.error("Error al cargar los estudiantes:", error)
             toast.error("Error al cargar los estudiantes. Intenta nuevamente.")
         }
+        finally {
+            setLoading(false)
+        }
     }
+
+    
 
     useEffect(() => {
         mostrarEstudiantes()
     }, [])
-
+    if (loading) {
+        return <Spinner />
+    }
     return (
         <>
             <header className="my-5">
@@ -50,8 +58,8 @@ export const Index = () => {
 
             <div>
                 <h2 className="text-xl font-semibold text-black dark:text-white mb-2">Tus representados:</h2>
-
-                {listadoEstudiantes.length > 0 ? (
+                
+                {listadoEstudiantes.length > 0  ? (
                     <ul>
                         {/* Filtramos los estudiantes que tienen el mismo representante.id */}
                         {listadoEstudiantes
