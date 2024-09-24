@@ -76,7 +76,6 @@ export const Profile = () => {
         </div>
       </div>
 
-      {/* Modal */}
       <ModalEditarRepre modalIsOpen={modalIsOpen} closeModal={closeModal} representante={representante} />
     </div>
 

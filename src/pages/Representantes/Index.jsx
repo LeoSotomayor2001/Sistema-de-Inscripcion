@@ -1,93 +1,163 @@
-import axios from "axios"
-import { useEffect, useState } from "react"
-import { toast } from "react-toastify"
-import { Spinner } from "../../components/Spinner"
-import '../../components/Spinner.css'
-import { Link } from "react-router-dom"
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { Spinner } from "../../components/Spinner";
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import '../../components/Spinner.css';
+import { Link } from "react-router-dom";
+import { ModalEditarEstudiante } from "../../components/ModalEditarEstudiante";
+
+
+
+const formatDate = (isoDate) => {
+    if (!isoDate) return ''; // Si no hay fecha, retornar un string vacío
+    const date = new Date(isoDate);
+    const day = String(date.getUTCDate()).padStart(2, '0'); // Obtener el día en UTC
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Obtener el mes en UTC (0-indexado)
+    const year = date.getUTCFullYear(); // Obtener el año en UTC
+    return `${day}-${month}-${year}`;
+  };
+  
+
 export const Index = () => {
-    const token = localStorage.getItem("token")
-    const representante = JSON.parse(localStorage.getItem("representante"))
-    const [listadoEstudiantes, setListadoEstudiantes] = useState([])
-    const [loading, setLoading] = useState(true)
-    const mostrarEstudiantes = async () => {
-        try {
+  const token = localStorage.getItem("token");
+  const representante = JSON.parse(localStorage.getItem("representante"));
+  const [listadoEstudiantes, setListadoEstudiantes] = useState([]);
+  const [isVisible, setIsVisible] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const [estudianteSeleccionado, setEstudianteSeleccionado] = useState(null); // Estado para el estudiante seleccionado
+  const imageURL=`${import.meta.env.VITE_API_URL}/imagen/`;
 
-            const url = "http://127.0.0.1:8000/api/estudiantes"
-            const response = await axios.get(url, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
-
-            setListadoEstudiantes(response.data.data)
-        } catch (error) {
-            console.error("Error al cargar los estudiantes:", error)
-            toast.error("Error al cargar los estudiantes. Intenta nuevamente.")
-        }
-        finally {
-            setLoading(false)
-        }
+  const mostrarEstudiantes = async () => {
+    try {
+      const url = `${import.meta.env.VITE_API_URL}/estudiantes`;
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      setListadoEstudiantes(response.data.data);
+    } catch (error) {
+      console.error("Error al cargar los estudiantes:", error);
+      toast.error("Error al cargar los estudiantes. Intenta nuevamente.");
+    } finally {
+      setLoading(false);
     }
+  };
 
+  const openModal = (estudiante) => {
+    setEstudianteSeleccionado(estudiante); // Establecer el estudiante seleccionado
+    setIsOpen(true);
+  };
 
+  const closeModal = () => {
+    setIsOpen(false);
+    setEstudianteSeleccionado(null); // Limpiar el estudiante seleccionado al cerrar el modal
+  };
 
-    useEffect(() => {
-        mostrarEstudiantes()
-    }, [])
-    if (loading) {
-        return <Spinner />
+  useEffect(() => {
+    mostrarEstudiantes();
+    document.title = "Sistema de Inscripción - Estudiantes";
+  }, [document.title]);
+
+  useEffect(() => {
+    if (!loading) {
+      setTimeout(() => {
+        setIsVisible(true);
+      }, 100);
     }
-    const estudiantesFiltrados = listadoEstudiantes.filter(estudiante => estudiante.representante && estudiante.representante.id === representante.id);
-    return (
-        <>
-            <header className="my-5">
-                <ul className="flex flex-col md:flex-row justify-center gap-4 items-center p-4">
-                    <li>
-                        <Link
-                            to={"/registrar-estudiante"}
-                            className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out"
-                        >
-                            Registrar estudiante
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
-                            to={"/ver-estudiantes"}
-                            className="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out"
-                        >
-                            Ver estudiantes inscritos
-                        </Link>
-                    </li>
-                </ul>
+  }, [loading]);
 
-            </header>
+  if (loading) {
+    return <Spinner />;
+  }
 
-            <div>
-                <h2 className="text-xl font-semibold text-black dark:text-white mb-2">Tus representados:</h2>
+  const estudiantesFiltrados = listadoEstudiantes.filter(
+    (estudiante) =>
+      estudiante.representante && estudiante.representante.id === representante.id
+  );
 
-                {estudiantesFiltrados.length > 0 ? (
-                    <ul>
-                        {estudiantesFiltrados.map((estudiante) => (
-                            <li
-                                key={estudiante.id}
-                                className="p-4 flex flex-col md:flex-row items-start md:items-center justify-between bg-white rounded-lg shadow-md border border-gray-200 mb-4"
-                            >
-                                <div className="flex flex-col md:flex-row items-start md:items-center">
-                                    <div className="text-lg font-semibold text-gray-800">
-                                        {estudiante.name} {estudiante.apellido}
-                                    </div>
-                                    <span className="text-gray-500 text-sm md:ml-4">Cédula: {estudiante.cedula}</span>
-                                </div>
-                                <div className="text-gray-500 text-sm mt-2 md:mt-0">
-                                    Fecha de Nacimiento: {new Date(estudiante.fecha_nacimiento).toLocaleDateString('es-ES')}
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                ) : (
-                    <p className="text-gray-500">No tienes estudiantes representados.</p>
-                )}
-            </div>
-        </>
-    )
-}
+  return (
+    <>
+      <header className="my-5">
+        <ul className="flex flex-col md:flex-row justify-center gap-4 items-center p-4">
+          <li>
+            <Link
+              to={"/registrar-estudiante"}
+              className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out"
+            >
+              Registrar estudiante
+            </Link>
+          </li>
+          <li>
+            <Link
+              to={"/ver-estudiantes"}
+              className="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out"
+            >
+              Ver estudiantes inscritos
+            </Link>
+          </li>
+        </ul>
+      </header>
+
+      <div>
+        <h2 className="text-xl font-semibold text-black dark:text-white mb-2">
+          Tus representados:
+        </h2>
+
+        {estudiantesFiltrados.length > 0 ? (
+          <div
+            className={`transition-opacity duration-1000 ease-in-out ${isVisible ? "opacity-100" : "opacity-0"} grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3`}
+          >
+            {estudiantesFiltrados.map((estudiante) => (
+              <Card sx={{ maxWidth: 345 }} key={estudiante.id} className="mx-4">
+                <CardMedia
+                  sx={{ height: 290 }}
+                  image={`${estudiante.image ? imageURL + estudiante.image : 'img/usuario.svg' } `}
+                  title="Foto Estudiante"
+                  
+                />
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="div">
+                    {estudiante.name} {estudiante.apellido}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary" className="flex flex-col">
+                    <p className="text-gray-500">Cédula:</p>
+                    {estudiante.cedula}
+                  </Typography>
+
+                  <Typography variant="body2" color="text.primary" className="flex flex-col">
+                    <p className="text-gray-500">Fecha de nacimiento:</p>
+                    { formatDate(estudiante.fecha_nacimiento)}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small" onClick={() => openModal(estudiante)}>
+                    Editar
+                  </Button>
+                </CardActions>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500">No tienes estudiantes representados.</p>
+        )}
+
+        {estudianteSeleccionado && (
+          <ModalEditarEstudiante
+            modalIsOpen={modalIsOpen}
+            closeModal={closeModal}
+            estudiante={estudianteSeleccionado} // Pasar el estudiante seleccionado al modal
+            mostrarEstudiantes={mostrarEstudiantes}
+          />
+        )}
+      </div>
+    </>
+  );
+};
