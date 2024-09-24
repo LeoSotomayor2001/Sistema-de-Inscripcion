@@ -59,10 +59,9 @@ export const Formulario = () => {
             console.log(response);
             toast.success(response.data.message);
             setFormData(initialState);
-            setErrors({});
-            setTimeout(() => {
-                navigate('/');
-            }, 2000);
+            setErrors({});       
+            navigate('/');
+            
         } catch (error) {
             console.log(error.response.data.errors);
             setErrors(error.response.data.errors);

@@ -17,7 +17,7 @@ const customStyles = {
     maxWidth: '600px',
   },
 };
-const formatDateIso = (isoDate) => {
+const formatDate = (isoDate) => {
     if (!isoDate) return ''; // Si no hay fecha, retornar un string vacío
     const date = new Date(isoDate);
     const day = String(date.getUTCDate()).padStart(2, '0'); // Obtener el día en UTC
@@ -25,7 +25,7 @@ const formatDateIso = (isoDate) => {
     const year = date.getUTCFullYear(); // Obtener el año en UTC
     return `${day}-${month}-${year}`;
   };
-  const formatDate = (isoDate) => {
+  const formatDateIso = (isoDate) => {
     if (!isoDate) return ''; // Si no hay fecha, retornar un string vacío
     const date = new Date(isoDate);
     const day = String(date.getUTCDate()).padStart(2, '0'); // Obtener el día en UTC
@@ -42,7 +42,7 @@ export const ModalEditarEstudiante = ({ modalIsOpen, closeModal, estudiante,most
         name: estudiante.name || '',
         apellido: estudiante.apellido || '',
         cedula: estudiante.cedula || '',
-        fecha_nacimiento: formatDate(estudiante.fecha_nacimiento) || '',
+        fecha_nacimiento: formatDateIso(estudiante.fecha_nacimiento) || '',
         image: null, // Agregado para manejar la imagen
     }
     const [errors, setErrors] = useState({});
@@ -72,7 +72,7 @@ export const ModalEditarEstudiante = ({ modalIsOpen, closeModal, estudiante,most
     data.append('name', formData.name);
     data.append('apellido', formData.apellido);
     data.append('cedula', formData.cedula);
-    data.append('fecha_nacimiento', formatDateIso(formData.fecha_nacimiento));
+    data.append('fecha_nacimiento', formatDate(formData.fecha_nacimiento));
     data.append('_method', 'PUT');
     if (formData.image) {
       data.append('image', formData.image); // Añade el archivo si existe

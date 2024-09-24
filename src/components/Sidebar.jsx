@@ -6,16 +6,15 @@ import { Accordion, AccordionSummary, AccordionDetails, List, ListItem, ListItem
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export const Sidebar = () => {
-    const representante = JSON.parse(localStorage.getItem("representante"));
+    const representante = JSON.parse(localStorage.getItem("representante")) || {};
     const token = localStorage.getItem("token");
     const location = useLocation()
-    const imageUrl = `${import.meta.env.VITE_API_URL}/imagen/${representante.image}`;
 
     const navigate = useNavigate();
 
     useEffect(() => {
         document.title = "Sistema de Inscripción";
-    });
+    },[]);
 
     const cerrarSesion = async () => {
         try {
@@ -43,7 +42,7 @@ export const Sidebar = () => {
         <aside className="md:w-80 w-full md:shadow-xl shadow-md bg-white" aria-label="Sidebar">
             <div className="px-3 py-4">
                 <img 
-                    src={representante.image ? `${imageUrl}` : "img/usuario.svg"} 
+                    src={representante.image ? `${import.meta.env.VITE_API_URL}/imagen/${representante.image}` : "img/usuario.svg"} 
                     alt="imagen-representante" 
                     className="w-36 h-36 mx-auto rounded-full shadow-lg"
                  />

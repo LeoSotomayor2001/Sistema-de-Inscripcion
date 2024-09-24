@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import '../../components/Spinner.css';
 import { Link } from "react-router-dom";
 import { ModalEditarEstudiante } from "../../components/ModalEditarEstudiante";
-
+import Swal from 'sweetalert2';
 
 
 const formatDate = (isoDate) => {
@@ -51,6 +51,38 @@ export const Index = () => {
     }
   };
 
+  const eliminarEstudiante = async (id) => {
+    // Mostrar confirmación con SweetAlert
+    const resultado = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: 'Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    });
+  
+    // Si el usuario confirma
+    if (resultado.isConfirmed) {
+      try {
+        const url = `${import.meta.env.VITE_API_URL}/estudiantes/${id}`;
+        const response = await axios.delete(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        // Mostrar mensaje de éxito con Toastify
+        toast.success(response.data.mensaje);
+        mostrarEstudiantes(); // Actualiza la lista de estudiantes
+      } catch (error) {
+        console.error("Error al eliminar el estudiante:", error);
+        toast.error("Error al eliminar el estudiante. Intenta nuevamente.");
+      }
+    }
+  };
   const openModal = (estudiante) => {
     setEstudianteSeleccionado(estudiante); // Establecer el estudiante seleccionado
     setIsOpen(true);
@@ -137,9 +169,17 @@ export const Index = () => {
                     { formatDate(estudiante.fecha_nacimiento)}
                   </Typography>
                 </CardContent>
-                <CardActions>
+                <CardActions className="flex justify-between">
                   <Button size="small" onClick={() => openModal(estudiante)}>
                     Editar
+                  </Button>
+
+                  <Button
+                    size="small"
+                    color="error"
+                    onClick={() => eliminarEstudiante(estudiante.id)}
+                  >
+                    Eliminar
                   </Button>
                 </CardActions>
               </Card>
