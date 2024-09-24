@@ -5,6 +5,7 @@ import { RegisterPage } from "./pages/Auth/RegisterPage";
 import { RepresentanteLayout } from "./Layouts/RepresentanteLayout";
 import { Index } from "./pages/Representantes/Index";
 import { Formulario } from "./pages/Estudiantes/Formulario";
+import { Profile } from "./pages/Representantes/Profile";
 
 
 const router = createBrowserRouter([
@@ -33,7 +34,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/profile",
-        element: <h1>Profile</h1>
+        element: <Profile/>
       },
       {
         path: "/registrar-estudiante",

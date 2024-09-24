@@ -1,6 +1,6 @@
 import { TextField, Button, Box } from '@mui/material';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
@@ -21,6 +21,9 @@ export const Formulario = () => {
         fecha_nacimiento: '', // Inicializa en formato YYYY-MM-DD para el campo de tipo 'date'
         representante_id: representante.id
     };
+    useEffect(() => {
+        document.title = "Registrar Estudiante";
+    });
 
     const [formData, setFormData] = useState(initialState);
 
