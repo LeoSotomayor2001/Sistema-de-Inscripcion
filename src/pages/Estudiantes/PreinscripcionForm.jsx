@@ -1,0 +1,158 @@
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import { Button, Typography, MenuItem, Select, FormControl, InputLabel, Box } from '@mui/material';
+import PropTypes from 'prop-types';
+import { toast } from 'react-toastify';
+
+const PreinscripcionForm = ({ representanteId }) => {
+  const [secciones, setSecciones] = useState([]);
+  const [years, setYears] = useState([]);
+  const [estudiantes, setEstudiantes] = useState([]);
+  
+  const [selectedEstudiante, setSelectedEstudiante] = useState('');
+  const [selectedYear, setSelectedYear] = useState('');
+  const [selectedSeccion, setSelectedSeccion] = useState('');
+
+  const token = localStorage.getItem('token');
+
+  // Obtener años y estudiantes en el montaje inicial
+  useEffect(() => {
+    const fetchYearsAndEstudiantes = async () => {
+      try {
+        const [yearsResponse, estudiantesResponse] = await Promise.all([
+          axios.get(`${import.meta.env.VITE_API_URL}/years`),
+          axios.get(`${import.meta.env.VITE_API_URL}/representantes/${representanteId}/estudiantes`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }),
+        ]);
+        setYears(yearsResponse.data);
+        setEstudiantes(estudiantesResponse.data.estudiantes);
+      } catch (error) {
+        console.error('Error al obtener años y estudiantes:', error);
+      }
+    };
+
+    fetchYearsAndEstudiantes();
+  }, [representanteId]);
+
+  // Obtener las secciones según el año seleccionado
+  useEffect(() => {
+    if (selectedYear) {
+      const fetchSecciones = async () => {
+        try {
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/secciones?year_id=${selectedYear}`);
+          setSecciones(response.data);
+        } catch (error) {
+          console.error('Error al obtener secciones:', error);
+        }
+      };
+
+      fetchSecciones();
+    } else {
+      setSecciones([]); // Limpiar las secciones cuando no se haya seleccionado un año
+    }
+  }, [selectedYear]);
+
+  const handlePreinscripcion = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/inscripciones`,
+        {
+          estudiante_id: selectedEstudiante,
+          year_id: selectedYear,
+          seccion_id: selectedSeccion,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      toast.success(response.data.mensaje);
+    } catch (error) {
+      console.error('Error al preinscribir estudiante:', error);
+      toast.error(error.response.data.mensaje);
+    }
+  };
+
+  return (
+    <Box sx={{ p: 4, maxWidth: 600, mx: 'auto', backgroundColor: '#f4f4f4', borderRadius: 2 }}>
+      <Typography variant="h4" gutterBottom>
+        Preinscripción de Estudiantes
+      </Typography>
+
+      {/* Lista de estudiantes */}
+      <FormControl fullWidth margin="normal">
+        <InputLabel id="estudiante-label">Estudiantes</InputLabel>
+        <Select
+          labelId="estudiante-label"
+          label="Estudiantes"
+          value={selectedEstudiante}
+          onChange={(e) => setSelectedEstudiante(e.target.value)}
+        >
+          {estudiantes.map((estudiante) => (
+            <MenuItem key={estudiante.id} value={estudiante.id}>
+              {estudiante.name} {estudiante.apellido}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      {/* Lista de años */}
+      <FormControl fullWidth margin="normal">
+        <InputLabel id="year-label">Año Académico</InputLabel>
+        <Select
+          labelId="year-label"
+          label="Año Académico"
+          value={selectedYear}
+          onChange={(e) => setSelectedYear(e.target.value)}
+        >
+          {years.map((year) => (
+            <MenuItem key={year.id} value={year.id}>
+              {year.year + ' - ' + year.descripcion}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      {/* Lista de secciones */}
+      <FormControl fullWidth margin="normal">
+        <InputLabel id="seccion-label">Sección</InputLabel>
+        <Select
+          labelId="seccion-label"
+          label="Sección"
+          value={selectedSeccion}
+          onChange={(e) => setSelectedSeccion(e.target.value)}
+          disabled={!selectedYear} // Deshabilitar si no se selecciona un año
+        >
+          {secciones.map((seccion) => (
+            <MenuItem key={seccion.id} value={seccion.id}>
+              {seccion.name} (Cupos: {seccion.capacidad})
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+
+      {/* Botón de preinscripción */}
+      <Button
+        variant="contained"
+        color="primary"
+        fullWidth
+        sx={{ mt: 3 }}
+        onClick={handlePreinscripcion}
+        disabled={!selectedEstudiante || !selectedYear || !selectedSeccion}
+      >
+        Preinscribir Estudiante
+      </Button>
+    </Box>
+  );
+};
+
+PreinscripcionForm.propTypes = {
+  representanteId: PropTypes.number.isRequired,
+};
+
+export default PreinscripcionForm;

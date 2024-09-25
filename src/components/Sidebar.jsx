@@ -132,9 +132,9 @@ export const Sidebar = () => {
                                     >
                                         <ListItemButton
                                             component={NavLink}
-                                            to="/ver-estudiantes"
+                                            to="/preinscribir-estudiante"
                                         >
-                                            <ListItemText primary="Ver Estudiantes Inscritos" />
+                                            <ListItemText primary="Preinscribir Estudiante" />
                                         </ListItemButton>
                                     </ListItem>
                                 </List>

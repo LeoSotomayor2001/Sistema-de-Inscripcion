@@ -10,7 +10,7 @@ export const RepresentanteLayout = () => {
 
   useEffect(() => {
     // Verificar si el representante o token no existen
-    if (!representante || !token) {
+    if (!token) {
       navigate("/auth");
     }
   }, [representante, token, navigate]);

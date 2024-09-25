@@ -6,6 +6,7 @@ import { RepresentanteLayout } from "./Layouts/RepresentanteLayout";
 import { Index } from "./pages/Representantes/Index";
 import { Formulario } from "./pages/Estudiantes/Formulario";
 import { Profile } from "./pages/Representantes/Profile";
+import { PreinscribirEstudiante } from "./pages/Representantes/PreinscribirEstudiante";
 
 
 const router = createBrowserRouter([
@@ -41,8 +42,8 @@ const router = createBrowserRouter([
         element: <Formulario />
       },
       {
-        path: "/ver-estudiantes",
-        element: <h1>Ver Estudiantes</h1>
+        path: "/Preinscribir-estudiante",
+        element: <PreinscribirEstudiante />
       }
 
     ]
