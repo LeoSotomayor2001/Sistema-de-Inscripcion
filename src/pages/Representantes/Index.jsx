@@ -12,6 +12,7 @@ import '../../components/Spinner.css';
 import { Link } from "react-router-dom";
 import { ModalEditarEstudiante } from "../../components/ModalEditarEstudiante";
 import Swal from 'sweetalert2';
+import { useEstudiantes } from "../../Hooks/UseEstudiantes";
 
 
 const formatDate = (isoDate) => {
@@ -26,30 +27,12 @@ const formatDate = (isoDate) => {
 
 export const Index = () => {
   const token = localStorage.getItem("token");
-  const representante = JSON.parse(localStorage.getItem("representante"));
-  const [listadoEstudiantes, setListadoEstudiantes] = useState([]);
   const [isVisible, setIsVisible] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [estudianteSeleccionado, setEstudianteSeleccionado] = useState(null); // Estado para el estudiante seleccionado
   const imageURL=`${import.meta.env.VITE_API_URL}/imagen/`;
-
-  const mostrarEstudiantes = async () => {
-    try {
-      const url = `${import.meta.env.VITE_API_URL}/estudiantes`;
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setListadoEstudiantes(response.data.data);
-    } catch (error) {
-      console.error("Error al cargar los estudiantes:", error);
-      toast.error("Error al cargar los estudiantes. Intenta nuevamente.");
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {loading,estudiantes,fetchYearsAndEstudiantes}= useEstudiantes();
+  
 
   const eliminarEstudiante = async (id) => {
     // Mostrar confirmación con SweetAlert
@@ -76,10 +59,16 @@ export const Index = () => {
   
         // Mostrar mensaje de éxito con Toastify
         toast.success(response.data.mensaje);
-        mostrarEstudiantes(); // Actualiza la lista de estudiantes
+        fetchYearsAndEstudiantes(); // Actualiza la lista de estudiantes
       } catch (error) {
         console.error("Error al eliminar el estudiante:", error);
-        toast.error("Error al eliminar el estudiante. Intenta nuevamente.");
+        if(error.response.data.mensaje){
+          toast.error(error.response.data.mensaje);
+        }
+        else{
+          toast.error("Error al eliminar el estudiante. Intenta nuevamente.");
+
+        }
       }
     }
   };
@@ -94,7 +83,7 @@ export const Index = () => {
   };
 
   useEffect(() => {
-    mostrarEstudiantes();
+    fetchYearsAndEstudiantes();
     document.title = "Sistema de Inscripción - Estudiantes";
   }, [document.title]);
 
@@ -109,12 +98,6 @@ export const Index = () => {
   if (loading) {
     return <Spinner />;
   }
-
-  const estudiantesFiltrados = listadoEstudiantes.filter(
-    (estudiante) =>
-      estudiante.representante && estudiante.representante.id === representante.id
-  );
-
   return (
     <>
       <header className="my-5">
@@ -129,10 +112,10 @@ export const Index = () => {
           </li>
           <li>
             <Link
-              to={"/ver-estudiantes"}
+              to={"/Preinscribir-estudiante"}
               className="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out"
             >
-              Ver estudiantes inscritos
+              Preinscribir estudiante
             </Link>
           </li>
         </ul>
@@ -143,11 +126,11 @@ export const Index = () => {
           Tus representados:
         </h2>
 
-        {estudiantesFiltrados.length > 0 ? (
+        {estudiantes.length > 0 ? (
           <div
             className={`transition-opacity duration-1000 ease-in-out ${isVisible ? "opacity-100" : "opacity-0"} grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3`}
           >
-            {estudiantesFiltrados.map((estudiante) => (
+            {estudiantes.map((estudiante) => (
               <Card sx={{ maxWidth: 345 }} key={estudiante.id} className="mx-4">
                 <CardMedia
                   sx={{ height: 290 }}
@@ -193,8 +176,7 @@ export const Index = () => {
           <ModalEditarEstudiante
             modalIsOpen={modalIsOpen}
             closeModal={closeModal}
-            estudiante={estudianteSeleccionado} // Pasar el estudiante seleccionado al modal
-            mostrarEstudiantes={mostrarEstudiantes}
+            estudiante={estudianteSeleccionado} // Pasar el estudiante seleccionado al moda
           />
         )}
       </div>

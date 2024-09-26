@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { useEstudiantes } from '../Hooks/UseEstudiantes';
 
 const customStyles = {
   content: {
@@ -17,37 +18,31 @@ const customStyles = {
     maxWidth: '600px',
   },
 };
-const formatDate = (isoDate) => {
-    if (!isoDate) return ''; // Si no hay fecha, retornar un string vacío
-    const date = new Date(isoDate);
-    const day = String(date.getUTCDate()).padStart(2, '0'); // Obtener el día en UTC
-    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Obtener el mes en UTC (0-indexado)
-    const year = date.getUTCFullYear(); // Obtener el año en UTC
-    return `${day}-${month}-${year}`;
-  };
-  const formatDateIso = (isoDate) => {
-    if (!isoDate) return ''; // Si no hay fecha, retornar un string vacío
-    const date = new Date(isoDate);
-    const day = String(date.getUTCDate()).padStart(2, '0'); // Obtener el día en UTC
-    const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Obtener el mes en UTC (0-indexado)
-    const year = date.getUTCFullYear(); // Obtener el año en UTC
-    return `${year}-${month}-${day}`; // Cambiar el formato a 'YYYY-MM-DD' para el campo de entrada
+
+const formatDateIso = (isoDate) => {
+  if (!isoDate) return ''; // Si no hay fecha, retornar un string vacío
+  const date = new Date(isoDate);
+  const day = String(date.getUTCDate()).padStart(2, '0'); // Obtener el día en UTC
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0'); // Obtener el mes en UTC (0-indexado)
+  const year = date.getUTCFullYear(); // Obtener el año en UTC
+  return `${year}-${month}-${day}`; // Cambiar el formato a 'YYYY-MM-DD' para el campo de entrada
 };
-  
-  
+
+
 Modal.setAppElement('#root');
 
-export const ModalEditarEstudiante = ({ modalIsOpen, closeModal, estudiante,mostrarEstudiantes }) => {
-    const initialState = {
-        name: estudiante.name || '',
-        apellido: estudiante.apellido || '',
-        cedula: estudiante.cedula || '',
-        fecha_nacimiento: formatDateIso(estudiante.fecha_nacimiento) || '',
-        image: null, // Agregado para manejar la imagen
-    }
-    const [errors, setErrors] = useState({});
-    const token = localStorage.getItem('token');
+export const ModalEditarEstudiante = ({ modalIsOpen, closeModal, estudiante }) => {
+  const initialState = {
+    name: estudiante.name || '',
+    apellido: estudiante.apellido || '',
+    cedula: estudiante.cedula || '',
+    fecha_nacimiento: formatDateIso(estudiante.fecha_nacimiento) || '',
+    image: null, // Agregado para manejar la imagen
+  }
+  const [errors, setErrors] = useState({});
+  const token = localStorage.getItem('token');
   const [formData, setFormData] = useState(initialState);
+  const {mostrarEstudiantes,formatDate}= useEstudiantes();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -79,29 +74,29 @@ export const ModalEditarEstudiante = ({ modalIsOpen, closeModal, estudiante,most
     }
 
     try {
-        const response =await axios.post(`${import.meta.env.VITE_API_URL}/estudiantes/${estudiante.id}`, data, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-                'Authorization': `Bearer ${token}`,
-            }
-        });
+      const response = await axios.post(`${import.meta.env.VITE_API_URL}/estudiantes/${estudiante.id}`, data, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${token}`,
+        }
+      });
 
-        toast.success(response.data.mensaje);
-        closeModal();
-        mostrarEstudiantes();
+      toast.success(response.data.mensaje);
+      closeModal();
+      mostrarEstudiantes();
     }
     catch (error) {
-        console.log(error)
-        if(error.response){
-            setErrors(error.response.data.errors);
-            setTimeout(() => {
-                setErrors({});
-            }, 3000);
-        }
-        else{
-            toast.error('Ocurrio un error en el servidor');
-        }
-      
+      console.log(error)
+      if (error.response) {
+        setErrors(error.response.data.errors);
+        setTimeout(() => {
+          setErrors({});
+        }, 3000);
+      }
+      else {
+        toast.error('Ocurrio un error en el servidor');
+      }
+
     }
   };
 
@@ -158,17 +153,17 @@ export const ModalEditarEstudiante = ({ modalIsOpen, closeModal, estudiante,most
         {errors.cedula && <p className="text-red-500">{errors.cedula[0]}</p>}
 
         <TextField
-            label="Fecha de Nacimiento"
-            name="fecha_nacimiento"
-            type="date" // Cambia el tipo a "date"
-            variant="outlined"
-            value={formData.fecha_nacimiento}
-            onChange={handleChange}
-            fullWidth
-            required
-            InputLabelProps={{
-              shrink: true, // Esto asegura que la etiqueta no se superponga al valor del campo
-            }}
+          label="Fecha de Nacimiento"
+          name="fecha_nacimiento"
+          type="date" // Cambia el tipo a "date"
+          variant="outlined"
+          value={formData.fecha_nacimiento}
+          onChange={handleChange}
+          fullWidth
+          required
+          InputLabelProps={{
+            shrink: true, // Esto asegura que la etiqueta no se superponga al valor del campo
+          }}
         />
         {errors.fecha_nacimiento && <p className="text-red-500">{errors.fecha_nacimiento[0]}</p>}
 
@@ -212,5 +207,4 @@ ModalEditarEstudiante.propTypes = {
     cedula: PropTypes.number.isRequired,
     fecha_nacimiento: PropTypes.string.isRequired,
   }).isRequired,
-  mostrarEstudiantes: PropTypes.func.isRequired,
 };

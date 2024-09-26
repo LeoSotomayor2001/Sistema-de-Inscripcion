@@ -1,41 +1,22 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Button, Typography, MenuItem, Select, FormControl, InputLabel, Box } from '@mui/material';
-import PropTypes from 'prop-types';
 import { toast } from 'react-toastify';
+import { useEstudiantes } from '../../Hooks/UseEstudiantes';
 
-const PreinscripcionForm = ({ representanteId }) => {
+const PreinscripcionForm = () => {
   const [secciones, setSecciones] = useState([]);
-  const [years, setYears] = useState([]);
-  const [estudiantes, setEstudiantes] = useState([]);
 
   const [selectedEstudiante, setSelectedEstudiante] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
   const [selectedSeccion, setSelectedSeccion] = useState('');
-
+  const {fetchYearsAndEstudiantes,years,estudiantes}=useEstudiantes();
   const token = localStorage.getItem('token');
 
   // Obtener años y estudiantes en el montaje inicial
   useEffect(() => {
-    const fetchYearsAndEstudiantes = async () => {
-      try {
-        const [yearsResponse, estudiantesResponse] = await Promise.all([
-          axios.get(`${import.meta.env.VITE_API_URL}/years`),
-          axios.get(`${import.meta.env.VITE_API_URL}/representantes/${representanteId}/estudiantes`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }),
-        ]);
-        setYears(yearsResponse.data);
-        setEstudiantes(estudiantesResponse.data.estudiantes);
-      } catch (error) {
-        console.error('Error al obtener años y estudiantes:', error);
-      }
-    };
-
     fetchYearsAndEstudiantes();
-  }, [representanteId]);
+  }, []);
 
   // Obtener las secciones según el año seleccionado
   useEffect(() => {
@@ -161,8 +142,5 @@ const PreinscripcionForm = ({ representanteId }) => {
   );
 };
 
-PreinscripcionForm.propTypes = {
-  representanteId: PropTypes.number.isRequired,
-};
 
 export default PreinscripcionForm;
