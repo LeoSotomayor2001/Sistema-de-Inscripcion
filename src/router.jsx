@@ -11,21 +11,6 @@ import { PreinscribirEstudiante } from "./pages/Representantes/PreinscribirEstud
 
 const router = createBrowserRouter([
   {
-    path: "/auth",
-    element: <AuthLayout />,
-    children: [
-      {
-        index: true,
-        element: <LoginPage />
-      },
-      {
-        path: "/auth/registro",
-        element: <RegisterPage />
-      }
-    ]
-
-  },
-  {
     path: "/",
     element: <RepresentanteLayout/>,
     children: [
@@ -47,6 +32,21 @@ const router = createBrowserRouter([
       }
 
     ]
+  },
+  {
+    path: "/auth",
+    element: <AuthLayout />,
+    children: [
+      {
+        index: true,
+        element: <LoginPage />
+      },
+      {
+        path: "/auth/registro",
+        element: <RegisterPage />
+      }
+    ]
+
   },
   {
     path: "*",

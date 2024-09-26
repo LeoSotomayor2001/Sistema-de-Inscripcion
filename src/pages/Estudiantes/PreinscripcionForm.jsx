@@ -8,7 +8,7 @@ const PreinscripcionForm = ({ representanteId }) => {
   const [secciones, setSecciones] = useState([]);
   const [years, setYears] = useState([]);
   const [estudiantes, setEstudiantes] = useState([]);
-  
+
   const [selectedEstudiante, setSelectedEstudiante] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
   const [selectedSeccion, setSelectedSeccion] = useState('');
@@ -40,18 +40,23 @@ const PreinscripcionForm = ({ representanteId }) => {
   // Obtener las secciones según el año seleccionado
   useEffect(() => {
     if (selectedYear) {
+      setSelectedSeccion(''); // Restablece la sección seleccionada al cambiar de año
       const fetchSecciones = async () => {
         try {
-          const response = await axios.get(`${import.meta.env.VITE_API_URL}/secciones?year_id=${selectedYear}`);
+          const response = await axios.get(
+            `${import.meta.env.VITE_API_URL}/secciones?year_id=${selectedYear}`
+          );
           setSecciones(response.data);
         } catch (error) {
           console.error('Error al obtener secciones:', error);
+          toast.error('Debe seleccionar todos los campos');
         }
       };
 
       fetchSecciones();
     } else {
       setSecciones([]); // Limpiar las secciones cuando no se haya seleccionado un año
+      setSelectedSeccion(''); // Asegurar que la sección esté vacía
     }
   }, [selectedYear]);
 
@@ -75,6 +80,11 @@ const PreinscripcionForm = ({ representanteId }) => {
     } catch (error) {
       console.error('Error al preinscribir estudiante:', error);
       toast.error(error.response.data.mensaje);
+    }
+    finally {
+      setSelectedEstudiante('');
+      setSelectedYear('');
+      setSelectedSeccion('');
     }
   };
 
