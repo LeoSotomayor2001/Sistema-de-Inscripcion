@@ -82,9 +82,9 @@ export const Index = () => {
 
   useEffect(() => {
     fetchYearsAndEstudiantes();
-    document.title = "Sistema de Inscripción - Estudiantes";
-  }, [document.title]);
-
+    document.title = "Sistema de Inscripción - Estudiantes"; 
+  }, []);
+ 
   useEffect(() => {
     if (!loading) {
       const timer = setTimeout(() => {
@@ -97,7 +97,7 @@ export const Index = () => {
     }
   }, [loading]);
 
-  if (loading) {
+  if (loading ) {
     return <Spinner />;
   }
   return (
@@ -128,7 +128,7 @@ export const Index = () => {
           Tus representados:
         </h2>
 
-        {estudiantes.length > 0 && !loading? (
+        {estudiantes.length > 0? (
           <div
             className={`transition-opacity duration-1000 ease-in-out ${isVisible ? "opacity-100" : "opacity-0"} grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3`}
           >

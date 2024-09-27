@@ -8,15 +8,22 @@ import { useEstudiantes } from "../Hooks/UseEstudiantes";
 import { Spinner } from "./Spinner";
 
 export const Sidebar = () => {
-    const location = useLocation()
-    const { representanteObtenido, getRepresentante, loadingSidebar } = useEstudiantes();
+    const location = useLocation();
+    const { representanteObtenido, getRepresentante, loadingSidebar,limpiarTodo } = useEstudiantes();
     const navigate = useNavigate();
     const [expanded, setExpanded] = useState(false);
+    const [loadingRepresentante, setLoadingRepresentante] = useState(true); // Estado para controlar la carga
+    
     useEffect(() => {
-        getRepresentante();
+        // Llamar a getRepresentante cuando el componente se monta
+        const fetchRepresentante = async () => {
+            await getRepresentante();
+            setLoadingRepresentante(false); // Cambiar el estado de carga
+        };
+
+        fetchRepresentante();
         document.title = "Sistema de Inscripción";
     }, []);
-
 
     // Hook para determinar si el acordeón debe estar abierto
     useEffect(() => {
@@ -37,21 +44,20 @@ export const Sidebar = () => {
                 }
             });
 
-            localStorage.removeItem("representante");
-            localStorage.removeItem("token");
+            limpiarTodo();
             toast.success(response.data.mensaje);
             navigate("/auth");
-
 
         } catch (error) {
             console.log(error);
             toast.error("Error al cerrar sesión");
         }
     };
-    if (loadingSidebar) {
+
+    if (loadingSidebar || loadingRepresentante) {
         return (
             <Spinner />
-        )
+        );
     }
 
     return (
@@ -136,7 +142,7 @@ export const Sidebar = () => {
                                         : "text-gray-700 hover:bg-indigo-600 hover:text-white font-medium rounded-lg transition-all duration-300 mb-2"}
                                     >
                                         <ListItemButton component={NavLink} to="/registrar-estudiante">
-                                            <ListItemText primary="Crear Estudiante" />
+                                            <ListItemText primary="Registrar Estudiante" />
                                         </ListItemButton>
                                     </ListItem>
 
@@ -154,7 +160,7 @@ export const Sidebar = () => {
                                         : "text-gray-700 hover:bg-indigo-600 hover:text-white font-medium rounded-lg transition-all duration-300 mb-2"}
                                     >
                                         <ListItemButton component={NavLink} to="/estudiantes-preinscritos">
-                                            <ListItemText primary="Preinscribir Estudiante" />
+                                            <ListItemText primary="Estudiantes Preinscritos" />
                                         </ListItemButton>
                                     </ListItem>
                                 </List>
