@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types';
 import { TextField, Button, Box } from '@mui/material';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from 'react-modal';
-import axios from 'axios'; // Asegúrate de importar axios
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { useEstudiantes } from '../Hooks/UseEstudiantes';
 
 const customStyles = {
   content: {
@@ -23,7 +25,7 @@ Modal.setAppElement('#root');
 export const ModalEditarRepre = ({ modalIsOpen, closeModal, representante }) => {
   const [errors, setErrors] = useState({});
   const token = localStorage.getItem('token');
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: representante.name || '',
     apellido: representante.apellido || '',
@@ -34,6 +36,22 @@ export const ModalEditarRepre = ({ modalIsOpen, closeModal, representante }) => 
     direccion: representante.direccion || '',
     image: null,
   });
+  const [hasChanges, setHasChanges] = useState(false); // Estado para detectar cambios
+  const {getRepresentante}=useEstudiantes()
+  // Función para detectar si hay cambios en el formulario
+  useEffect(() => {
+    const hasFormChanged =
+      formData.name !== representante.name ||
+      formData.apellido !== representante.apellido ||
+      formData.cedula !== representante.cedula ||
+      formData.email !== representante.email ||
+      formData.telefono !== representante.telefono ||
+      formData.ciudad !== representante.ciudad ||
+      formData.direccion !== representante.direccion ||
+      formData.image !== null;
+
+    setHasChanges(hasFormChanged);
+  }, [formData, representante]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,14 +64,13 @@ export const ModalEditarRepre = ({ modalIsOpen, closeModal, representante }) => 
   const handleFileChange = (e) => {
     setFormData((prev) => ({
       ...prev,
-      image: e.target.files[0], // Guarda el archivo
+      image: e.target.files[0],
     }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Crear un FormData
     const data = new FormData();
     data.append('name', formData.name);
     data.append('apellido', formData.apellido);
@@ -64,20 +81,24 @@ export const ModalEditarRepre = ({ modalIsOpen, closeModal, representante }) => 
     data.append('direccion', formData.direccion);
     data.append('_method', 'PUT');
     if (formData.image) {
-      data.append('image', formData.image); // Añade el archivo si existe
+      data.append('image', formData.image);
     }
 
     try {
-      const response = await axios.post(`${import.meta.env.VITE_API_URL}/representantes/${representante.id}`, data, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`,
-          
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/representantes/${representante.id}`,
+        data,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
+          },
         }
-        
-      });
-      localStorage.setItem('representante', JSON.stringify(response.data.representante));
+      );
+
+      getRepresentante();
       closeModal();
+      toast.success(response.data.mensaje);
       navigate('/profile');
     } catch (error) {
       console.error('Error al enviar el formulario:', error);
@@ -89,26 +110,14 @@ export const ModalEditarRepre = ({ modalIsOpen, closeModal, representante }) => 
       setTimeout(() => {
         setErrors({});
       }, 3000);
-
     }
   };
 
   return (
-    <Modal
-      isOpen={modalIsOpen}
-      onRequestClose={closeModal}
-      style={customStyles}
-      contentLabel="Editar Perfil"
-      
-    >
+    <Modal isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles} contentLabel="Editar Perfil">
       <h2 className="text-center text-3xl font-bold mb-4">Editar Perfil</h2>
 
-      <Box
-        component="form"
-        onSubmit={handleSubmit}
-        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-        noValidate
-      >
+      <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }} noValidate>
         <TextField
           label="Nombre"
           name="name"
@@ -175,31 +184,15 @@ export const ModalEditarRepre = ({ modalIsOpen, closeModal, representante }) => 
           onChange={handleChange}
           fullWidth
         />
-        
 
-        {/* Input de tipo archivo para subir imagen */}
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-        />
+        <input type="file" accept="image/*" onChange={handleFileChange} />
         {errors.image && <p className="text-red-500">{errors.image[0]}</p>}
-        <Button
-          variant="contained"
-          color="primary"
-          type="submit"
-          fullWidth
-        >
+        <Button variant="contained" color="primary" type="submit" fullWidth disabled={!hasChanges}>
           Guardar
         </Button>
       </Box>
 
-      <Button
-        onClick={closeModal}
-        color="secondary"
-        sx={{ mt: 2 }}
-        fullWidth
-      >
+      <Button onClick={closeModal} color="secondary" sx={{ mt: 2 }} fullWidth>
         Cerrar
       </Button>
     </Modal>
@@ -207,16 +200,16 @@ export const ModalEditarRepre = ({ modalIsOpen, closeModal, representante }) => 
 };
 
 ModalEditarRepre.propTypes = {
-  modalIsOpen: PropTypes.bool.isRequired, // modalIsOpen es un booleano requerido
-  closeModal: PropTypes.func.isRequired,  // closeModal es una función requerida
+  modalIsOpen: PropTypes.bool.isRequired,
+  closeModal: PropTypes.func.isRequired,
   representante: PropTypes.shape({
-    id: PropTypes.number.isRequired,         // id es un número requerido
-    name: PropTypes.string.isRequired,       // name es un string requerido
-    apellido: PropTypes.string.isRequired,   // apellido es un string requerido
-    cedula: PropTypes.string.isRequired,     // cedula es un string requerido
-    email: PropTypes.string.isRequired,      // email es un string requerido
-    telefono: PropTypes.string,              // teléfono es opcional
-    ciudad: PropTypes.string,                // ciudad es opcional
-    direccion: PropTypes.string,             // dirección es opcional
-  }).isRequired, // representante es un objeto requerido
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    apellido: PropTypes.string.isRequired,
+    cedula: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+    telefono: PropTypes.string,
+    ciudad: PropTypes.string,
+    direccion: PropTypes.string,
+  }).isRequired,
 };

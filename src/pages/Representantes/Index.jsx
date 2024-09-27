@@ -61,13 +61,11 @@ export const Index = () => {
         toast.success(response.data.mensaje);
         fetchYearsAndEstudiantes(); // Actualiza la lista de estudiantes
       } catch (error) {
-        console.error("Error al eliminar el estudiante:", error);
         if(error.response.data.mensaje){
           toast.error(error.response.data.mensaje);
         }
         else{
           toast.error("Error al eliminar el estudiante. Intenta nuevamente.");
-
         }
       }
     }
@@ -89,9 +87,13 @@ export const Index = () => {
 
   useEffect(() => {
     if (!loading) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         setIsVisible(true);
       }, 100);
+      // Limpiar el timeout si el componente se desmonta o el estado cambia
+      return () => clearTimeout(timer);
+    } else {
+      setIsVisible(false); // Resetea isVisible cuando se activa el loading
     }
   }, [loading]);
 
@@ -126,7 +128,7 @@ export const Index = () => {
           Tus representados:
         </h2>
 
-        {estudiantes.length > 0 ? (
+        {estudiantes.length > 0 && !loading? (
           <div
             className={`transition-opacity duration-1000 ease-in-out ${isVisible ? "opacity-100" : "opacity-0"} grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3`}
           >

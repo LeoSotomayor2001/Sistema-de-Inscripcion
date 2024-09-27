@@ -1,29 +1,34 @@
 import { useEffect, useState } from "react";
 import { ModalEditarRepre } from "../../components/ModalEditarRepre";
-
-// Estilos personalizados para el modal
-
-// Asegúrate de que el elemento root sea correcto
-
+import { useEstudiantes } from "../../Hooks/UseEstudiantes";
+import { Spinner } from "../../components/Spinner";
 
 export const Profile = () => {
-  const representante = JSON.parse(localStorage.getItem("representante"));
-  const imageUrl = `${import.meta.env.VITE_API_URL}/imagen/${representante.image}`;
-
+  const { representanteObtenido, getRepresentante,loading } = useEstudiantes();
+  const imageUrl = `${import.meta.env.VITE_API_URL}/imagen/${representanteObtenido.image}`;
   const [modalIsOpen, setIsOpen] = useState(false);
 
+  useEffect(() => {
+    document.title = "Sistema de Inscripción - Perfil";
+    getRepresentante();
+  }, []);
+
   const openModal = () => {
-    setIsOpen(true);
+    if (representanteObtenido) {
+      // Verifica que representanteObtenido no esté vacío antes de abrir el modal
+      setIsOpen(true);
+    } else {
+      console.log("El representante no se ha cargado aún.");
+    }
   };
 
   const closeModal = () => {
     setIsOpen(false);
   };
 
-  useEffect(() => {
-    document.title = "Sistema de Inscripción - Perfil";
-
-  }, []);
+  if (loading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -33,7 +38,7 @@ export const Profile = () => {
         <div className="flex flex-col items-center justify-center">
           <img
             className="w-32 h-32 md:w-44 md:h-44 mb-4 rounded-full shadow-lg"
-            src={representante.image ? `${imageUrl}` : "img/usuario.svg"}
+            src={representanteObtenido.image ? imageUrl : "img/usuario.svg"}
             alt="Profile"
           />
           <button title="Editar Perfil" onClick={openModal} type="button">
@@ -55,29 +60,32 @@ export const Profile = () => {
 
           <div className="flex flex-col items-center justify-center mt-4">
             <h5 className="mb-1 text-lg md:text-2xl font-medium text-gray-900">
-              {representante.name + " " + representante.apellido}
+              {representanteObtenido.name + " " + representanteObtenido.apellido}
             </h5>
             <span className="text-sm md:text-xl text-gray-500 dark:text-gray-400">
-              Correo: {representante.email}
+              Correo: {representanteObtenido.email}
             </span>
             <span className="text-sm md:text-xl text-gray-500 dark:text-gray-400">
-              Cédula: {representante.cedula}
+              Cédula: {representanteObtenido.cedula}
             </span>
             <span className="text-sm md:text-xl text-gray-500 dark:text-gray-400">
-              Teléfono: {representante.telefono}
+              Teléfono: {representanteObtenido.telefono}
             </span>
             <span className="text-sm md:text-xl text-gray-500 dark:text-gray-400">
-              Ciudad: {representante.ciudad}
+              Ciudad: {representanteObtenido.ciudad}
             </span>
             <span className="text-sm md:text-xl text-gray-500 dark:text-gray-400">
-              Dirección: {representante.direccion}
+              Dirección: {representanteObtenido.direccion}
             </span>
           </div>
         </div>
       </div>
 
-      <ModalEditarRepre modalIsOpen={modalIsOpen} closeModal={closeModal} representante={representante} />
+      <ModalEditarRepre
+        modalIsOpen={modalIsOpen}
+        closeModal={closeModal}
+        representante={representanteObtenido} // Envía los datos del representante correcto
+      />
     </div>
-
   );
 };

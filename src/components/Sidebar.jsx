@@ -4,51 +4,55 @@ import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Accordion, AccordionSummary, AccordionDetails, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { useEstudiantes } from "../Hooks/UseEstudiantes";
+import { Spinner } from "./Spinner";
 
 export const Sidebar = () => {
-    const representante = JSON.parse(localStorage.getItem("representante")) || {};
-    const token = localStorage.getItem("token");
     const location = useLocation()
-
+    const {representanteObtenido, getRepresentante, loadingSidebar}= useEstudiantes();
     const navigate = useNavigate();
-
     useEffect(() => {
+        getRepresentante();
         document.title = "Sistema de Inscripción";
-    },[]);
+      }, []);
 
     const cerrarSesion = async () => {
         try {
+            const currentToken = localStorage.getItem("token");
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/logout-representante`, {}, {
                 headers: {
-                    Authorization: `Bearer ${token}`
+                    Authorization: `Bearer ${currentToken}`
                 }
             });
 
-            console.log(response);
             localStorage.removeItem("representante");
             localStorage.removeItem("token");
-
             toast.success(response.data.mensaje);
-            setTimeout(() => {
-                navigate("/auth");
-            }, 2000);
+            navigate("/auth");
+
+            
         } catch (error) {
             console.log(error);
             toast.error("Error al cerrar sesión");
         }
     };
+    if(loadingSidebar){
+        return (
+            <Spinner/>
+        )
+    }
 
     return (
         <aside className="md:w-80 w-full md:shadow-xl shadow-md bg-white" aria-label="Sidebar">
             <div className="px-3 py-4">
                 <img 
-                    src={representante.image ? `${import.meta.env.VITE_API_URL}/imagen/${representante.image}` : "img/usuario.svg"} 
+                    src={representanteObtenido.image ? `${import.meta.env.VITE_API_URL}/imagen/${representanteObtenido.image}` : "img/usuario.svg"} 
                     alt="imagen-representante" 
                     className="w-36 h-36 mx-auto rounded-full shadow-lg"
                  />
             </div>
             <h1 className="text-2xl font-bold text-center">
-                {representante && representante.name + " " + representante.apellido}
+                {representanteObtenido && representanteObtenido.name + " " + representanteObtenido.apellido}
             </h1>
             <div className="h-full px-3 py-4 overflow-y-auto">
                 <ul className="space-y-4">
