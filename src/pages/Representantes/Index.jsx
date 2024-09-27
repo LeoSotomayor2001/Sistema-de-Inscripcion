@@ -114,7 +114,7 @@ export const Index = () => {
           </li>
           <li>
             <Link
-              to={"/Preinscribir-estudiante"}
+              to={"/preinscribir-estudiante"}
               className="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out"
             >
               Preinscribir estudiante

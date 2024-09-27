@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Accordion, AccordionSummary, AccordionDetails, List, ListItem, ListItemButton, ListItemText } from '@mui/material';
@@ -9,12 +9,24 @@ import { Spinner } from "./Spinner";
 
 export const Sidebar = () => {
     const location = useLocation()
-    const {representanteObtenido, getRepresentante, loadingSidebar}= useEstudiantes();
+    const { representanteObtenido, getRepresentante, loadingSidebar } = useEstudiantes();
     const navigate = useNavigate();
+    const [expanded, setExpanded] = useState(false);
     useEffect(() => {
         getRepresentante();
         document.title = "Sistema de Inscripción";
-      }, []);
+    }, []);
+
+
+    // Hook para determinar si el acordeón debe estar abierto
+    useEffect(() => {
+        const pathname = location.pathname;
+        if (pathname === "/registrar-estudiante" || pathname === "/preinscribir-estudiante" || pathname === "/estudiantes-preinscritos") {
+            setExpanded(true);
+        } else {
+            setExpanded(false);
+        }
+    }, [location.pathname]);
 
     const cerrarSesion = async () => {
         try {
@@ -30,26 +42,26 @@ export const Sidebar = () => {
             toast.success(response.data.mensaje);
             navigate("/auth");
 
-            
+
         } catch (error) {
             console.log(error);
             toast.error("Error al cerrar sesión");
         }
     };
-    if(loadingSidebar){
+    if (loadingSidebar) {
         return (
-            <Spinner/>
+            <Spinner />
         )
     }
 
     return (
         <aside className="md:w-80 w-full md:shadow-xl shadow-md bg-white" aria-label="Sidebar">
             <div className="px-3 py-4">
-                <img 
-                    src={representanteObtenido.image ? `${import.meta.env.VITE_API_URL}/imagen/${representanteObtenido.image}` : "img/usuario.svg"} 
-                    alt="imagen-representante" 
+                <img
+                    src={representanteObtenido.image ? `${import.meta.env.VITE_API_URL}/imagen/${representanteObtenido.image}` : "img/usuario.svg"}
+                    alt="imagen-representante"
                     className="w-36 h-36 mx-auto rounded-full shadow-lg"
-                 />
+                />
             </div>
             <h1 className="text-2xl font-bold text-center">
                 {representanteObtenido && representanteObtenido.name + " " + representanteObtenido.apellido}
@@ -98,8 +110,13 @@ export const Sidebar = () => {
                         </NavLink>
                     </li>
                     <li className="mb-2">
-                        <Accordion>
-                            <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="panel1a-content" id="panel1a-header">
+                        <Accordion expanded={expanded} onChange={() => setExpanded(!expanded)}>
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1a-content"
+                                id="panel1a-header"
+                                aria-expanded={expanded} // Añadir accesibilidad
+                            >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="none"
@@ -108,11 +125,7 @@ export const Sidebar = () => {
                                     stroke="currentColor"
                                     className="w-6 h-6"
                                 >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
-                                    />
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
                                 </svg>
                                 <span className="ml-4 text-xl">Estudiantes</span>
                             </AccordionSummary>
@@ -122,28 +135,32 @@ export const Sidebar = () => {
                                         ? "bg-indigo-600 text-white font-medium rounded-lg transition-all duration-300 mb-2"
                                         : "text-gray-700 hover:bg-indigo-600 hover:text-white font-medium rounded-lg transition-all duration-300 mb-2"}
                                     >
-                                        <ListItemButton
-                                            component={NavLink}
-                                            to="/registrar-estudiante"
-                                        >
+                                        <ListItemButton component={NavLink} to="/registrar-estudiante">
                                             <ListItemText primary="Crear Estudiante" />
                                         </ListItemButton>
                                     </ListItem>
 
-                                    <ListItem disablePadding className={location.pathname === "/ver-estudiantes"
-                                        ? "bg-indigo-600 text-white font-medium rounded-lg transition-all duration-300"
-                                        : "text-gray-700 hover:bg-indigo-600 hover:text-white font-medium rounded-lg transition-all duration-300"}
+                                    <ListItem disablePadding className={location.pathname === "/preinscribir-estudiante"
+                                        ? "bg-indigo-600 text-white font-medium rounded-lg transition-all duration-300 mb-2"
+                                        : "text-gray-700 hover:bg-indigo-600 hover:text-white font-medium rounded-lg transition-all duration-300 mb-2"}
                                     >
-                                        <ListItemButton
-                                            component={NavLink}
-                                            to="/preinscribir-estudiante"
-                                        >
+                                        <ListItemButton component={NavLink} to="/preinscribir-estudiante">
+                                            <ListItemText primary="Preinscribir Estudiante" />
+                                        </ListItemButton>
+                                    </ListItem>
+
+                                    <ListItem disablePadding className={location.pathname === "/estudiantes-preinscritos"
+                                        ? "bg-indigo-600 text-white font-medium rounded-lg transition-all duration-300 mb-2"
+                                        : "text-gray-700 hover:bg-indigo-600 hover:text-white font-medium rounded-lg transition-all duration-300 mb-2"}
+                                    >
+                                        <ListItemButton component={NavLink} to="/estudiantes-preinscritos">
                                             <ListItemText primary="Preinscribir Estudiante" />
                                         </ListItemButton>
                                     </ListItem>
                                 </List>
                             </AccordionDetails>
                         </Accordion>
+
                     </li>
                     <li className="mb-2">
                         <button

@@ -7,6 +7,7 @@ import { Index } from "./pages/Representantes/Index";
 import { Formulario } from "./pages/Estudiantes/Formulario";
 import { Profile } from "./pages/Representantes/Profile";
 import { PreinscribirEstudiante } from "./pages/Representantes/PreinscribirEstudiante";
+import EstudiantesPreinscritos from "./pages/Estudiantes/EstudiantesPreinscritos";
 
 
 const router = createBrowserRouter([
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: "/Preinscribir-estudiante",
         element: <PreinscribirEstudiante />
+      },
+      {
+        path:'/estudiantes-preinscritos',
+        element: <EstudiantesPreinscritos/>
       }
 
     ]

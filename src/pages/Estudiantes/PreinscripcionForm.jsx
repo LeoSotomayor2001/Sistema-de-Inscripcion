@@ -3,10 +3,11 @@ import axios from 'axios';
 import { Button, Typography, MenuItem, Select, FormControl, InputLabel, Box } from '@mui/material';
 import { toast } from 'react-toastify';
 import { useEstudiantes } from '../../Hooks/UseEstudiantes';
+import { useNavigate } from 'react-router-dom';
 
 const PreinscripcionForm = () => {
   const [secciones, setSecciones] = useState([]);
-
+  const navigate=useNavigate();
   const [selectedEstudiante, setSelectedEstudiante] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
   const [selectedSeccion, setSelectedSeccion] = useState('');
@@ -58,6 +59,8 @@ const PreinscripcionForm = () => {
       );
 
       toast.success(response.data.mensaje);
+      navigate('/estudiantes-preinscritos');
+      
     } catch (error) {
       console.error('Error al preinscribir estudiante:', error);
       toast.error(error.response.data.mensaje);
