@@ -107,7 +107,7 @@ export const Index = () => {
           <li>
             <Link
               to={"/registrar-estudiante"}
-              className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out"
+              className="bg-indigo-700 hover:bg-indigo-800 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out"
             >
               Registrar estudiante
             </Link>
@@ -115,7 +115,7 @@ export const Index = () => {
           <li>
             <Link
               to={"/preinscribir-estudiante"}
-              className="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out"
+              className="bg-sky-700 hover:bg-sky-800 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out"
             >
               Preinscribir estudiante
             </Link>

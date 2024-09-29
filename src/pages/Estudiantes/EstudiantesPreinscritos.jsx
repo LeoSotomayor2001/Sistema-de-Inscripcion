@@ -39,12 +39,12 @@ const EstudiantesPreinscritos = () => {
         <TableContainer component={Paper}>
             <Table>
                 <TableHead>
-                    <TableRow>
-                        <TableCell>Nombre</TableCell>
-                        <TableCell>Apellido</TableCell>
-                        <TableCell>Sección</TableCell>
-                        <TableCell>Año</TableCell>
-                        <TableCell>Estado</TableCell>
+                    <TableRow sx={{ backgroundColor: '#4b0082' }}>
+                        <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Nombre</TableCell>
+                        <TableCell sx={{ color: 'white', fontWeight: 'bold'  }}>Apellido</TableCell>
+                        <TableCell sx={{ color: 'white', fontWeight: 'bold'  }}>Sección</TableCell>
+                        <TableCell sx={{ color: 'white' , fontWeight: 'bold' }}>Año</TableCell>
+                        <TableCell sx={{ color: 'white', fontWeight: 'bold'  }}>Estado</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>

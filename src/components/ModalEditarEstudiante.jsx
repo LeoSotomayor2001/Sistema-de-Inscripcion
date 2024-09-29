@@ -42,7 +42,7 @@ export const ModalEditarEstudiante = ({ modalIsOpen, closeModal, estudiante }) =
   const [errors, setErrors] = useState({});
   const token = localStorage.getItem('token');
   const [formData, setFormData] = useState(initialState);
-  const {mostrarEstudiantes,formatDate}= useEstudiantes();
+  const {fetchYearsAndEstudiantes,formatDate}= useEstudiantes();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -83,7 +83,7 @@ export const ModalEditarEstudiante = ({ modalIsOpen, closeModal, estudiante }) =
 
       toast.success(response.data.mensaje);
       closeModal();
-      mostrarEstudiantes();
+      fetchYearsAndEstudiantes();
     }
     catch (error) {
       console.log(error)

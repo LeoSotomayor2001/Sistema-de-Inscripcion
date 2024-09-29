@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 
 
 export const Formulario = () => {
-    
+
     const representante = JSON.parse(localStorage.getItem('representante'));
     const token = localStorage.getItem('token');
     const [errors, setErrors] = useState({});
@@ -18,7 +18,8 @@ export const Formulario = () => {
         name: '',
         apellido: '',
         cedula: '',
-        fecha_nacimiento: '', // Inicializa en formato YYYY-MM-DD para el campo de tipo 'date'
+        fecha_nacimiento: '',
+        image: null,
         representante_id: representante.id
     };
     useEffect(() => {
@@ -39,32 +40,46 @@ export const Formulario = () => {
         }));
     };
 
+    const handleFileChange = (e) => {
+        setFormData((prev) => ({
+            ...prev,
+            image: e.target.files[0], // Guarda el archivo en el estado
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Convertimos la fecha a DD-MM-YYYY antes de enviar los datos
-        const formattedData = {
-            ...formData,
-            fecha_nacimiento: formatDateToDMY(formData.fecha_nacimiento), // Convierte a DD-MM-YYYY antes de enviar
-        };
+        const data = new FormData();
+        data.append('name', formData.name);
+        data.append('apellido', formData.apellido);
+        data.append('cedula', formData.cedula);
+        data.append('representante_id', representante.id);
+        data.append('fecha_nacimiento', formatDateToDMY(formData.fecha_nacimiento));
+        if (formData.image) {
+          data.append('image', formData.image); // Añade el archivo si existe
+        }
 
         try {
             const url = "http://127.0.0.1:8000/api/estudiantes";
-            const response = await axios.post(url, formattedData, {
+            const response = await axios.post(url, data, {
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${token}`
                 }
             });
             console.log(response);
             toast.success(response.data.message);
             setFormData(initialState);
-            setErrors({});       
+            setErrors({});
             navigate('/');
-            
+
         } catch (error) {
-            console.log(error.response.data.errors);
-            setErrors(error.response.data.errors);
+            console.log(error);
+            if (error.response.data.errors) {
+                setErrors(error.response.data.errors);
+                
+            }
             setTimeout(() => {
                 setErrors({});
             }, 2000);
@@ -115,10 +130,17 @@ export const Formulario = () => {
                     name="fecha_nacimiento"
                     value={formData.fecha_nacimiento}
                     onChange={handleChange}
-                    InputLabelProps={{ shrink: true }} 
+                    InputLabelProps={{ shrink: true }}
                     fullWidth
                 />
                 {errors.fecha_nacimiento && <p className='text-red-500'>{errors.fecha_nacimiento[0]}</p>}
+
+                <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                />
+                {errors.image && <p className="text-red-500">{errors.image[0]}</p>}
                 <Button variant="contained" color="info" type="submit">
                     Enviar
                 </Button>

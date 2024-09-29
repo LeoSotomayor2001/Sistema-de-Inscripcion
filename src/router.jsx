@@ -8,6 +8,7 @@ import { Formulario } from "./pages/Estudiantes/Formulario";
 import { Profile } from "./pages/Representantes/Profile";
 import { PreinscribirEstudiante } from "./pages/Representantes/PreinscribirEstudiante";
 import EstudiantesPreinscritos from "./pages/Estudiantes/EstudiantesPreinscritos";
+import { NotFound } from "./pages/NotFound";
 
 
 const router = createBrowserRouter([
@@ -55,7 +56,7 @@ const router = createBrowserRouter([
   },
   {
     path: "*",
-    element: <h1>404</h1>
+    element: <NotFound />
   }
 ])
 
