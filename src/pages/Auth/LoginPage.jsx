@@ -6,7 +6,8 @@ import 'react-toastify/dist/ReactToastify.css';
 export const LoginPage = () => {
     const initialState={
         email: "",
-        password: ""
+        password: "",
+        user_type: "representante"
     }
     const [formData, setFormData] = useState(initialState)
     const [errors, setErrors] = useState({})
@@ -32,13 +33,25 @@ export const LoginPage = () => {
                 }
             });
             const { token } = response.data
-            const { representante } = response.data
-            localStorage.setItem('representante', JSON.stringify(response.data.representante))
-            localStorage.setItem('token', token)
-            toast.success('Bienvenido, ' + representante.name)
-            setTimeout(() => {
-                navigate('/')
-            }, 1500);
+            if(response.data.representante){
+                const { representante } = response.data
+                localStorage.setItem('representante', JSON.stringify(response.data.representante))
+                localStorage.setItem('token', token)
+                toast.success('Bienvenido, ' + representante.name)
+                setTimeout(() => {
+                    navigate('/')
+                }, 1500);
+            }
+            else{
+                const { usuario } = response.data
+                localStorage.setItem('usuario', JSON.stringify(response.data.usuario))
+                localStorage.setItem('token', token)
+                toast.success('Bienvenido, ' + usuario.name)
+                setTimeout(() => {
+                    navigate('/index')
+                }, 1500);
+            }
+            
         } catch (error) {
             if(!error.response){
                 toast.error('Ocurrio un error en el servidor')
@@ -89,6 +102,19 @@ export const LoginPage = () => {
                             value={formData.password}
                         />
                         {errors.password && <p className="text-red-500">{errors.password[0]}</p>}
+                    </div>
+                    <div className="my-2">
+                        <label htmlFor="user_type" className="mb-2 block uppercase font-bold">Tipo de usuario</label>
+                        <select
+                            id="user_type"
+                            name="user_type"
+                            className="border p-3 w-full rounded-lg"
+                            onChange={handleChange}
+                            value={formData.user_type}
+                        >
+                            <option value="representante">Representante</option>
+                            <option value="profesor">Profesor</option>
+                        </select>
                     </div>
                 </div>
                 <input type="submit" value="Entrar" className="bg-indigo-600 w-full p-3 text-white uppercase font-bold rounded-lg hover:bg-indigo-700 cursor-pointer" />

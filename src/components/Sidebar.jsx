@@ -38,7 +38,7 @@ export const Sidebar = () => {
     const cerrarSesion = async () => {
         try {
             const currentToken = localStorage.getItem("token");
-            const response = await axios.post(`${import.meta.env.VITE_API_URL}/logout-representante`, {}, {
+            const response = await axios.post(`${import.meta.env.VITE_API_URL}/logout`, {}, {
                 headers: {
                     Authorization: `Bearer ${currentToken}`
                 }

@@ -9,6 +9,7 @@ import { Profile } from "./pages/Representantes/Profile";
 import { PreinscribirEstudiante } from "./pages/Representantes/PreinscribirEstudiante";
 import EstudiantesPreinscritos from "./pages/Estudiantes/EstudiantesPreinscritos";
 import { NotFound } from "./pages/NotFound";
+import { ProfesorLayout } from "./Layouts/ProfesorLayout";
 
 
 const router = createBrowserRouter([
@@ -38,6 +39,17 @@ const router = createBrowserRouter([
       }
 
     ]
+  },
+  {
+    path: "/index",
+    element: <ProfesorLayout/>,
+    children: [
+      {
+        index: true,
+        element: <h1>Index</h1>
+      }
+    ]
+    
   },
   {
     path: "/auth",
