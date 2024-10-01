@@ -23,10 +23,15 @@ const EstudiantesProvider = ({ children }) => {
   const [loadingSidebar, setloadingSidebar] = useState(true);
   const [representanteObtenido, setRepresentanteObtenido] = useState({});
   const [loading, setLoading] = useState(false);
- 
+  const [pagination, setPagination] = useState({
+    current_page: 1,
+    last_page: 1,
+    per_page: 10,
+    total: 0,
+  });
 
   // Obtener el token desde localStorage
-  const token = localStorage.getItem('token');  
+
 
   // Función para limpiar los datos del estado y del localStorage
   const limpiarTodo = () => {
@@ -39,15 +44,27 @@ const EstudiantesProvider = ({ children }) => {
   };
 
   // Función para obtener los estudiantes
-  const mostrarEstudiantes = async () => {
+  const mostrarEstudiantes = async (page = 1) => {
     setLoading(true);
     try {
-      const url = `${import.meta.env.VITE_API_URL}/estudiantes`;
-      const response = await axios.get(url);
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/estudiantes?page=${page}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // Actualiza los estudiantes
       setListadoEstudiantes(response.data.data);
+      // Actualiza la paginación
+      setPagination({
+        current_page: response.data.meta.current_page,
+        last_page: response.data.meta.last_page,
+        per_page: response.data.meta.per_page,
+        total: response.data.meta.total,
+      });
     } catch (error) {
-      console.error('Error al cargar los estudiantes:', error);
-      toast.error('Error al cargar los estudiantes. Intenta nuevamente.');
+      console.error("Error al obtener los estudiantes:", error);
     } finally {
       setLoading(false);
     }
@@ -127,7 +144,7 @@ const EstudiantesProvider = ({ children }) => {
         formatDate,
         getRepresentante,
         representanteObtenido,
-        token,
+        pagination,
         limpiarTodo,
       }}
     >

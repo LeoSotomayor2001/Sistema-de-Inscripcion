@@ -10,6 +10,7 @@ import { PreinscribirEstudiante } from "./pages/Representantes/PreinscribirEstud
 import EstudiantesPreinscritos from "./pages/Estudiantes/EstudiantesPreinscritos";
 import { NotFound } from "./pages/NotFound";
 import { AdminLayout } from "./Layouts/AdminLayout";
+import { Estudiantes } from "./pages/Admin/Estudiantes";
 
 
 const router = createBrowserRouter([
@@ -50,7 +51,7 @@ const router = createBrowserRouter([
       },
       {
         path: "index/estudiantes",
-        element: <h1>Estudiantes</h1>
+        element: <Estudiantes/>
       },
       {
         path: "index/inscripciones",

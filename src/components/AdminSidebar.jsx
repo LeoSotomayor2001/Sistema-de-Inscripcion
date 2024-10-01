@@ -16,7 +16,6 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import PersonIcon from '@mui/icons-material/Person';
 import ClassIcon from '@mui/icons-material/Class';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import MenuIcon from '@mui/icons-material/Menu';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -62,40 +61,51 @@ export const AdminSidebar = () => {
     const AnotherItems = [
         { text: 'Asignaturas', icon: <InboxIcon />, url: '/asignaturas' },
         { text: 'Notificaciones', icon: <NotificationsIcon />, url: '/notificaciones' },
-        { text: 'Cerrar Sesión', icon: <ExitToAppIcon />, action: handleLogout },
     ];
 
  
 
 
     const DrawerList = (
-        <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
-            <List>
-                {items.map((item) => (
-                    <ListItem key={item.text} disablePadding>
-                        <ListItemButton component={NavLink} to={item.url} >
-                            <ListItemIcon>
-                                {item.icon}
-                            </ListItemIcon>
-                            <ListItemText primary={item.text} />
-                        </ListItemButton>
-                    </ListItem>
-                ))}
-            </List>
-            <Divider />
-            <List>
-                {AnotherItems.map((item) => (
-                    <ListItem key={item.text} disablePadding>
-                    <ListItemButton component={NavLink} to={item.url} onClick={item.action}>
-                      <ListItemIcon>
-                        {item.icon}
-                      </ListItemIcon>
-                      <ListItemText primary={item.text} />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
-            </List>
-        </Box>
+        <Box sx={{ width: 300 }} role="presentation" onClick={toggleDrawer(false)}>
+  
+        {/* Lista de navegación */}
+        <List>
+          {items.map((item) => (
+            <ListItem key={item.text} disablePadding>
+              <ListItemButton component={NavLink} to={item.url}>
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+  
+        <Divider />
+  
+        {/* Otra lista con acciones */}
+        <List>
+          {AnotherItems.map((item) => (
+            <ListItem key={item.text} disablePadding>
+              <ListItemButton component={NavLink} to={item.url} onClick={item.action}>
+                <ListItemIcon>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+  
+        {/* Botón para cerrar sesión */}
+        <div className="px-3 py-4">
+          <button
+            type="button"
+            className="text-xl bg-red-600 text-white font-bold py-2 px-4 rounded w-full hover:bg-red-700 transition-all duration-300 ease-in-out"
+            onClick={handleLogout}
+          >
+            Cerrar sesión
+          </button>
+        </div>
+      </Box>
     );
 
     return (
