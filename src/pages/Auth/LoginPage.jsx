@@ -113,7 +113,7 @@ export const LoginPage = () => {
                             value={formData.user_type}
                         >
                             <option value="representante">Representante</option>
-                            <option value="profesor">Profesor</option>
+                            <option value="administrador">Administrador</option>
                         </select>
                     </div>
                 </div>

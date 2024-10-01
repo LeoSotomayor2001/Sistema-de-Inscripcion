@@ -9,7 +9,7 @@ import { Profile } from "./pages/Representantes/Profile";
 import { PreinscribirEstudiante } from "./pages/Representantes/PreinscribirEstudiante";
 import EstudiantesPreinscritos from "./pages/Estudiantes/EstudiantesPreinscritos";
 import { NotFound } from "./pages/NotFound";
-import { ProfesorLayout } from "./Layouts/ProfesorLayout";
+import { AdminLayout } from "./Layouts/AdminLayout";
 
 
 const router = createBrowserRouter([
@@ -42,11 +42,27 @@ const router = createBrowserRouter([
   },
   {
     path: "/index",
-    element: <ProfesorLayout/>,
+    element: <AdminLayout/>,
     children: [
       {
         index: true,
         element: <h1>Index</h1>
+      },
+      {
+        path: "index/estudiantes",
+        element: <h1>Estudiantes</h1>
+      },
+      {
+        path: "index/inscripciones",
+        element: <h1>Incripciones</h1>
+      },
+      {
+        path: "index/profesores",
+        element: <h1>Profesores</h1>
+      },
+      {
+        path: "index/secciones",
+        element: <h1>Secciones</h1>
       }
     ]
     
