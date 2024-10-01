@@ -12,7 +12,7 @@ const PreinscripcionForm = () => {
   const [selectedYear, setSelectedYear] = useState('');
   const [selectedSeccion, setSelectedSeccion] = useState('');
   const {fetchYearsAndEstudiantes,years,estudiantes}=useEstudiantes();
-  const token = localStorage.getItem('token');
+
 
   // Obtener años y estudiantes en el montaje inicial
   useEffect(() => {
@@ -25,8 +25,14 @@ const PreinscripcionForm = () => {
       setSelectedSeccion(''); // Restablece la sección seleccionada al cambiar de año
       const fetchSecciones = async () => {
         try {
+          const token = localStorage.getItem('token');
           const response = await axios.get(
-            `${import.meta.env.VITE_API_URL}/secciones?year_id=${selectedYear}`
+            `${import.meta.env.VITE_API_URL}/secciones?year_id=${selectedYear}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
           );
           setSecciones(response.data);
         } catch (error) {
@@ -44,6 +50,7 @@ const PreinscripcionForm = () => {
 
   const handlePreinscripcion = async () => {
     try {
+      const token = localStorage.getItem('token');
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/inscripciones`,
         {

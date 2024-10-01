@@ -142,7 +142,7 @@ export const Formulario = () => {
                 />
                 {errors.image && <p className="text-red-500">{errors.image[0]}</p>}
                 <Button variant="contained" color="info" type="submit">
-                    Enviar
+                    Registrar
                 </Button>
             </Box>
         </div>

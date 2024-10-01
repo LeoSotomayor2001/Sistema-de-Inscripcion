@@ -4,10 +4,11 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { Spinner } from "../../components/Spinner";
 
 export const Estudiantes = () => {
-    const { mostrarEstudiantes, listadoEstudiantes, loading,pagination } = useEstudiantes();
+    const { mostrarEstudiantes, listadoEstudiantes, loading,pagination,formatDate } = useEstudiantes();
 
     useEffect(() => {
         mostrarEstudiantes();
+        listadoEstudiantes.fecha_nacimiento = formatDate(listadoEstudiantes.fecha_nacimiento);
     }, []);
 
     const handlePageChange = (newPage) => {
@@ -48,7 +49,7 @@ export const Estudiantes = () => {
                             <TableCell>{estudiante.name}</TableCell>
                             <TableCell>{estudiante.apellido}</TableCell>
                             <TableCell>{estudiante.cedula}</TableCell>
-                            <TableCell>{estudiante.fecha_nacimiento}</TableCell>
+                            <TableCell>{formatDate(estudiante.fecha_nacimiento)}</TableCell>
                             <TableCell>
                                 {estudiante.representante
                                     ? `${estudiante.representante.name} ${estudiante.representante.apellido}`

@@ -11,6 +11,7 @@ import EstudiantesPreinscritos from "./pages/Estudiantes/EstudiantesPreinscritos
 import { NotFound } from "./pages/NotFound";
 import { AdminLayout } from "./Layouts/AdminLayout";
 import { Estudiantes } from "./pages/Admin/Estudiantes";
+import { Secciones } from "./pages/Admin/Secciones";
 
 
 const router = createBrowserRouter([
@@ -63,7 +64,7 @@ const router = createBrowserRouter([
       },
       {
         path: "index/secciones",
-        element: <h1>Secciones</h1>
+        element: <Secciones/>
       }
     ]
     
