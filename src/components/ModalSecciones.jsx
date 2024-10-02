@@ -9,14 +9,18 @@ Modal.setAppElement('#root');
 
 const customStyles = {
   content: {
+    position: 'absolute',
     top: '50%',
     left: '50%',
     right: 'auto',
     bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
+    transform: 'translate(-50%, -150%)', // Comienza fuera de la pantalla verticalmente
     width: '80%',
     maxWidth: '600px',
+    transition: 'transform 0.5s ease-out', // Animación suave en 'transform'
+  },
+  contentOpen: {
+    transform: 'translate(-50%, -50%)', // Se mueve al centro de la pantalla
   },
 };
 
@@ -118,7 +122,9 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
     <Modal
       isOpen={modalIsOpen}
       onRequestClose={closeModal}
-      style={customStyles}
+       style={{
+        content: modalIsOpen ? { ...customStyles.content, ...customStyles.contentOpen } : customStyles.content,
+      }}
       contentLabel={isEdit ? 'Editar Sección' : 'Crear Sección'}
     >
       <h2 className="text-center text-2xl font-bold my-2">{isEdit ? 'Editar Sección' : 'Crear Sección'}</h2>

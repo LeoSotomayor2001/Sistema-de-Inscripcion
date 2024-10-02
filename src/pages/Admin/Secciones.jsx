@@ -7,102 +7,140 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Spinner } from "../../components/Spinner";
 import { ModalSecciones } from "../../components/ModalSecciones";
 import { useEstudiantes } from "../../Hooks/UseEstudiantes";
+import axios from "axios";
+import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 export const Secciones = () => {
     const [modalIsOpen, setIsOpen] = useState(false);
     const [seccionSeleccionada, setSeccionSeleccionada] = useState(null);
-    const {getSecciones, secciones, loading} = useEstudiantes();
-   
-    const openModal = (seccion=null) => {
+    const { getSecciones, secciones, loading } = useEstudiantes();
+
+    const openModal = (seccion = null) => {
         setSeccionSeleccionada(seccion);
         setIsOpen(true);
-      };
-    
-      const closeModal = () => {
-          setIsOpen(false);
-          setSeccionSeleccionada(null);
-      };
+    };
+
+    const closeModal = () => {
+        setIsOpen(false);
+        setSeccionSeleccionada(null);
+    };
 
     useEffect(() => {
         document.title = 'Secciones';
         getSecciones();
     }, []);
 
+    const deleteSeccion = async (id) => {
+        // Eliminar seccion
+        const resultado = await Swal.fire({
+            title: '¿Estás seguro?',
+            text: 'Esta acción no se puede deshacer.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+        });
+        if (resultado.isConfirmed) {
+            try {
+                const token = localStorage.getItem('token');
+                const response= await axios.delete(`${import.meta.env.VITE_API_URL}/secciones/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                toast.success(response.data);
+                getSecciones();
+            } catch (error) {
+                console.error(error);
+                if (error.response.data.error) {
+                    toast.error(error.response.data.error);
+                }
+                else{
+                    toast.error('Error al eliminar la sección');
+
+                }
+            }
+        }
+    };
+
     if (loading) {
         return <Spinner />
     }
     return (
         <>
-        <header>
-            <Typography variant="h5" sx={{ textAlign: 'center', marginTop: 2 }}>Secciones</Typography>
-            <Typography variant="subtitle1" sx={{ textAlign: 'center', marginTop: 1 }}>Agregue, edite o elimine las secciones</Typography>
-            <Button variant="contained" sx={{ margin: 'auto', marginTop: 2 }} startIcon={<AddIcon/>} onClick={() => openModal()}>
-                Agregar nueva sección
-            </Button>
-            
+            <header>
+                <Typography variant="h5" sx={{ textAlign: 'center', marginTop: 2 }}>Secciones</Typography>
+                <Typography variant="subtitle1" sx={{ textAlign: 'center', marginTop: 1 }}>Agregue, edite o elimine las secciones</Typography>
+                <Button variant="contained" sx={{ margin: 'auto', marginTop: 2 }} startIcon={<AddIcon />} onClick={() => openModal()}>
+                    Agregar nueva sección
+                </Button>
 
-        </header>
 
-        <TableContainer component={Paper} sx={{ width: '90%', margin: 'auto', marginTop: 2 }}>
-        <Table>
-            <TableHead>
-                <TableRow sx={{ backgroundColor: '#4b0082' }}>
-                    <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Año</TableCell>
-                    <TableCell sx={{ color: 'white', fontWeight: 'bold', }}>Nombre</TableCell>
-                    <TableCell sx={{ color: 'white', fontWeight: 'bold',  }}>Capacidad</TableCell>
-                    <TableCell sx={{ color: 'white', fontWeight: 'bold',  }}>Estudiantes preinscritos</TableCell>
-                    <TableCell sx={{ color: 'white', fontWeight: 'bold',  }}>Estudiantes inscritos</TableCell>
-                    <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Acciones</TableCell>
-                </TableRow>
-            </TableHead>
-            <TableBody>
-                {secciones.length > 0 ? (
-                    secciones.map((seccion, index) => (
-                        <TableRow key={index} sx={{ backgroundColor: index % 2 === 0 ? 'grey.200' : 'white' }}>
-                            <TableCell sx={{ fontWeight: 'bold' }}>{seccion.año}</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>{seccion.nombre}</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold' }}>{seccion.capacidad}</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold', width: '100px', fontSize: '0.875rem' }}>{seccion.estudiantes_preinscritos}</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold', width: '100px', fontSize: '0.875rem' }}>{seccion.estudiantes_inscritos}</TableCell>
-                            <TableCell sx={{ fontWeight: 'bold', display: 'flex', gap: 2, justifyContent: 'center' }}>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    size="small"
-                                    onClick={() => openModal(seccion)}
-                                    title="Editar sección"
-                                >
-                                    <EditIcon />
-                                </Button>
-                                <Button
-                                    variant="contained"
-                                    color="error"
-                                    size="small"
-                                    onClick={() => console.log("Eliminar")}
-                                    title="Eliminar sección"
-                                >
-                                    <DeleteIcon />
-                                </Button>
-                            </TableCell>
+            </header>
+
+            <TableContainer component={Paper} sx={{ width: '90%', margin: 'auto', marginTop: 2 }}>
+                <Table>
+                    <TableHead>
+                        <TableRow sx={{ backgroundColor: '#4b0082' }}>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Año</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold', }}>Nombre</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold', }}>Capacidad</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold', }}>Estudiantes preinscritos</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold', }}>Estudiantes inscritos</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Acciones</TableCell>
                         </TableRow>
-                    ))
-                ) : (
-                    <TableRow>
-                        <TableCell colSpan={6} align="center">
-                            <Typography variant="h6" color="textSecondary">
-                                No hay secciones registradas.
-                            </Typography>
-                        </TableCell>
-                    </TableRow>
-                )}
-            </TableBody>
-        </Table>
-    </TableContainer>
-    <ModalSecciones
-        modalIsOpen={modalIsOpen}
-        closeModal={closeModal}
-        seccion={seccionSeleccionada}
-    
-    />
-    </>
+                    </TableHead>
+                    <TableBody>
+                        {secciones.length > 0 ? (
+                            secciones.map((seccion, index) => (
+                                <TableRow key={index} sx={{ backgroundColor: index % 2 === 0 ? 'grey.200' : 'white' }}>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>{seccion.año}</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>{seccion.nombre}</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>{seccion.capacidad}</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold', width: '100px', fontSize: '0.875rem' }}>{seccion.estudiantes_preinscritos}</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold', width: '100px', fontSize: '0.875rem' }}>{seccion.estudiantes_inscritos}</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold', display: 'flex', gap: 2, justifyContent: 'center' }}>
+                                        <Button
+                                            variant="contained"
+                                            color="primary"
+                                            size="small"
+                                            onClick={() => openModal(seccion)}
+                                            title="Editar sección"
+                                        >
+                                            <EditIcon />
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="error"
+                                            size="small"
+                                            onClick={() => deleteSeccion(seccion.id)}
+                                            title="Eliminar sección"
+                                        >
+                                            <DeleteIcon />
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={6} align="center">
+                                    <Typography variant="h6" color="textSecondary">
+                                        No hay secciones registradas.
+                                    </Typography>
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <ModalSecciones
+                modalIsOpen={modalIsOpen}
+                closeModal={closeModal}
+                seccion={seccionSeleccionada}
+
+            />
+        </>
     )
 }
