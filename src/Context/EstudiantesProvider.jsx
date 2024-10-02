@@ -23,6 +23,7 @@ const EstudiantesProvider = ({ children }) => {
   const [loadingSidebar, setloadingSidebar] = useState(true);
   const [representanteObtenido, setRepresentanteObtenido] = useState({});
   const [loading, setLoading] = useState(false);
+  const [secciones, setSecciones] = useState([]);
   const [pagination, setPagination] = useState({
     current_page: 1,
     last_page: 1,
@@ -130,6 +131,29 @@ const EstudiantesProvider = ({ children }) => {
       setLoading(false);
     }
   };
+  const getSecciones = async () => {
+    setLoading(true)
+    try {
+        
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+            `${import.meta.env.VITE_API_URL}/secciones`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        setSecciones(response.data);
+    } catch (error) {
+        console.error(error);
+        toast.error("Error al obtener las secciones");
+    }
+    finally {
+        setLoading(false)
+    }
+}
 
   return (
     <EstudiantesContext.Provider
@@ -146,6 +170,8 @@ const EstudiantesProvider = ({ children }) => {
         representanteObtenido,
         pagination,
         limpiarTodo,
+        getSecciones,
+        secciones
       }}
     >
       {children}

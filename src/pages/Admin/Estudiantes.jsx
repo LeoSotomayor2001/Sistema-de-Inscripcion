@@ -24,7 +24,7 @@ export const Estudiantes = () => {
     return (
         <>
         <TableContainer component={Paper}>
-            <Table>
+            <Table >
                 <TableHead>
                     <TableRow sx={{ backgroundColor: '#4b0082' }}>
                         <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Foto</TableCell>

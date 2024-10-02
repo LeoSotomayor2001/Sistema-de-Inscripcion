@@ -1,36 +1,29 @@
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import axios from "axios";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+
 import { Spinner } from "../../components/Spinner";
+import { ModalSecciones } from "../../components/ModalSecciones";
+import { useEstudiantes } from "../../Hooks/UseEstudiantes";
 export const Secciones = () => {
-    const token = localStorage.getItem("token");
-    const [secciones, setSecciones] = useState([]);
-    const [loading, setLoading] = useState(true)
-    const getSecciones = async () => {
-        try {
-
-            const response = await axios.get(
-                `${import.meta.env.VITE_API_URL}/secciones`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            setSecciones(response.data);
-        } catch (error) {
-            console.error(error);
-            toast.error("Error al obtener las secciones");
-        }
-        finally {
-            setLoading(false)
-        }
-    }
+    const [modalIsOpen, setIsOpen] = useState(false);
+    const [seccionSeleccionada, setSeccionSeleccionada] = useState(null);
+    const {getSecciones, secciones, loading} = useEstudiantes();
+   
+    const openModal = (seccion=null) => {
+        setSeccionSeleccionada(seccion);
+        setIsOpen(true);
+      };
+    
+      const closeModal = () => {
+          setIsOpen(false);
+          setSeccionSeleccionada(null);
+      };
 
     useEffect(() => {
+        document.title = 'Secciones';
         getSecciones();
     }, []);
 
@@ -42,14 +35,14 @@ export const Secciones = () => {
         <header>
             <Typography variant="h5" sx={{ textAlign: 'center', marginTop: 2 }}>Secciones</Typography>
             <Typography variant="subtitle1" sx={{ textAlign: 'center', marginTop: 1 }}>Agregue, edite o elimine las secciones</Typography>
-            <Button variant="contained" sx={{ margin: 'auto', marginTop: 2 }} startIcon={<AddIcon/>}>
+            <Button variant="contained" sx={{ margin: 'auto', marginTop: 2 }} startIcon={<AddIcon/>} onClick={() => openModal()}>
                 Agregar nueva sección
             </Button>
             
 
         </header>
 
-        <TableContainer component={Paper} sx={{ width: '80%', margin: 'auto', marginTop: 2 }}>
+        <TableContainer component={Paper} sx={{ width: '90%', margin: 'auto', marginTop: 2 }}>
         <Table>
             <TableHead>
                 <TableRow sx={{ backgroundColor: '#4b0082' }}>
@@ -76,16 +69,18 @@ export const Secciones = () => {
                                     color="primary"
                                     size="small"
                                     onClick={() => console.log("Editar")}
+                                    title="Editar sección"
                                 >
-                                    Editar
+                                    <EditIcon />
                                 </Button>
                                 <Button
                                     variant="contained"
                                     color="error"
                                     size="small"
                                     onClick={() => console.log("Eliminar")}
+                                    title="Eliminar sección"
                                 >
-                                    Eliminar
+                                    <DeleteIcon />
                                 </Button>
                             </TableCell>
                         </TableRow>
@@ -102,6 +97,12 @@ export const Secciones = () => {
             </TableBody>
         </Table>
     </TableContainer>
+    <ModalSecciones
+        modalIsOpen={modalIsOpen}
+        closeModal={closeModal}
+        seccion={seccionSeleccionada}
+    
+    />
     </>
     )
 }
