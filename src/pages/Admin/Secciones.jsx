@@ -68,7 +68,7 @@ export const Secciones = () => {
                                     variant="contained"
                                     color="primary"
                                     size="small"
-                                    onClick={() => console.log("Editar")}
+                                    onClick={() => openModal(seccion)}
                                     title="Editar sección"
                                 >
                                     <EditIcon />

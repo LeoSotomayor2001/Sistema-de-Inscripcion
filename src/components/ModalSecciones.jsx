@@ -1,4 +1,4 @@
-import  { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
 import { toast } from 'react-toastify';
@@ -26,7 +26,7 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
   const [capacidad, setCapacidad] = useState('');
   const [yearId, setYearId] = useState('');
   const [errors, setErrors] = useState({});
-  const { getSecciones} = useEstudiantes();
+  const { getSecciones } = useEstudiantes();
   // Manejo de estado para saber si es edición o creación
   const isEdit = Boolean(seccion);
 
@@ -48,9 +48,10 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
   useEffect(() => {
     if (isEdit && seccion) {
       // Cargar datos de la sección a editar
+
       setNombre(seccion.nombre);
       setCapacidad(seccion.capacidad);
-      setYearId(seccion.year_id);
+      setYearId(seccion.año);
     } else {
       // Si es creación, limpiar el formulario
       setNombre('');
@@ -61,7 +62,7 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
   }, [seccion]);
 
   useEffect(() => {
-    fetchYears();   
+    fetchYears();
   }, []);
 
   const handleSubmit = async (e) => {
@@ -83,6 +84,7 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
           },
         });
         toast.success('Sección actualizada con éxito');
+
       } else {
         // Crear nueva sección
         await axios.post(`${import.meta.env.VITE_API_URL}/secciones`, formData, {
@@ -91,20 +93,23 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
           },
         });
         toast.success('Sección creada con éxito');
-        getSecciones();
       }
+      getSecciones();
       closeModal();
     } catch (error) {
       console.error(error);
-      if(error.response.data) {
-          setErrors(error.response.data || {});
-          
-          setTimeout(() => {
-            setErrors({});
-          }, 2000);
+      if (error.response.data) {
+        setErrors(error.response.data || {});
+
+        setTimeout(() => {
+          setErrors({});
+        }, 2000);
       }
       else {
-      toast.error('Error al guardar la sección');
+        toast.error('Error al guardar la sección');
+      }
+      if(error.response.data.error){
+        toast.error(error.response.data.error);
       }
     }
   };
@@ -118,59 +123,59 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
     >
       <h2 className="text-center text-2xl font-bold my-2">{isEdit ? 'Editar Sección' : 'Crear Sección'}</h2>
       <form onSubmit={handleSubmit} noValidate>
-      <Box mb={3}>
-        <TextField
-          fullWidth
-          label="Nombre de la Sección"
-          variant="outlined"
-          value={nombre}
-          onChange={(e) => setNombre(e.target.value)}
-          
-        />
-        {errors?.name && <p className="text-red-500">{errors.name}</p>}
-      </Box>
-      <Box mb={3}>
-        <TextField
-          fullWidth
-          label="Capacidad"
-          variant="outlined"
-          type="number"
-          value={capacidad}
-          onChange={(e) => setCapacidad(e.target.value)}
-          
-        />
-      </Box>
+        <Box mb={3}>
+          <TextField
+            fullWidth
+            label="Nombre de la Sección"
+            variant="outlined"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+
+          />
+          {errors?.name && <p className="text-red-500">{errors.name}</p>}
+        </Box>
+        <Box mb={3}>
+          <TextField
+            fullWidth
+            label="Capacidad"
+            variant="outlined"
+            type="number"
+            value={capacidad}
+            onChange={(e) => setCapacidad(e.target.value)}
+
+          />
+        </Box>
         {errors?.capacidad && <p className="text-red-500">{errors.capacidad}</p>}
-      <Box mb={3}>
-        <TextField
-          fullWidth
-          select
-          label="Año Académico"
-          value={yearId}
-          onChange={(e) => setYearId(e.target.value)}
-          variant="outlined"
-          
-        >
-          <MenuItem value="">
-            <em>Seleccione un año académico</em>
-          </MenuItem>
-          {years.map((year) => (
-            <MenuItem key={year.id} value={year.id}>
-              {year.year} - {year.descripcion}
+        <Box mb={3}>
+          <TextField
+            fullWidth
+            select
+            label="Año Académico"
+            value={yearId}
+            onChange={(e) => setYearId(e.target.value)}
+            variant="outlined"
+
+          >
+            <MenuItem value="">
+              <em>Seleccione un año académico</em>
             </MenuItem>
-          ))}
-        </TextField>
-        {errors?.year_id && <p className="text-red-500">{errors.year_id}</p>}
-      </Box>
-      <Box display="flex" justifyContent="flex-end">
-        <Button onClick={closeModal} variant="outlined" sx={{ mr: 2 }}>
-          Cancelar
-        </Button>
-        <Button type="submit" variant="contained" color="primary">
-          {isEdit ? 'Actualizar' : 'Crear'}
-        </Button>
-      </Box>
-    </form>
+            {years.map((year) => (
+              <MenuItem key={year.id} value={year.id}>
+                {year.year} - {year.descripcion}
+              </MenuItem>
+            ))}
+          </TextField>
+          {errors?.year_id && <p className="text-red-500">{errors.year_id}</p>}
+        </Box>
+        <Box display="flex" justifyContent="flex-end">
+          <Button onClick={closeModal} variant="outlined" sx={{ mr: 2 }}>
+            Cancelar
+          </Button>
+          <Button type="submit" variant="contained" color="primary">
+            {isEdit ? 'Actualizar' : 'Crear'}
+          </Button>
+        </Box>
+      </form>
     </Modal>
   );
 };

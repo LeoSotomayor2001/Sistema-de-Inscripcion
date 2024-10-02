@@ -20,7 +20,9 @@ export const AdminLayout = () => {
     if(token && !usuario){
       navigate("/");
     }
+
   }, []);
+  
 
   return (
     <div className="md:flex bg-gray-100 overflow-hidden">

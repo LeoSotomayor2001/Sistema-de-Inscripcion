@@ -131,7 +131,7 @@ const PreinscripcionForm = () => {
         >
           {secciones.map((seccion) => (
             <MenuItem key={seccion.id} value={seccion.id}>
-              {seccion.name} (Cupos: {seccion.capacidad})
+              {seccion.name} -  ({'Cupos disponibles: '+ seccion.capacidad})
             </MenuItem>
           ))}
         </Select>
