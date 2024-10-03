@@ -8,7 +8,7 @@ export const Estudiantes = () => {
 
     useEffect(() => {
         mostrarEstudiantes();
-        listadoEstudiantes.fecha_nacimiento = formatDate(listadoEstudiantes.fecha_nacimiento);
+        document.title = "Estudiantes";
     }, []);
 
     const handlePageChange = (newPage) => {

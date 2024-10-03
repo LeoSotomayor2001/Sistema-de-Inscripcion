@@ -24,6 +24,7 @@ const EstudiantesProvider = ({ children }) => {
   const [representanteObtenido, setRepresentanteObtenido] = useState({});
   const [loading, setLoading] = useState(false);
   const [secciones, setSecciones] = useState([]);
+  const [listadoProfesores, setListadoProfesores] = useState([]);
   const [pagination, setPagination] = useState({
     current_page: 1,
     last_page: 1,
@@ -70,6 +71,27 @@ const EstudiantesProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
+  const getProfesores = async () => {
+    setLoading(true);
+    const url="http://127.0.0.1:8000/api/users";
+    try{
+        const token = localStorage.getItem('token');
+        const response = await axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        console.log(response.data.data);
+        setListadoProfesores(response.data.data);
+    }
+    catch(error){
+        console.log(error);
+    }
+    finally{
+        setLoading(false);
+    }
+}
 
   // Función para obtener el representante
   const getRepresentante = async () => {
@@ -171,6 +193,8 @@ const EstudiantesProvider = ({ children }) => {
         pagination,
         limpiarTodo,
         getSecciones,
+        listadoProfesores,
+        getProfesores,
         secciones
       }}
     >

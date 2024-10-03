@@ -12,6 +12,7 @@ import { NotFound } from "./pages/NotFound";
 import { AdminLayout } from "./Layouts/AdminLayout";
 import { Estudiantes } from "./pages/Admin/Estudiantes";
 import { Secciones } from "./pages/Admin/Secciones";
+import { Profesores } from "./pages/Admin/Profesores";
 
 
 const router = createBrowserRouter([
@@ -60,7 +61,7 @@ const router = createBrowserRouter([
       },
       {
         path: "index/profesores",
-        element: <h1>Profesores</h1>
+        element: <Profesores/>
       },
       {
         path: "index/secciones",
