@@ -44,7 +44,7 @@ export const ModalProfesores = ({ modalIsOpen, closeModal, profesor = null }) =>
             setApellido(apellido || '');
             setCedula(cedula || '');
             setEmail(email || '');
-            setAdmin(profesor.admin === 1); // Convierte 1 a true, 0 a false
+            setAdmin(admin === 1); // Convierte 1 a true, 0 a false
         } else {
             setNombre('');
             setApellido('');
@@ -75,7 +75,7 @@ export const ModalProfesores = ({ modalIsOpen, closeModal, profesor = null }) =>
             admin
         }
     
-        const url = isEdit ? `http://127.0.0.1:8000/api/users/${profesor.id}` : 'http://127.0.0.1:8000/api/users';
+        const url = isEdit ? `${import.meta.env.VITE_API_URL}/users/${profesor.id}` : `${import.meta.env.VITE_API_URL}/users`;
         try {
             if (isEdit) {
                 // Editar profesor (sin incluir contraseñas)
