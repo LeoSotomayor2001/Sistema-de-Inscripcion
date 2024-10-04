@@ -45,31 +45,31 @@ const router = createBrowserRouter([
   },
   {
     path: "/index",
-    element: <AdminLayout/>,
+    element: <AdminLayout />,
     children: [
       {
         index: true,
         element: <h1>Index</h1>
       },
       {
-        path: "index/estudiantes",
-        element: <Estudiantes/>
+        path: "estudiantes",
+        element: <Estudiantes />
       },
       {
-        path: "index/inscripciones",
-        element: <h1>Incripciones</h1>
+        path: "inscripciones",
+        element: <h1>Inscripciones</h1>
       },
       {
-        path: "index/profesores",
-        element: <Profesores/>
+        path: "profesores",
+        element: <Profesores />
       },
       {
-        path: "index/secciones",
-        element: <Secciones/>
+        path: "secciones",
+        element: <Secciones />
       }
     ]
-    
   },
+  
   {
     path: "/auth",
     element: <AuthLayout />,

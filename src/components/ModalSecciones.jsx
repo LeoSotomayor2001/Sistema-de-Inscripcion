@@ -78,7 +78,6 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
       capacidad,
       year_id: yearId,
     };
-    console.log(formData)
     try {
       if (isEdit) {
         // Editar sección

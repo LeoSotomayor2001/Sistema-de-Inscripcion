@@ -82,7 +82,6 @@ const EstudiantesProvider = ({ children }) => {
                 Authorization: `Bearer ${token}`
             }
         });
-        console.log(response.data.data);
         setListadoProfesores(response.data.data);
     }
     catch(error){

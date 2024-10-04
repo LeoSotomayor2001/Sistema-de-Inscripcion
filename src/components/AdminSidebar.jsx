@@ -52,10 +52,10 @@ export const AdminSidebar = () => {
     };
     const items = [
         { text: 'Inicio', icon: <HomeIcon />, url: '/index' },
-        { text: 'Estudiantes', icon: <SchoolIcon />, url: 'index/estudiantes' },
-        { text: 'Inscripciones', icon: <AssignmentIcon />, url: 'index/inscripciones' },
-        { text: 'Profesores', icon: <PersonIcon />, url: 'index/profesores' },
-        { text: 'Secciones', icon: <ClassIcon />,url: 'index/secciones' },
+        { text: 'Estudiantes', icon: <SchoolIcon />, url: 'estudiantes' },
+        { text: 'Inscripciones', icon: <AssignmentIcon />, url: 'inscripciones' },
+        { text: 'Profesores', icon: <PersonIcon />, url: 'profesores' },
+        { text: 'Secciones', icon: <ClassIcon />,url: 'secciones' },
     ];
 
     const AnotherItems = [
