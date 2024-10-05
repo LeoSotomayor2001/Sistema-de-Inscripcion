@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
 import { toast } from 'react-toastify';
 import { Spinner } from '../../components/Spinner';
+import { TablaEstudiantesPreinscritos } from '../../components/TablaEstudiantesPreinscritos';
 
 const EstudiantesPreinscritos = () => {
     const [inscripciones, setInscripciones] = useState([]);
@@ -37,42 +37,7 @@ const EstudiantesPreinscritos = () => {
     }
 
     return (
-        <TableContainer component={Paper}>
-            <Table>
-                <TableHead>
-                    <TableRow sx={{ backgroundColor: '#4b0082' }}>
-                        <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Nombre</TableCell>
-                        <TableCell sx={{ color: 'white', fontWeight: 'bold'  }}>Apellido</TableCell>
-                        <TableCell sx={{ color: 'white', fontWeight: 'bold'  }}>Sección</TableCell>
-                        <TableCell sx={{ color: 'white' , fontWeight: 'bold' }}>Año</TableCell>
-                        <TableCell sx={{ color: 'white' , fontWeight: 'bold' }}>Periodo escolar</TableCell>
-                        <TableCell sx={{ color: 'white', fontWeight: 'bold'  }}>Estado</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {inscripciones.length > 0 ? (
-                        inscripciones.map((inscripcion, index) => (
-                            <TableRow key={index}>
-                                <TableCell>{inscripcion.nombre}</TableCell>
-                                <TableCell>{inscripcion.apellido}</TableCell>
-                                <TableCell>{inscripcion.seccion}</TableCell>
-                                <TableCell>{inscripcion.año}</TableCell>
-                                <TableCell>{inscripcion.ano_escolar}</TableCell>
-                                <TableCell>{inscripcion.estado}</TableCell>
-                            </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell colSpan={5} align="center">
-                                <Typography variant="h6" color="textSecondary">
-                                    No hay estudiantes preinscritos.
-                                </Typography>
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <TablaEstudiantesPreinscritos inscripciones={inscripciones} />
     );
 };
 

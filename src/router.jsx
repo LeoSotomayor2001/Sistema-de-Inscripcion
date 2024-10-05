@@ -13,6 +13,7 @@ import { AdminLayout } from "./Layouts/AdminLayout";
 import { Estudiantes } from "./pages/Admin/Estudiantes";
 import { Secciones } from "./pages/Admin/Secciones";
 import { Profesores } from "./pages/Admin/Profesores";
+import { EstudiantesPreinscritosPage } from "./pages/Admin/EstudiantesPreinscritosPage";
 
 
 const router = createBrowserRouter([
@@ -57,7 +58,7 @@ const router = createBrowserRouter([
       },
       {
         path: "inscripciones",
-        element: <h1>Inscripciones</h1>
+        element: <EstudiantesPreinscritosPage/>
       },
       {
         path: "profesores",
