@@ -25,6 +25,7 @@ const EstudiantesProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [secciones, setSecciones] = useState([]);
   const [listadoProfesores, setListadoProfesores] = useState([]);
+  const [anosEscolares, setAnosEscolares] = useState([]);
   const [pagination, setPagination] = useState({
     current_page: 1,
     last_page: 1,
@@ -71,6 +72,25 @@ const EstudiantesProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
+  const getAnosEscolares=()=>{
+    const token=localStorage.getItem('token');
+    const url=`${import.meta.env.VITE_API_URL}/anos-escolares`;
+
+    try{
+      axios.get(url,{
+        headers:{
+          Authorization:`Bearer ${token}`
+        }
+      })
+      .then((response)=>{
+        setAnosEscolares(response.data);
+      })
+    }
+    catch(error){
+      console.log(error);
+    }
+  }
 
   const getProfesores = async () => {
     setLoading(true);
@@ -194,7 +214,10 @@ const EstudiantesProvider = ({ children }) => {
         getSecciones,
         listadoProfesores,
         getProfesores,
-        secciones
+        secciones,
+        getAnosEscolares,
+        anosEscolares,
+
       }}
     >
       {children}

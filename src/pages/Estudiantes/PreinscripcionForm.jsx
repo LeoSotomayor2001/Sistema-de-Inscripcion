@@ -11,12 +11,14 @@ const PreinscripcionForm = () => {
   const [selectedEstudiante, setSelectedEstudiante] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
   const [selectedSeccion, setSelectedSeccion] = useState('');
-  const {fetchYearsAndEstudiantes,years,estudiantes}=useEstudiantes();
-
+  const {fetchYearsAndEstudiantes,years,estudiantes,getAnosEscolares,anosEscolares}=useEstudiantes();
+  
+  const [selectedAnoEscolar, setSelectedAnoEscolar] = useState('');
 
   // Obtener años y estudiantes en el montaje inicial
   useEffect(() => {
     fetchYearsAndEstudiantes();
+    getAnosEscolares();
   }, []);
 
   // Obtener las secciones según el año seleccionado
@@ -57,6 +59,7 @@ const PreinscripcionForm = () => {
           estudiante_id: selectedEstudiante,
           year_id: selectedYear,
           seccion_id: selectedSeccion,
+          ano_escolar_id: selectedAnoEscolar,
         },
         {
           headers: {
@@ -137,6 +140,23 @@ const PreinscripcionForm = () => {
         </Select>
       </FormControl>
 
+      <FormControl fullWidth margin="normal">
+        <InputLabel id="ano-escolar-label">Año Escolar</InputLabel>
+        <Select
+          labelId="ano-escolar-label"
+          label="Año Escolar"
+          value={selectedAnoEscolar}
+          onChange={(e) => setSelectedAnoEscolar(e.target.value)}
+        >
+          {anosEscolares.map((ano) => (
+            <MenuItem key={ano.id} value={ano.id}>
+              {ano.nombre}
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
+      
+
       {/* Botón de preinscripción */}
       <Button
         variant="contained"
@@ -144,7 +164,7 @@ const PreinscripcionForm = () => {
         fullWidth
         sx={{ mt: 3 }}
         onClick={handlePreinscripcion}
-        disabled={!selectedEstudiante || !selectedYear || !selectedSeccion}
+        disabled={!selectedEstudiante || !selectedYear || !selectedSeccion || !selectedAnoEscolar}
       >
         Preinscribir Estudiante
       </Button>

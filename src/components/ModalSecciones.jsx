@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
-import { TextField, Button, MenuItem, Box } from '@mui/material';
+import { TextField, Button, MenuItem, Box, FormControl, InputLabel, Select } from '@mui/material';
 import { useEstudiantes } from '../Hooks/UseEstudiantes';
 Modal.setAppElement('#root');
 
@@ -30,7 +30,9 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
   const [capacidad, setCapacidad] = useState('');
   const [yearId, setYearId] = useState('');
   const [errors, setErrors] = useState({});
-  const { getSecciones } = useEstudiantes();
+    
+  const [selectedAnoEscolar, setSelectedAnoEscolar] = useState('');
+  const { getSecciones, getAnosEscolares, anosEscolares } = useEstudiantes();
   // Manejo de estado para saber si es edición o creación
   const isEdit = Boolean(seccion);
 
@@ -52,20 +54,21 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
   useEffect(() => {
     if (isEdit && seccion) {
       // Cargar datos de la sección a editar
-
       setNombre(seccion.nombre);
       setCapacidad(seccion.capacidad);
       setYearId(seccion.año);
+      setSelectedAnoEscolar(seccion.ano_escolar);
     } else {
       // Si es creación, limpiar el formulario
       setNombre('');
       setCapacidad('');
       setYearId('');
+      setSelectedAnoEscolar('');
     }
-
   }, [seccion]);
 
   useEffect(() => {
+    getAnosEscolares();
     fetchYears();
   }, []);
 
@@ -77,7 +80,9 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
       name: nombre,
       capacidad,
       year_id: yearId,
+      ano_escolar_id: selectedAnoEscolar,
     };
+    console.log(formData);
     try {
       if (isEdit) {
         // Editar sección
@@ -111,7 +116,7 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
       else {
         toast.error('Error al guardar la sección');
       }
-      if(error.response.data.error){
+      if (error.response.data.error) {
         toast.error(error.response.data.error);
       }
     }
@@ -121,7 +126,7 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
     <Modal
       isOpen={modalIsOpen}
       onRequestClose={closeModal}
-       style={{
+      style={{
         content: modalIsOpen ? { ...customStyles.content, ...customStyles.contentOpen } : customStyles.content,
       }}
       contentLabel={isEdit ? 'Editar Sección' : 'Crear Sección'}
@@ -172,6 +177,22 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
           </TextField>
           {errors?.year_id && <p className="text-red-500">{errors.year_id}</p>}
         </Box>
+        <FormControl fullWidth margin="normal">
+          <InputLabel id="ano-escolar-label">Periodo Escolar</InputLabel>
+          <Select
+            labelId="ano-escolar-label"
+            label="Periodo Escolar"
+            value={selectedAnoEscolar}
+            onChange={(e) => setSelectedAnoEscolar(e.target.value)}
+          >
+            {anosEscolares.map((ano) => (
+              <MenuItem key={ano.id} value={ano.id}>
+                {ano.nombre}
+              </MenuItem>
+            ))}
+          </Select>
+          {errors?.ano_escolar_id && <p className="text-red-500">{errors.ano_escolar_id}</p>}
+        </FormControl>
         <Box display="flex" justifyContent="flex-end">
           <Button onClick={closeModal} variant="outlined" sx={{ mr: 2 }}>
             Cancelar

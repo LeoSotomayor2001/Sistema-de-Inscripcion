@@ -19,6 +19,7 @@ const EstudiantesPreinscritos = () => {
                         Authorization: `Bearer ${token}`
                     }
                 });
+                console.log(response.data.inscripciones);
                 setInscripciones(response.data.inscripciones);
             } catch (error) {
                 console.error(error);
@@ -44,6 +45,7 @@ const EstudiantesPreinscritos = () => {
                         <TableCell sx={{ color: 'white', fontWeight: 'bold'  }}>Apellido</TableCell>
                         <TableCell sx={{ color: 'white', fontWeight: 'bold'  }}>Sección</TableCell>
                         <TableCell sx={{ color: 'white' , fontWeight: 'bold' }}>Año</TableCell>
+                        <TableCell sx={{ color: 'white' , fontWeight: 'bold' }}>Periodo escolar</TableCell>
                         <TableCell sx={{ color: 'white', fontWeight: 'bold'  }}>Estado</TableCell>
                     </TableRow>
                 </TableHead>
@@ -55,6 +57,7 @@ const EstudiantesPreinscritos = () => {
                                 <TableCell>{inscripcion.apellido}</TableCell>
                                 <TableCell>{inscripcion.seccion}</TableCell>
                                 <TableCell>{inscripcion.año}</TableCell>
+                                <TableCell>{inscripcion.ano_escolar}</TableCell>
                                 <TableCell>{inscripcion.estado}</TableCell>
                             </TableRow>
                         ))

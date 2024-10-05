@@ -28,6 +28,7 @@ export const Secciones = () => {
     useEffect(() => {
         document.title = 'Secciones';
         getSecciones();
+        console.log(secciones);
     }, []);
 
     const deleteSeccion = async (id) => {
@@ -89,6 +90,7 @@ export const Secciones = () => {
                             <TableCell sx={{ color: 'white', fontWeight: 'bold', }}>Capacidad</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: 'bold', }}>Estudiantes preinscritos</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: 'bold', }}>Estudiantes inscritos</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold', }}>Periodo Escolar</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Acciones</TableCell>
                         </TableRow>
                     </TableHead>
@@ -99,8 +101,9 @@ export const Secciones = () => {
                                     <TableCell sx={{ fontWeight: 'bold' }}>{seccion.año}</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>{seccion.nombre}</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>{seccion.capacidad}</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold', width: '100px', fontSize: '0.875rem' }}>{seccion.estudiantes_preinscritos}</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold', width: '100px', fontSize: '0.875rem' }}>{seccion.estudiantes_inscritos}</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>{seccion.estudiantes_preinscritos}</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>{seccion.estudiantes_inscritos}</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold'}}>{seccion.ano_escolar}</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold', display: 'flex', gap: 2, justifyContent: 'center' }}>
                                         <Button
                                             variant="contained"
@@ -125,7 +128,7 @@ export const Secciones = () => {
                             ))
                         ) : (
                             <TableRow>
-                                <TableCell colSpan={6} align="center">
+                                <TableCell colSpan={7} align="center">
                                     <Typography variant="h6" color="textSecondary">
                                         No hay secciones registradas.
                                     </Typography>
