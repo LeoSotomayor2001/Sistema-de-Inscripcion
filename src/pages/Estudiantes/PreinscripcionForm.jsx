@@ -11,9 +11,8 @@ const PreinscripcionForm = () => {
   const [selectedEstudiante, setSelectedEstudiante] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
   const [selectedSeccion, setSelectedSeccion] = useState('');
-  const {fetchYearsAndEstudiantes,years,estudiantes,getAnosEscolares,anosEscolares}=useEstudiantes();
-  
   const [selectedAnoEscolar, setSelectedAnoEscolar] = useState('');
+  const {fetchYearsAndEstudiantes,years,estudiantes,getAnosEscolares,anosEscolares}=useEstudiantes();
 
   // Obtener años y estudiantes en el montaje inicial
   useEffect(() => {

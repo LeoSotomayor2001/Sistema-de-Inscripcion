@@ -5,14 +5,26 @@ import { CheckCircle } from '@mui/icons-material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import {  useState } from 'react';
+import { ModalInscripciones } from './ModalInscripciones';
 export const TablaEstudiantesPreinscritos = ({ inscripciones, admin = false,obtenerEstudiantes=()=>{} }) => {
+
+    const [modalIsOpen, setIsOpen] = useState(false);
+    const [inscripcionSeleccionada, setInscripcionSeleccionada] = useState(null);
+
+    const openModal = (inscripcion = null) => {
+        setInscripcionSeleccionada(inscripcion);
+        setIsOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsOpen(false);
+        setInscripcionSeleccionada(null);
+    };
     const confirmarInscripcion = async (inscripcion) => {
         try {
             const token = localStorage.getItem("token");
             const url = `${import.meta.env.VITE_API_URL}/inscripciones/${inscripcion.id}/confirmar`;
-    
-            console.log(url, token);  // Asegúrate de que el token esté siendo obtenido correctamente.
-    
             const response = await axios.post(url, {}, { // Pasa los headers en este objeto adicional
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -30,15 +42,17 @@ export const TablaEstudiantesPreinscritos = ({ inscripciones, admin = false,obte
             }
         }
     };
+    
     return (
+        <>
         <TableContainer component={Paper}>
             <Table>
                 <TableHead>
                     <TableRow sx={{ backgroundColor: '#4b0082' }}>
                         <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Nombre</TableCell>
                         <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Apellido</TableCell>
-                        <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Sección</TableCell>
                         <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Año</TableCell>
+                        <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Sección</TableCell>
                         <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Periodo escolar</TableCell>
                         <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Estado</TableCell>
                         {admin && <TableCell sx={{ color: 'white', fontWeight: 'bold', alignItems: 'center' }}>Acciones</TableCell>}
@@ -50,8 +64,8 @@ export const TablaEstudiantesPreinscritos = ({ inscripciones, admin = false,obte
                             <TableRow key={index}>
                                 <TableCell>{inscripcion.nombre}</TableCell>
                                 <TableCell>{inscripcion.apellido}</TableCell>
-                                <TableCell>{inscripcion.seccion}</TableCell>
                                 <TableCell>{inscripcion.año}</TableCell>
+                                <TableCell>{inscripcion.seccion}</TableCell>
                                 <TableCell>{inscripcion.ano_escolar}</TableCell>
                                 <TableCell>{inscripcion.estado}</TableCell>
                                 {admin && 
@@ -67,6 +81,7 @@ export const TablaEstudiantesPreinscritos = ({ inscripciones, admin = false,obte
                                     color="primary"
                                     sx={{ mr: 1 }}
                                     size="small"
+                                    onClick={() => openModal(inscripcion)}
                                     title="Editar inscripción"
                                   >
                                     <EditIcon />
@@ -86,6 +101,7 @@ export const TablaEstudiantesPreinscritos = ({ inscripciones, admin = false,obte
                                     size="small"
                                     onClick={() => confirmarInscripcion(inscripcion)}
                                     title="Confirmar inscripción"
+                                    disabled={inscripcion.estado==='confirmada'}
                                   >
                                     <CheckCircle />
                                   </Button>
@@ -105,6 +121,17 @@ export const TablaEstudiantesPreinscritos = ({ inscripciones, admin = false,obte
                 </TableBody>
             </Table>
         </TableContainer>
+        {admin && inscripcionSeleccionada && (
+                <ModalInscripciones
+                    modalIsOpen={modalIsOpen}
+                    closeModal={closeModal}
+                    inscripcion={inscripcionSeleccionada}
+                    obtenerEstudiantes={obtenerEstudiantes}
+                />
+            
+        )}
+        
+        </>
     )
 }
 

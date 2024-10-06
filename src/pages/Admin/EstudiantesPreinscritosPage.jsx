@@ -10,7 +10,6 @@ export const EstudiantesPreinscritosPage = () => {
 
     const obtenerEstudiantes = async () => {
         try {
-            setLoading(true);
             const token = localStorage.getItem("token");
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/inscripciones`, {
                 headers: {
