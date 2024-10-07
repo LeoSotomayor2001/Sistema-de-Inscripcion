@@ -35,7 +35,6 @@ export const ModalProfesores = ({ modalIsOpen, closeModal, profesor = null }) =>
     const [admin, setAdmin] = useState(false);
     const [errors, setErrors] = useState({});
     const { getProfesores } = useEstudiantes();
-
     const isEdit = profesor && profesor.name;
     useEffect(() => {
         if (isEdit && profesor) {
@@ -53,6 +52,7 @@ export const ModalProfesores = ({ modalIsOpen, closeModal, profesor = null }) =>
             setAdmin(false);
         }
     }, [profesor]);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();

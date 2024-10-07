@@ -100,13 +100,6 @@ export const ModalInscripciones = ({ modalIsOpen, closeModal, inscripcion, obten
             setSelectedSeccion("");
         }
     };
-
-    useEffect(() => {
-        fetchYears();
-        getSecciones();
-        getAnosEscolares();
-    }, []);
-
     useEffect(() => {
         if (inscripcion) {
             setSelectedAnoEscolar(inscripcion.ano_escolar_id);
@@ -114,6 +107,14 @@ export const ModalInscripciones = ({ modalIsOpen, closeModal, inscripcion, obten
             setSelectedSeccion(inscripcion.seccion_id);
         }
     }, [inscripcion]);
+    
+    useEffect(() => {
+        fetchYears();
+        getSecciones();
+        getAnosEscolares();
+    }, []);
+
+  
 
     // Detectar cambios en los selects y actualizar hasChanges
     useEffect(() => {
