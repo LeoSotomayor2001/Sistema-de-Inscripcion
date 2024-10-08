@@ -9,20 +9,21 @@ export const AdminLayout = () => {
   
   const navigate = useNavigate();
 
+  // validate token
   useEffect(() => {
-    if (!token || !usuario) {
+    if (!token) {
       navigate("/auth");
     }
+  }, [token, navigate])
 
-    if (usuario && usuario.admin === 1) {
-      navigate("/index");
-    }
-    if(token && !usuario){
+  //validate user
+  useEffect(()=>{
+    if (!usuario) {
       navigate("/");
     }
 
-  }, []);
-  
+  }, [usuario, navigate])
+
 
   return (
     <div className="md:flex bg-gray-100 overflow-hidden">

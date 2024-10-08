@@ -7,15 +7,23 @@ export const AuthLayout = () => {
     const representante = JSON.parse(localStorage.getItem("representante"))
     const token = localStorage.getItem("token")
     const usuario = JSON.parse(localStorage.getItem("usuario"))
+
+
     useEffect(() => {
-        if (representante && token) {
+        if(!token) {
+            localStorage.clear()
+            return
+        }
+
+        if (representante) {
             navigate("/")
         }
-        if(usuario && usuario.admin=== 1){
+
+        if(usuario?.admin === 1){
             navigate("/index")
         }
 
-    }, [token, representante, navigate,usuario])
+    }, [token, representante, navigate, usuario])
 
     return (
         <main className='flex items-center justify-center h-screen bg-univercity bg-cover bg-center flex-col '>

@@ -64,7 +64,7 @@ export const Sidebar = () => {
         <aside className="md:w-80 w-full md:shadow-xl shadow-md bg-white" aria-label="Sidebar">
             <div className="px-3 py-4">
                 <img
-                    src={representanteObtenido.image ? `${import.meta.env.VITE_API_URL}/imagen/${representanteObtenido.image}` : "img/usuario.svg"}
+                    src={representanteObtenido?.image ? `${import.meta.env.VITE_API_URL}/imagen/${representanteObtenido.image}` : "img/usuario.svg"}
                     alt="imagen-representante"
                     className="w-36 h-36 mx-auto rounded-full shadow-lg"
                 />

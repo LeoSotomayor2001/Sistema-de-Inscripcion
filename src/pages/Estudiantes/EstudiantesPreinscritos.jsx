@@ -19,7 +19,6 @@ const EstudiantesPreinscritos = () => {
                         Authorization: `Bearer ${token}`
                     }
                 });
-                console.log(response.data.inscripciones);
                 setInscripciones(response.data.inscripciones);
             } catch (error) {
                 console.error(error);

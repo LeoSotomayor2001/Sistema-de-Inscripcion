@@ -80,9 +80,11 @@ export const Index = () => {
     setEstudianteSeleccionado(null); // Limpiar el estudiante seleccionado al cerrar el modal
   };
 
+   
   useEffect(() => {
     fetchYearsAndEstudiantes();
     document.title = "Sistema de Inscripción - Estudiantes"; 
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
   }, []);
  
   useEffect(() => {
@@ -128,7 +130,8 @@ export const Index = () => {
           Tus representados:
         </h2>
 
-        {estudiantes.length > 0? (
+
+        {estudiantes?.length > 0? (
           <div
             className={`transition-opacity duration-1000 ease-in-out ${isVisible ? "opacity-100" : "opacity-0"} grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-3`}
           >
