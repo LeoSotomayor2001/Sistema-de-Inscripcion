@@ -57,7 +57,7 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
       setNombre(seccion.nombre);
       setCapacidad(seccion.capacidad);
       setYearId(seccion.año);
-      setSelectedAnoEscolar(seccion.ano_escolar);
+      setSelectedAnoEscolar(seccion.ano_escolar_id);
     } else {
       // Si es creación, limpiar el formulario
       setNombre('');
@@ -65,6 +65,7 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
       setYearId('');
       setSelectedAnoEscolar('');
     }
+
   }, [seccion]);
 
   useEffect(() => {

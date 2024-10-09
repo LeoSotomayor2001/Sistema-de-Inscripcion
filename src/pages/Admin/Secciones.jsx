@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, } from '@mui/material'
+import ChecklistIcon from '@mui/icons-material/Checklist';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -10,9 +11,13 @@ import { useEstudiantes } from "../../Hooks/UseEstudiantes";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { ModalListaEstudiantes } from "../../components/ModalListaEstudiantes";
 export const Secciones = () => {
     const [modalIsOpen, setIsOpen] = useState(false);
     const [seccionSeleccionada, setSeccionSeleccionada] = useState(null);
+    const [modalIsOpenChecklist, setIsOpenChecklist] = useState(false);
+    const [seccionSeleccionadaChecklist, setSeccionSeleccionadaChecklist] = useState(null);
+    
     const { getSecciones, secciones, loading } = useEstudiantes();
 
     const openModal = (seccion = null) => {
@@ -25,10 +30,20 @@ export const Secciones = () => {
         setSeccionSeleccionada(null);
     };
 
+    const openModalChecklist = (seccion = null) => {
+        setSeccionSeleccionadaChecklist(seccion);
+        setIsOpenChecklist(true);
+        console.log(seccion,modalIsOpenChecklist);
+    }
+    
+    const closeModalChecklist = () => {
+        setIsOpenChecklist(false);
+        setSeccionSeleccionadaChecklist(null);
+    }
     useEffect(() => {
         document.title = 'Secciones';
         getSecciones();
-        console.log(secciones);
+
     }, []);
 
     const deleteSeccion = async (id) => {
@@ -46,7 +61,7 @@ export const Secciones = () => {
         if (resultado.isConfirmed) {
             try {
                 const token = localStorage.getItem('token');
-                const response= await axios.delete(`${import.meta.env.VITE_API_URL}/secciones/${id}`, {
+                const response = await axios.delete(`${import.meta.env.VITE_API_URL}/secciones/${id}`, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
@@ -58,7 +73,7 @@ export const Secciones = () => {
                 if (error.response.data.error) {
                     toast.error(error.response.data.error);
                 }
-                else{
+                else {
                     toast.error('Error al eliminar la sección');
 
                 }
@@ -103,7 +118,7 @@ export const Secciones = () => {
                                     <TableCell sx={{ fontWeight: 'bold' }}>{seccion.capacidad}</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>{seccion.estudiantes_preinscritos}</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>{seccion.estudiantes_inscritos}</TableCell>
-                                    <TableCell sx={{ fontWeight: 'bold'}}>{seccion.ano_escolar}</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>{seccion.ano_escolar}</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold', display: 'flex', gap: 2, justifyContent: 'center' }}>
                                         <Button
                                             variant="contained"
@@ -122,6 +137,15 @@ export const Secciones = () => {
                                             title="Eliminar sección"
                                         >
                                             <DeleteIcon />
+                                        </Button>
+                                        <Button
+                                            variant="contained"
+                                            color="success"
+                                            size="small"
+                                            onClick={() => openModalChecklist(seccion)}
+                                            title="Lista de estudiantes de la sección"
+                                        >
+                                            <ChecklistIcon />
                                         </Button>
                                     </TableCell>
                                 </TableRow>
@@ -144,6 +168,14 @@ export const Secciones = () => {
                 seccion={seccionSeleccionada}
 
             />
+            {seccionSeleccionadaChecklist && (
+                <ModalListaEstudiantes
+                modalIsOpenChecklist={modalIsOpenChecklist}
+                closeModalChecklist={closeModalChecklist}
+                    seccion={seccionSeleccionadaChecklist}
+                />
+                
+            )}
         </>
     )
 }
