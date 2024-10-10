@@ -52,7 +52,7 @@ export const ModalListaEstudiantes = ({ modalIsOpenChecklist, closeModalChecklis
 
     return (
         <Modal
-            isOpen={modalIsOpenChecklist}  // Asegúrate de que coincida con el nombre de la prop pasada
+            isOpen={modalIsOpenChecklist}  
             onRequestClose={closeModalChecklist}
             style={customStyles}
             contentLabel={'Lista de estudiantes'}
@@ -67,6 +67,7 @@ export const ModalListaEstudiantes = ({ modalIsOpenChecklist, closeModalChecklis
                             <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>ID</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: 'bold', }}>Nombre y Apellido</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: 'bold', }}>Cédula</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold', }}>Género</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: 'bold', }}>Fecha de Nacimiento</TableCell>
 
                         </TableRow>
@@ -86,6 +87,7 @@ export const ModalListaEstudiantes = ({ modalIsOpenChecklist, closeModalChecklis
                                     <TableCell sx={{ fontWeight: 'bold' }}>{index + 1}</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>{estudiante.nombre_completo}</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>{estudiante.cedula}</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>{estudiante.genero}</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>{estudiante.fecha_nacimiento}</TableCell>
                                 </TableRow>
                             ))

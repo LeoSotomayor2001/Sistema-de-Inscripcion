@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { TextField, Button, Box } from '@mui/material';
+import { TextField, Button, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import { toast } from 'react-toastify';
@@ -38,11 +38,13 @@ export const ModalEditarEstudiante = ({ modalIsOpen, closeModal, estudiante }) =
     cedula: estudiante.cedula || '',
     fecha_nacimiento: formatDateIso(estudiante.fecha_nacimiento) || '',
     image: null, // Agregado para manejar la imagen
+    genero: estudiante.genero || '',
   }
   const [errors, setErrors] = useState({});
   const token = localStorage.getItem('token');
   const [formData, setFormData] = useState(initialState);
   const {fetchYearsAndEstudiantes,formatDate}= useEstudiantes();
+  const generos = ["Masculino", "Femenino"]; // Géneros disponibles
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -68,7 +70,9 @@ export const ModalEditarEstudiante = ({ modalIsOpen, closeModal, estudiante }) =
     data.append('apellido', formData.apellido);
     data.append('cedula', formData.cedula);
     data.append('fecha_nacimiento', formatDate(formData.fecha_nacimiento));
+    data.append('genero', formData.genero);
     data.append('_method', 'PUT');
+
     if (formData.image) {
       data.append('image', formData.image); // Añade el archivo si existe
     }
@@ -166,6 +170,24 @@ export const ModalEditarEstudiante = ({ modalIsOpen, closeModal, estudiante }) =
           }}
         />
         {errors.fecha_nacimiento && <p className="text-red-500">{errors.fecha_nacimiento[0]}</p>}
+          {/* Select para género */}
+          <FormControl fullWidth margin="normal">
+                    <InputLabel id="genero-label">Género</InputLabel>
+                    <Select
+                        labelId="genero-label"
+                        label="Género"
+                        name="genero"
+                        value={formData.genero}
+                        onChange={handleChange}
+                    >
+                        {generos.map((genero) => (
+                            <MenuItem key={genero} value={genero}>
+                                {genero}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                    {errors.genero && <p className="text-red-500">{errors.genero[0]}</p>}
+                </FormControl>
 
         {/* Input de tipo archivo para subir imagen */}
         <input
@@ -206,5 +228,6 @@ ModalEditarEstudiante.propTypes = {
     apellido: PropTypes.string.isRequired,
     cedula: PropTypes.number.isRequired,
     fecha_nacimiento: PropTypes.string.isRequired,
+    genero: PropTypes.string.isRequired,
   }).isRequired,
 };

@@ -156,6 +156,11 @@ export const Index = () => {
                     <p className="text-gray-500">Fecha de nacimiento:</p>
                     { formatDate(estudiante.fecha_nacimiento)}
                   </Typography>
+
+                  <Typography variant="body2" color="text.primary" className="flex flex-col">
+                    <p className="text-gray-500">Género:</p>
+                    { estudiante.genero}
+                  </Typography>
                 </CardContent>
                 <CardActions className="flex justify-between">
                   <Button size="small" onClick={() => openModal(estudiante)}>
