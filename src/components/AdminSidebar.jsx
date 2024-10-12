@@ -59,8 +59,8 @@ export const AdminSidebar = () => {
     ];
 
     const AnotherItems = [
-        { text: 'Asignaturas', icon: <InboxIcon />, url: '/asignaturas' },
-        { text: 'Notificaciones', icon: <NotificationsIcon />, url: '/notificaciones' },
+        { text: 'Asignaturas', icon: <InboxIcon />, url: 'asignaturas' },
+        { text: 'Notificaciones', icon: <NotificationsIcon />, url: 'notificaciones' },
     ];
 
  

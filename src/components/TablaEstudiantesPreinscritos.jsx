@@ -92,6 +92,7 @@ export const TablaEstudiantesPreinscritos = ({ inscripciones, admin = false, obt
             }
         }
     }
+    
     return (
         <>
             <TableContainer component={Paper}>

@@ -14,6 +14,7 @@ import { Estudiantes } from "./pages/Admin/Estudiantes";
 import { Secciones } from "./pages/Admin/Secciones";
 import { Profesores } from "./pages/Admin/Profesores";
 import { EstudiantesPreinscritosPage } from "./pages/Admin/EstudiantesPreinscritosPage";
+import { Asignaturas } from "./pages/Admin/Asignaturas";
 
 
 const router = createBrowserRouter([
@@ -67,6 +68,10 @@ const router = createBrowserRouter([
       {
         path: "secciones",
         element: <Secciones />
+      },
+      {
+        path:"asignaturas",
+        element: <Asignaturas/>
       }
     ]
   },
