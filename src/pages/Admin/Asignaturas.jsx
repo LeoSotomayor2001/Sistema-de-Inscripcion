@@ -8,6 +8,7 @@ export const Asignaturas = () => {
    const { fetchAsignaturas, asignaturas,loading } = useEstudiantes()
     useEffect(() => {
       fetchAsignaturas()
+      document.title = 'Asignaturas'
     }, [])
 
     if(loading){
@@ -24,6 +25,8 @@ export const Asignaturas = () => {
               <TableCell  sx={{ color: 'white', fontWeight: 'bold' }}>Asignatura</TableCell>
               <TableCell  sx={{ color: 'white', fontWeight: 'bold' }}>Descripcion</TableCell>
               <TableCell  sx={{ color: 'white', fontWeight: 'bold' }}>Código</TableCell>
+              <TableCell  sx={{ color: 'white', fontWeight: 'bold' }}>Año</TableCell>
+              <TableCell  sx={{ color: 'white', fontWeight: 'bold' }}>Periodo Escolar</TableCell>
               <TableCell  sx={{ color: 'white', fontWeight: 'bold' }}>Acciones</TableCell>
             </TableRow>
           </TableHead>
@@ -35,8 +38,10 @@ export const Asignaturas = () => {
                   <TableCell>{asignatura.nombre}</TableCell>
                   <TableCell>{asignatura.descripcion}</TableCell>
                   <TableCell>{asignatura.codigo}</TableCell>
-                  <TableCell>
-                    <Button variant="contained" sx={{ mr: 2 }}>Edit</Button>
+                  <TableCell>{asignatura.year}</TableCell>
+                  <TableCell>{asignatura.ano_escolar}</TableCell>
+                  <TableCell sx={{ display: 'flex', gap: 2 }}>
+                    <Button variant="contained">Edit</Button>
                     <Button variant="contained" color="error">Delete</Button>
                   </TableCell>
                 </TableRow>
