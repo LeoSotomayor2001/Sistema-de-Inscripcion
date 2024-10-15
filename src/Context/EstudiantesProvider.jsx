@@ -56,7 +56,6 @@ const EstudiantesProvider = ({ children }) => {
           Authorization: `Bearer ${token}`
         }
       })
-      console.log(response.data)
       setAsignaturas(response.data)
     } catch (error) {
       console.log(error)

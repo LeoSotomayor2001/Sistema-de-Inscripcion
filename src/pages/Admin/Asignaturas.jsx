@@ -1,11 +1,24 @@
 
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button } from '@mui/material';
 import { useEstudiantes } from "../../Hooks/UseEstudiantes";
 import { Spinner } from "../../components/Spinner";
+import { ModalAsignaturas } from "../../components/ModalAsignaturas";
 export const Asignaturas = () => {
     
    const { fetchAsignaturas, asignaturas,loading } = useEstudiantes()
+   const [modalIsOpen, setIsOpen] = useState(false);
+   const [asignaturaSeleccionada, setAsignaturaSeleccionada] = useState(null);
+
+   const openModal = (asignatura = null) => {
+    setAsignaturaSeleccionada(asignatura);
+    setIsOpen(true);
+};
+
+const closeModal = () => {
+    setIsOpen(false);
+    setAsignaturaSeleccionada(null);
+};
     useEffect(() => {
       fetchAsignaturas()
       document.title = 'Asignaturas'
@@ -41,7 +54,7 @@ export const Asignaturas = () => {
                   <TableCell>{asignatura.year}</TableCell>
                   <TableCell>{asignatura.ano_escolar}</TableCell>
                   <TableCell sx={{ display: 'flex', gap: 2 }}>
-                    <Button variant="contained">Edit</Button>
+                    <Button variant="contained" color="primary" onClick={() => openModal(asignatura)}>Edit</Button>
                     <Button variant="contained" color="error">Delete</Button>
                   </TableCell>
                 </TableRow>
@@ -58,6 +71,13 @@ export const Asignaturas = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      {asignaturaSeleccionada && (
+        <ModalAsignaturas
+          modalIsOpen={modalIsOpen}
+          closeModal={closeModal}
+          asignatura={asignaturaSeleccionada}
+        />
+      )}
     </div>
   )
 }
