@@ -22,7 +22,7 @@ export const NotFound = () => {
       <h1 className='text-3xl text-white font-bold text-center'>Página No Encontrada</h1>
       <p className='text-white text-center'>La pagina que intentas buscar no existe</p>
       <img src="../img/404.svg" alt="" className='w-96 mx-auto'/>
-      <p className='text-white text-center'>Redirigiendo en {contador}...</p>
+      <p className='text-white text-center'>Serás redirigido a la pagina anterior en {contador}...</p>
     </div>
   )
 }
