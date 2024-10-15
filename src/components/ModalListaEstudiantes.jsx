@@ -94,7 +94,7 @@ export const ModalListaEstudiantes = ({ modalIsOpenChecklist, closeModalChecklis
                         ) : (
                             // Mostrar el mensaje de "No hay estudiantes registrados" si no hay estudiantes
                             <TableRow>
-                                <TableCell colSpan={4} align="center">
+                                <TableCell colSpan={5} align="center">
                                     <Typography variant="h6" color="textSecondary">
                                         No hay estudiantes registrados.
                                     </Typography>

@@ -48,7 +48,7 @@ export const Asignaturas = () => {
               ))
             ): (
                 <TableRow>
-                <TableCell colSpan={4} align="center">
+                <TableCell colSpan={7} align="center">
                     <Typography variant="h6" color="textSecondary">
                         No hay asignaturas registradas.
                     </Typography>

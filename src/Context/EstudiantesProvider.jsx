@@ -25,6 +25,7 @@ const EstudiantesProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [secciones, setSecciones] = useState([]);
   const [listadoProfesores, setListadoProfesores] = useState([]);
+  
   const [anosEscolares, setAnosEscolares] = useState([]);
   const [asignaturas, setAsignaturas] = useState([])
   const [pagination, setPagination] = useState({
@@ -91,6 +92,22 @@ const EstudiantesProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
+  
+  const fetchYears = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/years`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        setYears(response.data);
+    } catch (error) {
+        console.error(error);
+        toast.error('Error al obtener los años');
+    }
+}
 
   const getAnosEscolares=()=>{
     const token=localStorage.getItem('token');
@@ -235,6 +252,7 @@ const EstudiantesProvider = ({ children }) => {
         getProfesores,
         secciones,
         getAnosEscolares,
+        fetchYears,
         asignaturas,
         fetchAsignaturas,
         anosEscolares,

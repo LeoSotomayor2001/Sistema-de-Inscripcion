@@ -15,6 +15,7 @@ import { Secciones } from "./pages/Admin/Secciones";
 import { Profesores } from "./pages/Admin/Profesores";
 import { EstudiantesPreinscritosPage } from "./pages/Admin/EstudiantesPreinscritosPage";
 import { Asignaturas } from "./pages/Admin/Asignaturas";
+import { FormAsignaturas } from "./pages/Admin/FormAsignaturas";
 
 
 const router = createBrowserRouter([
@@ -72,6 +73,10 @@ const router = createBrowserRouter([
       {
         path:"asignaturas",
         element: <Asignaturas/>
+      },
+      {
+        path:"registrar-asignatura",
+        element: <FormAsignaturas/>
       }
     ]
   },

@@ -26,30 +26,15 @@ const customStyles = {
 
 export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
   const [nombre, setNombre] = useState('');
-  const [years, setYears] = useState([]);
   const [capacidad, setCapacidad] = useState('');
   const [yearId, setYearId] = useState('');
   const [errors, setErrors] = useState({});
     
   const [selectedAnoEscolar, setSelectedAnoEscolar] = useState('');
-  const { getSecciones, getAnosEscolares, anosEscolares } = useEstudiantes();
+  const { getSecciones, getAnosEscolares, anosEscolares,fetchYears,years } = useEstudiantes();
   // Manejo de estado para saber si es edición o creación
   const isEdit = Boolean(seccion);
 
-  const fetchYears = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/years`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setYears(response.data);
-    } catch (error) {
-      console.error(error);
-      toast.error('Error al obtener los años');
-    }
-  };
 
   useEffect(() => {
     if (isEdit && seccion) {
@@ -83,7 +68,6 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
       year_id: yearId,
       ano_escolar_id: selectedAnoEscolar,
     };
-    console.log(formData);
     try {
       if (isEdit) {
         // Editar sección
