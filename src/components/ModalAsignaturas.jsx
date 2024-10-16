@@ -95,6 +95,8 @@ export const ModalAsignaturas = ({ modalIsOpen, closeModal, asignatura = null })
 
 
     }
+
+    
     return (
         <Modal
             isOpen={modalIsOpen}
