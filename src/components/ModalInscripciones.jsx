@@ -5,6 +5,7 @@ import { useEstudiantes } from '../Hooks/UseEstudiantes';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { useAdmin } from '../Hooks/UseAdmin';
 
 const customStyles = {
     content: {
@@ -22,28 +23,14 @@ const customStyles = {
 Modal.setAppElement('#root');
 
 export const ModalInscripciones = ({ modalIsOpen, closeModal, inscripcion, obtenerEstudiantes = () => {} }) => {
-    const { anosEscolares, getAnosEscolares, getSecciones } = useEstudiantes();
+    const { anosEscolares, getAnosEscolares } = useEstudiantes();
+    const {getSecciones,years,fetchYears}= useAdmin();
     const [selectedAnoEscolar, setSelectedAnoEscolar] = useState("");
     const [secciones, setSecciones] = useState([]);
     const [selectedYear, setSelectedYear] = useState("");
     const [selectedSeccion, setSelectedSeccion] = useState("");
-    const [years, setYears] = useState([]);
+    
     const [hasChanges, setHasChanges] = useState(false); // Nuevo estado para detectar cambios
-
-    const fetchYears = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/years`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            setYears(response.data);
-        } catch (error) {
-            console.error(error);
-            toast.error('Error al obtener los años');
-        }
-    };
 
     useEffect(() => {
         if (selectedYear) {

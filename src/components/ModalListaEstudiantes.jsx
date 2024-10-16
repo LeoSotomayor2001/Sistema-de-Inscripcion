@@ -24,7 +24,7 @@ Modal.setAppElement('#root');
 export const ModalListaEstudiantes = ({ modalIsOpenChecklist, closeModalChecklist, seccion }) => {
     const [listadoEstudiantes, setListadoEstudiantes] = useState([]);
     const [loading, setLoading] = useState(true);
-    const getEstudiantes = async () => {
+    const getEstudiantesSeccion = async () => {
         setLoading(true)
         const url = `${import.meta.env.VITE_API_URL}/secciones/${seccion.id}/estudiantes`
         const token = localStorage.getItem('token');
@@ -47,7 +47,7 @@ export const ModalListaEstudiantes = ({ modalIsOpenChecklist, closeModalChecklis
 
 
     useEffect(() => {
-        getEstudiantes();
+        getEstudiantesSeccion();
     }, []);
 
     return (

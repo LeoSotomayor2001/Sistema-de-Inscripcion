@@ -2,10 +2,11 @@ import { useEffect } from "react";
 import { useEstudiantes } from "../../Hooks/UseEstudiantes";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography,Box, Button } from '@mui/material';
 import { Spinner } from "../../components/Spinner";
+import { useAdmin } from "../../Hooks/UseAdmin";
 
 export const Estudiantes = () => {
-    const { mostrarEstudiantes, listadoEstudiantes, loading,pagination,formatDate } = useEstudiantes();
-
+    const {formatDate } = useEstudiantes();
+    const {mostrarEstudiantes,listadoEstudiantes,loading,pagination}= useAdmin();
     useEffect(() => {
         mostrarEstudiantes();
         document.title = "Estudiantes";

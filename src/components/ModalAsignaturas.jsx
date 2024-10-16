@@ -5,6 +5,7 @@ import Modal from 'react-modal';
 import { useEstudiantes } from '../Hooks/UseEstudiantes';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { useAdmin } from '../Hooks/UseAdmin';
 
 Modal.setAppElement('#root');
 
@@ -34,9 +35,8 @@ export const ModalAsignaturas = ({ modalIsOpen, closeModal, asignatura = null })
     const [formData, setFormData] = useState(initialState);
     const [yearId, setYearId] = useState('');
     const [errors, setErrors] = useState({});
-    const { getAnosEscolares, anosEscolares, years, fetchYears,fetchAsignaturas } = useEstudiantes();
-
-
+    const { getAnosEscolares, anosEscolares } = useEstudiantes();
+    const {years,fetchYears,fetchAsignaturas}= useAdmin();
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({

@@ -4,6 +4,7 @@ import { useEstudiantes } from "../../Hooks/UseEstudiantes";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useAdmin } from "../../Hooks/UseAdmin";
 
 export const FormAsignaturas = () => {
     const initialState = {
@@ -11,7 +12,8 @@ export const FormAsignaturas = () => {
         descripcion: '',
         codigo: '',
     };
-    const { getAnosEscolares, anosEscolares,years,fetchYears } = useEstudiantes();
+    const { getAnosEscolares, anosEscolares } = useEstudiantes();
+    const {fetchYears,years}= useAdmin();
     const [selectedAnoEscolar, setSelectedAnoEscolar] = useState('');
     const [yearId, setYearId] = useState('');
     const [errors, setErrors] = useState({});

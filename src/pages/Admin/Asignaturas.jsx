@@ -1,15 +1,15 @@
 
 import { useEffect, useState } from "react"
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button } from '@mui/material';
-import { useEstudiantes } from "../../Hooks/UseEstudiantes";
 import { Spinner } from "../../components/Spinner";
 import { ModalAsignaturas } from "../../components/ModalAsignaturas";
 import { toast } from "react-toastify";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useAdmin } from "../../Hooks/UseAdmin";
 export const Asignaturas = () => {
 
-  const { fetchAsignaturas, asignaturas, loading } = useEstudiantes()
+  const { fetchAsignaturas, asignaturas, loading } = useAdmin()
   const [modalIsOpen, setIsOpen] = useState(false);
   const [asignaturaSeleccionada, setAsignaturaSeleccionada] = useState(null);
 

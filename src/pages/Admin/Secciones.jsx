@@ -7,18 +7,18 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 import { Spinner } from "../../components/Spinner";
 import { ModalSecciones } from "../../components/ModalSecciones";
-import { useEstudiantes } from "../../Hooks/UseEstudiantes";
 import axios from "axios";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { ModalListaEstudiantes } from "../../components/ModalListaEstudiantes";
+import { useAdmin } from "../../Hooks/UseAdmin";
 export const Secciones = () => {
     const [modalIsOpen, setIsOpen] = useState(false);
     const [seccionSeleccionada, setSeccionSeleccionada] = useState(null);
     const [modalIsOpenChecklist, setIsOpenChecklist] = useState(false);
     const [seccionSeleccionadaChecklist, setSeccionSeleccionadaChecklist] = useState(null);
     
-    const { getSecciones, secciones, loading } = useEstudiantes();
+    const { getSecciones, secciones, loading } = useAdmin();
 
     const openModal = (seccion = null) => {
         setSeccionSeleccionada(seccion);

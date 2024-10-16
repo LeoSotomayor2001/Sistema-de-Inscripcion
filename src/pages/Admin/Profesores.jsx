@@ -1,6 +1,5 @@
 
 import { useEffect, useState } from "react"
-import { useEstudiantes } from "../../Hooks/UseEstudiantes";
 import { Spinner } from "../../components/Spinner";
 import { Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
@@ -10,10 +9,11 @@ import { ModalProfesores } from "../../components/ModalProfesores";
 import { toast } from "react-toastify";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useAdmin } from "../../Hooks/UseAdmin";
 
 export const Profesores = () => {
     const [modalIsOpen, setIsOpen] = useState(false);
-    const { getProfesores, listadoProfesores, loading } = useEstudiantes();
+    const { getProfesores, listadoProfesores, loading } = useAdmin();
     const [profesorSeleccionado, setProfesorSeleccionado] = useState(null);
     const openModal = (profesor=null) => {
         setProfesorSeleccionado(profesor);

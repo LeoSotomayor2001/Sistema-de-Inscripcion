@@ -123,7 +123,7 @@ export const TablaEstudiantesPreinscritos = ({ inscripciones, admin = false, obt
                                             sx={{
                                                 fontWeight: 'bold',
                                                 alignItems: 'center',
-                                                gap: 1, // Añade espacio entre los botones
+                                                gap: 2, // Añade espacio entre los botones
                                             }}
                                         >
                                             <Button

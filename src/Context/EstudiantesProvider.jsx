@@ -23,20 +23,7 @@ const EstudiantesProvider = ({ children }) => {
   const [loadingSidebar, setloadingSidebar] = useState(true);
   const [representanteObtenido, setRepresentanteObtenido] = useState({});
   const [loading, setLoading] = useState(false);
-  const [secciones, setSecciones] = useState([]);
-  const [listadoProfesores, setListadoProfesores] = useState([]);
-  
   const [anosEscolares, setAnosEscolares] = useState([]);
-  const [asignaturas, setAsignaturas] = useState([])
-  const [pagination, setPagination] = useState({
-    current_page: 1,
-    last_page: 1,
-    per_page: 10,
-    total: 0,
-  });
-
-  // Obtener el token desde localStorage
-
 
   // Función para limpiar los datos del estado y del localStorage
   const limpiarTodo = () => {
@@ -47,105 +34,26 @@ const EstudiantesProvider = ({ children }) => {
     setYears([]);
     setEstudiantes([]);
   };
-  const fetchAsignaturas = async () => {
-    setLoading(true);
+
+
+  const getAnosEscolares = () => {
+    const token = localStorage.getItem('token');
+    const url = `${import.meta.env.VITE_API_URL}/anos-escolares`;
+
     try {
-      const token = localStorage.getItem('token')
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/asignaturas`, {
+      axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       })
-      setAsignaturas(response.data)
-    } catch (error) {
-      console.log(error)
+        .then((response) => {
+          setAnosEscolares(response.data);
+        })
     }
-    finally {
-      setLoading(false)
-    }
-  }
-
-  // Función para obtener los estudiantes
-  const mostrarEstudiantes = async (page = 1) => {
-    setLoading(true);
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/estudiantes?page=${page}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      // Actualiza los estudiantes
-      setListadoEstudiantes(response.data.data);
-      // Actualiza la paginación
-      setPagination({
-        current_page: response.data.meta.current_page,
-        last_page: response.data.meta.last_page,
-        per_page: response.data.meta.per_page,
-        total: response.data.meta.total,
-      });
-    } catch (error) {
-      console.error("Error al obtener los estudiantes:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  
-  const fetchYears = async () => {
-    try {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`${import.meta.env.VITE_API_URL}/years`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        setYears(response.data);
-    } catch (error) {
-        console.error(error);
-        toast.error('Error al obtener los años');
-    }
-}
-
-  const getAnosEscolares=()=>{
-    const token=localStorage.getItem('token');
-    const url=`${import.meta.env.VITE_API_URL}/anos-escolares`;
-
-    try{
-      axios.get(url,{
-        headers:{
-          Authorization:`Bearer ${token}`
-        }
-      })
-      .then((response)=>{
-        setAnosEscolares(response.data);
-      })
-    }
-    catch(error){
+    catch (error) {
       console.log(error);
     }
   }
-
-  const getProfesores = async () => {
-    setLoading(true);
-    const url="http://127.0.0.1:8000/api/users";
-    try{
-        const token = localStorage.getItem('token');
-        const response = await axios.get(url, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
-        });
-        setListadoProfesores(response.data.data);
-    }
-    catch(error){
-        console.log(error);
-    }
-    finally{
-        setLoading(false);
-    }
-}
 
   // Función para obtener el representante
   const getRepresentante = async () => {
@@ -207,35 +115,11 @@ const EstudiantesProvider = ({ children }) => {
       setLoading(false);
     }
   };
-  const getSecciones = async () => {
-    setLoading(true)
-    try {
-        
-        const token = localStorage.getItem("token");
-        const response = await axios.get(
-            `${import.meta.env.VITE_API_URL}/secciones`,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-
-        setSecciones(response.data);
-    } catch (error) {
-        console.error(error);
-        toast.error("Error al obtener las secciones");
-    }
-    finally {
-        setLoading(false)
-    }
-}
 
   return (
     <EstudiantesContext.Provider
       value={{
         listadoEstudiantes,
-        mostrarEstudiantes,
         loading,
         loadingSidebar,
         years,
@@ -244,16 +128,8 @@ const EstudiantesProvider = ({ children }) => {
         formatDate,
         getRepresentante,
         representanteObtenido,
-        pagination,
         limpiarTodo,
-        getSecciones,
-        listadoProfesores,
-        getProfesores,
-        secciones,
         getAnosEscolares,
-        fetchYears,
-        asignaturas,
-        fetchAsignaturas,
         anosEscolares,
 
       }}
@@ -262,7 +138,6 @@ const EstudiantesProvider = ({ children }) => {
     </EstudiantesContext.Provider>
   );
 };
-
 
 EstudiantesProvider.propTypes = {
   children: PropTypes.node.isRequired,

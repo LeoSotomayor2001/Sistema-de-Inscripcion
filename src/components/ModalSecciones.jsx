@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { TextField, Button, MenuItem, Box, FormControl, InputLabel, Select } from '@mui/material';
 import { useEstudiantes } from '../Hooks/UseEstudiantes';
+import { useAdmin } from '../Hooks/UseAdmin';
 Modal.setAppElement('#root');
 
 const customStyles = {
@@ -31,10 +32,10 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
   const [errors, setErrors] = useState({});
     
   const [selectedAnoEscolar, setSelectedAnoEscolar] = useState('');
-  const { getSecciones, getAnosEscolares, anosEscolares,fetchYears,years } = useEstudiantes();
+  const { getAnosEscolares, anosEscolares,fetchYears,years } = useEstudiantes();
+  const {getSecciones}= useAdmin();
   // Manejo de estado para saber si es edición o creación
   const isEdit = Boolean(seccion);
-
 
   useEffect(() => {
     if (isEdit && seccion) {
