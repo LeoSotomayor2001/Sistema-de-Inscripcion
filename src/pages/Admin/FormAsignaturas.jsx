@@ -54,10 +54,10 @@ export const FormAsignaturas = () => {
             setFormData(initialState)
             setSelectedAnoEscolar('')
             setYearId('')
-            setTimeout(() => {
-                navigate('/index/asignaturas')
+            
+            navigate('/index/asignaturas')
                 
-            }, 2000);
+           
         } catch (error) {
             if(error.response.data.errors){
                 setErrors(error.response.data.errors)

@@ -7,6 +7,9 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ModalProfesores } from "../../components/ModalProfesores";
+import { toast } from "react-toastify";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 export const Profesores = () => {
     const [modalIsOpen, setIsOpen] = useState(false);
@@ -26,6 +29,36 @@ export const Profesores = () => {
         getProfesores();
         document.title = "Profesores"
     }, [])
+
+
+    const deleteProfesor = async (id) => {
+        const resultado = await Swal.fire({
+            title: '¿Estás seguro?',
+            text: 'Esta acción no se puede deshacer',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+          })
+
+        if (resultado.isConfirmed) {
+            try {
+                const token = localStorage.getItem('token')
+                const url = `${import.meta.env.VITE_API_URL}/users/${id}`
+                const response = await axios.delete(url, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                toast.success(response.data.message)
+                getProfesores()
+            } catch (error) {
+                toast.error(error.response.data.message)
+            }
+        }
+            }
 
     if (loading) {
         return <Spinner />
@@ -76,7 +109,7 @@ export const Profesores = () => {
                                             variant="contained"
                                             color="error"
                                             size="small"
-                                            
+                                            onClick={() => deleteProfesor(profesor.id)}
                                             title="Eliminar profesor"
                                         >
                                             <DeleteIcon />
