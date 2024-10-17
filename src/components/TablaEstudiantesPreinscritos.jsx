@@ -25,7 +25,7 @@ export const TablaEstudiantesPreinscritos = ({ inscripciones, admin = false, obt
     const confirmarInscripcion = async (inscripcion) => {
         const resultado = await Swal.fire({
             title: '¿Estás seguro de querer confirmar esta inscripción?',
-            text: 'No podra eliminar este registro al confirmar.',
+            text: 'No podra eliminar ni editar este registro al confirmar.',
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

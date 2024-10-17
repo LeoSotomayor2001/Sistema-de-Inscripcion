@@ -32,8 +32,8 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
   const [errors, setErrors] = useState({});
     
   const [selectedAnoEscolar, setSelectedAnoEscolar] = useState('');
-  const { getAnosEscolares, anosEscolares,fetchYears,years } = useEstudiantes();
-  const {getSecciones}= useAdmin();
+  const { getAnosEscolares, anosEscolares } = useEstudiantes();
+  const {getSecciones,fetchYears,years}= useAdmin();
   // Manejo de estado para saber si es edición o creación
   const isEdit = Boolean(seccion);
 
