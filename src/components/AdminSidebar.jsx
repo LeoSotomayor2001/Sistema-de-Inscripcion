@@ -63,6 +63,7 @@ export const AdminSidebar = () => {
     const AnotherItems = [
         { text: 'Lista de Asignaturas', icon: <AssignmentIcon />, url: 'asignaturas' },
         { text: 'Registrar Asignatura', icon: <InboxIcon />, url: 'registrar-asignatura' },
+        { text: 'Asignar Profesor', icon: <PersonIcon />, url: 'asignatura-profesor' },
         { text: 'Notificaciones', icon: <NotificationsIcon />, url: 'notificaciones' },
     ];
 
@@ -90,7 +91,7 @@ export const AdminSidebar = () => {
                 </AccordionSummary>
                 <AccordionDetails>
                     <List>
-                        {AnotherItems.slice(0, 2).map((item) => (
+                        {AnotherItems.slice(0, 3).map((item) => (
                             <ListItem key={item.text} disablePadding>
                                 <ListItemButton component={NavLink} to={item.url}>
                                     <ListItemIcon>{item.icon}</ListItemIcon>
@@ -102,7 +103,7 @@ export const AdminSidebar = () => {
                 </AccordionDetails>
             </Accordion>
             <List>
-                {AnotherItems.slice(2).map((item) => (
+                {AnotherItems.slice(3).map((item) => (
                     <ListItem key={item.text} disablePadding>
                         <ListItemButton component={NavLink} to={item.url} onClick={toggleDrawer(false)}>
                             <ListItemIcon>{item.icon}</ListItemIcon>

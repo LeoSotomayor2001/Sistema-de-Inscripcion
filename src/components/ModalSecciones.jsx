@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { TextField, Button, MenuItem, Box, FormControl, InputLabel, Select } from '@mui/material';
 import { useEstudiantes } from '../Hooks/UseEstudiantes';
 import { useAdmin } from '../Hooks/UseAdmin';
+
 Modal.setAppElement('#root');
 
 const customStyles = {
@@ -30,10 +31,11 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
   const [capacidad, setCapacidad] = useState('');
   const [yearId, setYearId] = useState('');
   const [errors, setErrors] = useState({});
-    
   const [selectedAnoEscolar, setSelectedAnoEscolar] = useState('');
+  const [isChanged, setIsChanged] = useState(false); // Estado para cambios detectados
   const { getAnosEscolares, anosEscolares } = useEstudiantes();
-  const {getSecciones,fetchYears,years}= useAdmin();
+  const { getSecciones, fetchYears, years } = useAdmin();
+
   // Manejo de estado para saber si es edición o creación
   const isEdit = Boolean(seccion);
 
@@ -51,7 +53,6 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
       setYearId('');
       setSelectedAnoEscolar('');
     }
-
   }, [seccion]);
 
   useEffect(() => {
@@ -59,9 +60,22 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
     fetchYears();
   }, []);
 
+  useEffect(() => {
+    // Detectar cambios en el formulario
+    if (isEdit) {
+      setIsChanged(
+        nombre !== seccion.nombre ||
+        capacidad !== seccion.capacidad ||
+        yearId !== seccion.año ||
+        selectedAnoEscolar !== seccion.ano_escolar_id
+      );
+    } else {
+      setIsChanged(nombre !== '' || capacidad !== '' || yearId !== '' || selectedAnoEscolar !== '');
+    }
+  }, [nombre, capacidad, yearId, selectedAnoEscolar]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const token = localStorage.getItem('token');
     const formData = {
       name: nombre,
@@ -78,7 +92,6 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
           },
         });
         toast.success('Sección actualizada con éxito');
-
       } else {
         // Crear nueva sección
         await axios.post(`${import.meta.env.VITE_API_URL}/secciones`, formData, {
@@ -94,12 +107,10 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
       console.error(error);
       if (error.response.data) {
         setErrors(error.response.data || {});
-
         setTimeout(() => {
           setErrors({});
         }, 2000);
-      }
-      else {
+      } else {
         toast.error('Error al guardar la sección');
       }
       if (error.response.data.error) {
@@ -126,7 +137,6 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
             variant="outlined"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
-
           />
           {errors?.name && <p className="text-red-500">{errors.name}</p>}
         </Box>
@@ -138,7 +148,6 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
             type="number"
             value={capacidad}
             onChange={(e) => setCapacidad(e.target.value)}
-
           />
         </Box>
         {errors?.capacidad && <p className="text-red-500">{errors.capacidad}</p>}
@@ -150,7 +159,6 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
             value={yearId}
             onChange={(e) => setYearId(e.target.value)}
             variant="outlined"
-
           >
             <MenuItem value="">
               <em>Seleccione un año académico</em>
@@ -183,7 +191,7 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
           <Button onClick={closeModal} variant="outlined" sx={{ mr: 2 }}>
             Cancelar
           </Button>
-          <Button type="submit" variant="contained" color="primary">
+          <Button type="submit" variant="contained" color="primary" disabled={isEdit && !isChanged}>
             {isEdit ? 'Actualizar' : 'Crear'}
           </Button>
         </Box>

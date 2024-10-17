@@ -4,15 +4,16 @@ import { Button, Typography, MenuItem, Select, FormControl, InputLabel, Box } fr
 import { toast } from 'react-toastify';
 import { useEstudiantes } from '../../Hooks/UseEstudiantes';
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 const PreinscripcionForm = () => {
   const [secciones, setSecciones] = useState([]);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const [selectedEstudiante, setSelectedEstudiante] = useState('');
   const [selectedYear, setSelectedYear] = useState('');
   const [selectedSeccion, setSelectedSeccion] = useState('');
   const [selectedAnoEscolar, setSelectedAnoEscolar] = useState('');
-  const {fetchYearsAndEstudiantes,years,estudiantes,getAnosEscolares,anosEscolares}=useEstudiantes();
+  const { fetchYearsAndEstudiantes, years, estudiantes, getAnosEscolares, anosEscolares } = useEstudiantes();
 
   // Obtener años y estudiantes en el montaje inicial
   useEffect(() => {
@@ -24,7 +25,7 @@ const PreinscripcionForm = () => {
   useEffect(() => {
     if (selectedYear) {
       setSelectedSeccion(''); // Restablece la sección seleccionada al cambiar de año
-      const fetchSecciones = async () => {
+      const fetchSeccionesByYear = async () => {
         try {
           const token = localStorage.getItem('token');
           const response = await axios.get(
@@ -42,7 +43,7 @@ const PreinscripcionForm = () => {
         }
       };
 
-      fetchSecciones();
+      fetchSeccionesByYear();
     } else {
       setSecciones([]); // Limpiar las secciones cuando no se haya seleccionado un año
       setSelectedSeccion(''); // Asegurar que la sección esté vacía
@@ -50,34 +51,47 @@ const PreinscripcionForm = () => {
   }, [selectedYear]);
 
   const handlePreinscripcion = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/inscripciones`,
-        {
-          estudiante_id: selectedEstudiante,
-          year_id: selectedYear,
-          seccion_id: selectedSeccion,
-          ano_escolar_id: selectedAnoEscolar,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+    const respuesta = await Swal.fire({
+      title: '¿Deseas preinscribir este estudiante?',
+      text: '¡No podras eliminar ni editar este registro!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Si, preinscribir',
+      cancelButtonText: 'Cancelar',
+    })
 
-      toast.success(response.data.mensaje);
-      navigate('/estudiantes-preinscritos');
-      
-    } catch (error) {
-      console.error('Error al preinscribir estudiante:', error);
-      toast.error(error.response.data.mensaje);
-    }
-    finally {
-      setSelectedEstudiante('');
-      setSelectedYear('');
-      setSelectedSeccion('');
+    if (respuesta.isConfirmed) {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await axios.post(
+          `${import.meta.env.VITE_API_URL}/inscripciones`,
+          {
+            estudiante_id: selectedEstudiante,
+            year_id: selectedYear,
+            seccion_id: selectedSeccion,
+            ano_escolar_id: selectedAnoEscolar,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        toast.success(response.data.mensaje);
+        navigate('/estudiantes-preinscritos');
+
+      } catch (error) {
+        console.error('Error al preinscribir estudiante:', error);
+        toast.error(error.response.data.mensaje);
+      }
+      finally {
+        setSelectedEstudiante('');
+        setSelectedYear('');
+        setSelectedSeccion('');
+      }
     }
   };
 
@@ -133,7 +147,7 @@ const PreinscripcionForm = () => {
         >
           {secciones.map((seccion) => (
             <MenuItem key={seccion.id} value={seccion.id}>
-              {seccion.name} -  ({'Cupos disponibles: '+ seccion.capacidad})
+              {seccion.name} -  ({'Cupos disponibles: ' + seccion.capacidad})
             </MenuItem>
           ))}
         </Select>
@@ -154,7 +168,7 @@ const PreinscripcionForm = () => {
           ))}
         </Select>
       </FormControl>
-      
+
 
       {/* Botón de preinscripción */}
       <Button
