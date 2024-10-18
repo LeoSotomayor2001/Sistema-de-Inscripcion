@@ -1,12 +1,12 @@
 import { useEffect } from "react";
 import { useEstudiantes } from "../../Hooks/UseEstudiantes";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography,Box, Button } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Box, Button } from '@mui/material';
 import { Spinner } from "../../components/Spinner";
 import { useAdmin } from "../../Hooks/UseAdmin";
 
 export const Estudiantes = () => {
-    const {formatDate } = useEstudiantes();
-    const {mostrarEstudiantes,listadoEstudiantes,loading,pagination}= useAdmin();
+    const { formatDate } = useEstudiantes();
+    const { mostrarEstudiantes, listadoEstudiantes, loading, pagination } = useAdmin();
     useEffect(() => {
         mostrarEstudiantes();
         document.title = "Estudiantes";
@@ -24,55 +24,55 @@ export const Estudiantes = () => {
 
     return (
         <>
-        <TableContainer component={Paper}>
-            <Table >
-                <TableHead>
-                    <TableRow sx={{ backgroundColor: '#4b0082' }}>
-                        <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Foto</TableCell>
-                        <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Nombres</TableCell>
-                        <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Apellidos</TableCell>
-                        <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Cédula</TableCell>
-                        <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Fecha de Nacimiento</TableCell>
-                        <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Representante</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {listadoEstudiantes.length > 0 ? (
-                        listadoEstudiantes.map((estudiante, index) => (
-                            <TableRow key={index}>
-                            <TableCell className="md:w-28 sm:w-16">
-                                <img
-                                    src={estudiante.image ? `${import.meta.env.VITE_API_URL}/imagen/${estudiante.image}` : "/img/usuario.svg"}
-                                    alt="foto estudiante"
-                                    className="max-w-full h-auto object-cover rounded-full"
-                                />
-                            </TableCell>
-                            <TableCell>{estudiante.name}</TableCell>
-                            <TableCell>{estudiante.apellido}</TableCell>
-                            <TableCell>{estudiante.cedula}</TableCell>
-                            <TableCell>{formatDate(estudiante.fecha_nacimiento)}</TableCell>
-                            <TableCell>
-                                {estudiante.representante
-                                    ? `${estudiante.representante.name} ${estudiante.representante.apellido}`
-                                    : "Sin representante"}
-                            </TableCell>
+            <TableContainer component={Paper}>
+                <Table >
+                    <TableHead>
+                        <TableRow sx={{ backgroundColor: '#4b0082' }}>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Foto</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Nombres</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Apellidos</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Cédula</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Fecha de Nacimiento</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Representante</TableCell>
                         </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell colSpan={6} align="center">
-                                <Typography variant="h6" color="textSecondary">
-                                    No hay estudiantes inscritos.
-                                </Typography>
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
-        </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                        {listadoEstudiantes.length > 0 ? (
+                            listadoEstudiantes.map((estudiante, index) => (
+                                <TableRow key={index}>
+                                    <TableCell className="md:w-28 sm:w-16">
+                                        <img
+                                            src={estudiante.image ? `${import.meta.env.VITE_API_URL}/imagen/${estudiante.image}` : "/img/usuario.svg"}
+                                            alt="foto estudiante"
+                                            className="max-w-full h-auto object-cover rounded-full"
+                                        />
+                                    </TableCell>
+                                    <TableCell>{estudiante.name}</TableCell>
+                                    <TableCell>{estudiante.apellido}</TableCell>
+                                    <TableCell>{estudiante.cedula}</TableCell>
+                                    <TableCell>{formatDate(estudiante.fecha_nacimiento)}</TableCell>
+                                    <TableCell>
+                                        {estudiante.representante
+                                            ? `${estudiante.representante.name} ${estudiante.representante.apellido}`
+                                            : "Sin representante"}
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={6} align="center">
+                                    <Typography variant="h6" color="textSecondary">
+                                        No hay estudiantes inscritos.
+                                    </Typography>
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </TableContainer>
 
-        {/* Paginación */}
-        <Box display="flex" justifyContent="center" mt={3}>
+            {/* Paginación */}
+            <Box display="flex" justifyContent="center" mt={3}>
                 <Button
                     variant="contained"
                     color="primary"
@@ -93,6 +93,6 @@ export const Estudiantes = () => {
                     Siguiente
                 </Button>
             </Box>
-    </>
+        </>
     );
 };

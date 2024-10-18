@@ -37,14 +37,14 @@ export const ModalAsignarProfesor = ({ modalIsOpen, closeModal}) => {
                     const token = localStorage.getItem('token');
                     console.log(selectedAsignatura);
                     const response = await axios.get(
-                        `${import.meta.env.VITE_API_URL}/secciones?year_id=${selectedAsignatura.year_id}`,
+                        `${import.meta.env.VITE_API_URL}/secciones/buscar?year_id=${selectedAsignatura.year_id}`,
                         {
                             headers: {
                                 Authorization: `Bearer ${token}`,
                             },
                         }
                     );
-                    setSecciones(response.data);
+                    setSecciones(response.data.secciones);
                     console.log(response);
                 } catch (error) {
                     console.error('Error al obtener secciones:', error);
@@ -145,7 +145,7 @@ export const ModalAsignarProfesor = ({ modalIsOpen, closeModal}) => {
                     >
                         {secciones.map((seccion) => (
                             <MenuItem key={seccion.id} value={seccion.id}>
-                                {seccion.name}
+                                {seccion.nombre}
                             </MenuItem>
                         ))}
                     </Select>

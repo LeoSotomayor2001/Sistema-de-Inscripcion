@@ -29,14 +29,14 @@ const PreinscripcionForm = () => {
         try {
           const token = localStorage.getItem('token');
           const response = await axios.get(
-            `${import.meta.env.VITE_API_URL}/secciones?year_id=${selectedYear}`,
+            `${import.meta.env.VITE_API_URL}/secciones/buscar?year_id=${selectedYear}`,
             {
               headers: {
                 Authorization: `Bearer ${token}`,
               },
             }
           );
-          setSecciones(response.data);
+          setSecciones(response.data.secciones);
         } catch (error) {
           console.error('Error al obtener secciones:', error);
           toast.error('Debe seleccionar todos los campos');
@@ -84,7 +84,6 @@ const PreinscripcionForm = () => {
         navigate('/estudiantes-preinscritos');
 
       } catch (error) {
-        console.error('Error al preinscribir estudiante:', error);
         toast.error(error.response.data.mensaje);
       }
       finally {
@@ -147,7 +146,7 @@ const PreinscripcionForm = () => {
         >
           {secciones.map((seccion) => (
             <MenuItem key={seccion.id} value={seccion.id}>
-              {seccion.name} -  ({'Cupos disponibles: ' + seccion.capacidad})
+              {seccion.nombre} -  ({'Cupos disponibles: ' + seccion.capacidad})
             </MenuItem>
           ))}
         </Select>

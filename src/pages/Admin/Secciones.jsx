@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, } from '@mui/material'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Box, } from '@mui/material'
 import ChecklistIcon from '@mui/icons-material/Checklist';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -18,13 +18,17 @@ export const Secciones = () => {
     const [modalIsOpenChecklist, setIsOpenChecklist] = useState(false);
     const [seccionSeleccionadaChecklist, setSeccionSeleccionadaChecklist] = useState(null);
     
-    const { getSecciones, secciones, loading } = useAdmin();
+    const { getSecciones, secciones, loading,pagination } = useAdmin();
 
     const openModal = (seccion = null) => {
         setSeccionSeleccionada(seccion);
         setIsOpen(true);
     };
-
+    const handlePageChange = (newPage) => {
+        if (newPage >= 1 && newPage <= pagination.last_page) {
+            getSecciones(newPage); // Cambiar a la página seleccionada
+        }
+    };
     const closeModal = () => {
         setIsOpen(false);
         setSeccionSeleccionada(null);
@@ -162,6 +166,28 @@ export const Secciones = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            {/* Paginación */}
+            <Box display="flex" justifyContent="center" mt={3}>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handlePageChange(pagination.current_page - 1)}
+                    disabled={pagination.current_page === 1}
+                >
+                    Anterior
+                </Button>
+                <Typography variant="body1" color="textSecondary" mx={2}>
+                    Página {pagination.current_page} de {pagination.last_page}
+                </Typography>
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handlePageChange(pagination.current_page + 1)}
+                    disabled={pagination.current_page === pagination.last_page}
+                >
+                    Siguiente
+                </Button>
+            </Box>
             <ModalSecciones
                 modalIsOpen={modalIsOpen}
                 closeModal={closeModal}

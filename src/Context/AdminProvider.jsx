@@ -97,21 +97,28 @@ const AdminProvider = ({ children }) => {
             setLoading(false);
         }
     }
-    const getSecciones = async () => {
+    const getSecciones = async (page = null) => {
         setLoading(true)
         try {
 
             const token = localStorage.getItem("token");
-            const response = await axios.get(
-                `${import.meta.env.VITE_API_URL}/secciones`,
+            const   url = `${import.meta.env.VITE_API_URL}/secciones?page=${page}`
+            console.log(page)
+            const response = await axios.get(url,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 }
             );
-
-            setSecciones(response.data);
+            console.log(response.data)
+            setSecciones(response.data.secciones);
+            setPagination({
+                current_page: response.data.pagination.current_page,
+                last_page: response.data.pagination.last_page,
+                per_page: response.data.pagination.per_page,
+                total: response.data.pagination.total,
+            });
         } catch (error) {
             console.error(error);
             toast.error("Error al obtener las secciones");

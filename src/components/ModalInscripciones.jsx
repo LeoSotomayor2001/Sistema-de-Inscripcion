@@ -24,7 +24,7 @@ Modal.setAppElement('#root');
 
 export const ModalInscripciones = ({ modalIsOpen, closeModal, inscripcion, obtenerEstudiantes = () => {} }) => {
     const { anosEscolares, getAnosEscolares } = useEstudiantes();
-    const {getSecciones,years,fetchYears}= useAdmin();
+    const {years,fetchYears}= useAdmin();
     const [selectedAnoEscolar, setSelectedAnoEscolar] = useState("");
     const [secciones, setSecciones] = useState([]);
     const [selectedYear, setSelectedYear] = useState("");
@@ -38,14 +38,14 @@ export const ModalInscripciones = ({ modalIsOpen, closeModal, inscripcion, obten
                 try {
                     const token = localStorage.getItem('token');
                     const response = await axios.get(
-                        `${import.meta.env.VITE_API_URL}/secciones?year_id=${selectedYear}`,
+                        `${import.meta.env.VITE_API_URL}/secciones/buscar?year_id=${selectedYear}`,
                         {
                             headers: {
                                 Authorization: `Bearer ${token}`,
                             },
                         }
                     );
-                    setSecciones(response.data);
+                    setSecciones(response.data.secciones);
                 } catch (error) {
                     console.error('Error al obtener secciones:', error);
                     toast.error('Debe seleccionar todos los campos');
@@ -97,7 +97,7 @@ export const ModalInscripciones = ({ modalIsOpen, closeModal, inscripcion, obten
     
     useEffect(() => {
         fetchYears();
-        getSecciones();
+
         getAnosEscolares();
     }, []);
 
@@ -163,7 +163,7 @@ export const ModalInscripciones = ({ modalIsOpen, closeModal, inscripcion, obten
                     >
                         {secciones.map((seccion) => (
                             <MenuItem key={seccion.id} value={seccion.id}>
-                                {seccion.name} - (Cupos disponibles: {seccion.capacidad})
+                                {seccion.nombre} - (Cupos disponibles: {seccion.capacidad})
                             </MenuItem>
                         ))}
                     </Select>
