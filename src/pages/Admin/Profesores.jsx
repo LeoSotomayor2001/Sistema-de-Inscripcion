@@ -82,6 +82,7 @@ export const Profesores = () => {
                             <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Apellido</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Email</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Cédula</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Asignaturas designadas</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Admin</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: 'bold', textAlign: 'center' }}>Acciones</TableCell>
                         </TableRow>
@@ -94,6 +95,7 @@ export const Profesores = () => {
                                     <TableCell sx={{ fontWeight: 'bold' }}>{profesor.apellido}</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>{profesor.email}</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>{profesor.cedula}</TableCell>
+                                    <TableCell sx={{ fontWeight: 'bold' }}>{profesor.asignaturas}</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold' }}>{profesor.admin ? 'Si' : 'No'}</TableCell>
                                     <TableCell sx={{ fontWeight: 'bold', display: 'flex', gap: 2, justifyContent: 'center' }}>
                                         <Button
