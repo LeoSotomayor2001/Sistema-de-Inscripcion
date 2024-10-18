@@ -47,7 +47,7 @@ export const Asignaturas = () => {
         fetchAsignaturas()
       }
       catch (error) {
-        toast.error('Error al eliminar la asignatura:' + error.response.data.error)
+        toast.error(error.response.data.error)
       }
     }
   }

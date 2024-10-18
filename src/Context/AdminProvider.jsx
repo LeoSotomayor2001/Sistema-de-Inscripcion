@@ -13,6 +13,7 @@ const AdminProvider = ({ children }) => {
 
     const [loading, setLoading] = useState(false);
     const [asignaturas, setAsignaturas] = useState([]);
+    const [asignaturasConProfesores, setAsignaturasConProfesores] = useState([]);
     const [secciones, setSecciones] = useState([]);
     const [listadoProfesores, setListadoProfesores] = useState([]);
     const [listadoEstudiantes, setListadoEstudiantes] = useState([]);
@@ -24,7 +25,26 @@ const AdminProvider = ({ children }) => {
         total: 0,
     });
 
+    const getProfesoresConAsignaturas = async () => {
+        setLoading(true)
+        const token = localStorage.getItem('token')
+        const url = `${import.meta.env.VITE_API_URL}/asignatura-profesor`
+        
+        try {
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            setAsignaturasConProfesores(response.data.asignaturas)
+        } catch (error) {
+            console.log(error)
+        }
+        finally {
+            setLoading(false)
+        }
 
+    }
     const fetchAsignaturas = async () => {
         setLoading(true);
         try {
@@ -70,7 +90,8 @@ const AdminProvider = ({ children }) => {
             setListadoProfesores(response.data.data);
         }
         catch (error) {
-            console.log(error);
+            console.error(error);
+            toast.error("Error al obtener los profesores");
         }
         finally {
             setLoading(false);
@@ -139,6 +160,8 @@ const AdminProvider = ({ children }) => {
                 fetchYears,
                 listadoEstudiantes,
                 mostrarEstudiantes,
+                getProfesoresConAsignaturas,
+                asignaturasConProfesores,
                 pagination,
             }}
         >

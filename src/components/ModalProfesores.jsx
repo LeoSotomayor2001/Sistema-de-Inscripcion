@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import PropTypes from 'prop-types';
 import { Box, Button, FormControlLabel, Switch, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useEstudiantes } from '../Hooks/UseEstudiantes';
+import { useAdmin } from '../Hooks/UseAdmin';
 
 Modal.setAppElement('#root');
 
@@ -34,7 +34,7 @@ export const ModalProfesores = ({ modalIsOpen, closeModal, profesor = null }) =>
     const [password_confirmation, setPasswordConfirmation] = useState('');
     const [admin, setAdmin] = useState(false);
     const [errors, setErrors] = useState({});
-    const { getProfesores } = useEstudiantes();
+    const { getProfesores } = useAdmin();
     const isEdit = profesor && profesor.name;
     useEffect(() => {
         if (isEdit && profesor) {

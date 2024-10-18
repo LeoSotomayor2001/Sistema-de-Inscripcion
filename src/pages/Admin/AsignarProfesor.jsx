@@ -3,23 +3,17 @@ import { useEffect, useState } from "react"
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button } from '@mui/material';
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { ModalAsignarProfesor } from "../../components/ModalAsignarProfesor";
+import { useAdmin } from "../../Hooks/UseAdmin";
 export const AsignarProfesor = () => {
-    const [asignaturas, setAsignaturas] = useState([])
-    const getProfesoresConAsignaturas = async () => {
-        const token = localStorage.getItem('token')
-        const url = `${import.meta.env.VITE_API_URL}/asignatura-profesor`
+    const [modalIsOpen, setIsOpen] = useState(false);
+    const {asignaturasConProfesores,getProfesoresConAsignaturas}= useAdmin();
+    const openModal = () => {
+        setIsOpen(true);
+    };
 
-        try {
-            const response = await axios.get(url, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
-            console.log(response)
-            setAsignaturas(response.data.asignaturas)
-        } catch (error) {
-            console.log(error)
-        }
+    const closeModal = () => {
+        setIsOpen(false);
     }
     const desasignarProfesor = async (asignatura) => {
         const url = `${import.meta.env.VITE_API_URL}/asignatura-profesor`;
@@ -49,24 +43,30 @@ export const AsignarProfesor = () => {
                 });
                 console.log(response);
                 getProfesoresConAsignaturas();
-                toast.success('Asignatura desasignada con exito');
+                toast.success(response.data);
             } catch (error) {
                 console.log(error);
                 toast.error('Error al desasignar el profesor');
             }
         }
     };
+
     
     useEffect(() => {
         getProfesoresConAsignaturas()
+        document.title = "Asignar Profesor"
+        // eslint-disable-next-line
     }, [])
+
+ 
+
     return (
         <>
             <header>
                 <Typography variant="h5" sx={{ textAlign: 'center', fontWeight: 'bold', my: 2 }}>
                     Lista de profesores con asignaturas
                 </Typography>
-                <Button variant="contained"  sx={{ margin: 'auto', my: 2 }}>Adjudicar Profesor
+                <Button variant="contained"  sx={{ margin: 'auto', my: 2 }} onClick={openModal}>Adjudicar Profesor
 
                 </Button>
             </header>
@@ -84,8 +84,8 @@ export const AsignarProfesor = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {asignaturas.length > 0 ? (
-                            asignaturas.map((asignatura, index) => (
+                        {asignaturasConProfesores.length > 0 ? (
+                            asignaturasConProfesores.map((asignatura, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{asignatura.nombre}</TableCell>
                                     <TableCell>{asignatura.codigo}</TableCell>
@@ -110,7 +110,6 @@ export const AsignarProfesor = () => {
                                             Quitar Profesor
                                         </Button>
 
-
                                     </TableCell>
 
                                 </TableRow>
@@ -118,7 +117,7 @@ export const AsignarProfesor = () => {
                         ) : (
                             <TableRow>
                                 <TableCell colSpan={7} align="center">
-                                    <Typography>
+                                    <Typography variant="h6" sx={{ textAlign: 'center', fontWeight: 'bold'}} color="textSecondary">
                                         No hay profesores asignados a ninguna asignatura
 
                                     </Typography>
@@ -129,7 +128,7 @@ export const AsignarProfesor = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-
+            <ModalAsignarProfesor modalIsOpen={modalIsOpen} closeModal={closeModal}/>
         </>
     )
 }
