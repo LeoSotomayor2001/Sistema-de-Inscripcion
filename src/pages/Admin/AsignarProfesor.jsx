@@ -18,10 +18,12 @@ export const AsignarProfesor = () => {
     const desasignarProfesor = async (asignatura) => {
         const url = `${import.meta.env.VITE_API_URL}/asignatura-profesor`;
         const data = {
-            asignatura_id: asignatura.id,
+            asignatura_id: asignatura.asignatura_id,
             profesor_id: asignatura.profesor_id,
             seccion_id: asignatura.seccion_id
         };
+        console.log(asignatura) 
+        console.log(data)
         const respuesta = await Swal.fire({
             title: '¿Deseas desasignar este profesor?',
             text: '¡No podras revertir esta operación!',
@@ -66,7 +68,7 @@ export const AsignarProfesor = () => {
                 <Typography variant="h5" sx={{ textAlign: 'center', fontWeight: 'bold', my: 2 }}>
                     Lista de profesores con asignaturas
                 </Typography>
-                <Button variant="contained"  sx={{ margin: 'auto', my: 2 }} onClick={openModal}>Adjudicar Profesor
+                <Button variant="contained"  sx={{ margin: 'auto', my: 2 }} onClick={openModal}>Asignar Profesor
 
                 </Button>
             </header>
