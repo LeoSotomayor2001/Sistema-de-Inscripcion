@@ -138,7 +138,7 @@ export const ModalListaEstudiantes = ({ modalIsOpenChecklist, closeModalChecklis
                     </TableBody>
                 </Table>
             </TableContainer>
-            <button onClick={handleDownloadPDF}>Descargar PDF</button>
+            <button onClick={handleDownloadPDF} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-5">Descargar PDF</button>
         </Modal>
     );
 };
