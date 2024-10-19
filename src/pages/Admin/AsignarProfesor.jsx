@@ -1,13 +1,15 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Box, TextField, MenuItem } from '@mui/material';
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { ModalAsignarProfesor } from "../../components/ModalAsignarProfesor";
 import { useAdmin } from "../../Hooks/UseAdmin";
 export const AsignarProfesor = () => {
     const [modalIsOpen, setIsOpen] = useState(false);
-    const {asignaturasConProfesores,getProfesoresConAsignaturas}= useAdmin();
+    const { asignaturasConProfesores, getProfesoresConAsignaturas, years, fetchYears, setAsignaturasConProfesores } = useAdmin();
+    const [nombre, setNombre] = useState('');
+    const [yearId, setYearId] = useState('');
     const openModal = () => {
         setIsOpen(true);
     };
@@ -22,7 +24,7 @@ export const AsignarProfesor = () => {
             profesor_id: asignatura.profesor_id,
             seccion_id: asignatura.seccion_id
         };
-        console.log(asignatura) 
+        console.log(asignatura)
         console.log(data)
         const respuesta = await Swal.fire({
             title: '¿Deseas desasignar este profesor?',
@@ -53,14 +55,32 @@ export const AsignarProfesor = () => {
         }
     };
 
-    
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        const token = localStorage.getItem('token');
+        const url = `${import.meta.env.VITE_API_URL}/asignatura-profesor/buscar`;
+        try {
+            const response = await axios.get(url, {
+                params: { nombre, year_id: yearId },
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            setAsignaturasConProfesores(response.data);
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+
     useEffect(() => {
         getProfesoresConAsignaturas()
+        fetchYears()
         document.title = "Asignar Profesor"
         // eslint-disable-next-line
     }, [])
 
- 
 
     return (
         <>
@@ -68,9 +88,49 @@ export const AsignarProfesor = () => {
                 <Typography variant="h5" sx={{ textAlign: 'center', fontWeight: 'bold', my: 2 }}>
                     Lista de profesores con asignaturas
                 </Typography>
-                <Button variant="contained"  sx={{ margin: 'auto', my: 2 }} onClick={openModal}>Asignar Profesor
+                <Button variant="contained" sx={{ margin: 'auto', my: 2 }} onClick={openModal}>Asignar Profesor
 
                 </Button>
+                <form className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2 mb-3" onSubmit={handleSubmit} >
+                    <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} width="100%" alignItems="center">
+                        <TextField
+                            fullWidth
+                            id="nombre"
+                            name="nombre"
+                            label="Buscar por nombre del profesor"
+                            variant="outlined"
+                            value={nombre}
+                            onChange={(e) => setNombre(e.target.value)}
+                            sx={{ mb: { xs: 2, md: 0 }, mr: { md: 2 }, width: { md: '300px' } }}
+                        />
+                        <TextField
+                            fullWidth
+                            select
+                            label="Buscar asignaturas por año"
+                            value={yearId}
+                            onChange={(e) => setYearId(e.target.value)}
+                            variant="outlined"
+                            sx={{ mb: { xs: 2, md: 0 }, mr: { md: 2 }, width: { md: '300px' } }}
+                        >
+                            <MenuItem value="">
+                                <em>Seleccione un año académico</em>
+                            </MenuItem>
+                            {years.map((year) => (
+                                <MenuItem key={year.id} value={year.id}>
+                                    {year.year} - {year.descripcion}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="primary"
+                            sx={{ mt: { xs: 2, md: 0 }, width: { xs: '100%', md: 'auto' }, height: 50 }}
+                        >
+                            Buscar
+                        </Button>
+                    </Box>
+                </form>
             </header>
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -119,7 +179,7 @@ export const AsignarProfesor = () => {
                         ) : (
                             <TableRow>
                                 <TableCell colSpan={7} align="center">
-                                    <Typography variant="h6" sx={{ textAlign: 'center', fontWeight: 'bold'}} color="textSecondary">
+                                    <Typography variant="h6" sx={{ textAlign: 'center', fontWeight: 'bold' }} color="textSecondary">
                                         No hay profesores asignados a ninguna asignatura
 
                                     </Typography>
@@ -130,7 +190,7 @@ export const AsignarProfesor = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <ModalAsignarProfesor modalIsOpen={modalIsOpen} closeModal={closeModal}/>
+            <ModalAsignarProfesor modalIsOpen={modalIsOpen} closeModal={closeModal} />
         </>
     )
 }

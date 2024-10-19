@@ -39,6 +39,7 @@ const AdminProvider = ({ children }) => {
                 }
             })
             setAsignaturasConProfesores(response.data.asignaturas)
+            setLoading(false)
         } catch (error) {
             console.log(error)
         }
@@ -203,6 +204,7 @@ const AdminProvider = ({ children }) => {
                 inscripciones,
                 setAsignaturas,
                 obtenerEstudiantes,
+                setAsignaturasConProfesores,
             }}
         >
             {children}
