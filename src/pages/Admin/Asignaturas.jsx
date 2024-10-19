@@ -73,6 +73,7 @@ export const Asignaturas = () => {
             }
         });
         setAsignaturas(response.data);
+        
     } catch (error) {
         console.error(error);
     }
@@ -176,27 +177,30 @@ export const Asignaturas = () => {
           </TableBody>
         </Table>
       </TableContainer>
-      <Box display="flex" justifyContent="center" mt={3}>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => handlePageChange(pagination.current_page - 1)}
-          disabled={pagination.current_page === 1}
-        >
-          Anterior
-        </Button>
-        <Typography variant="body1" color="textSecondary" mx={2}>
-          Página {pagination.current_page} de {pagination.last_page}
-        </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => handlePageChange(pagination.current_page + 1)}
-          disabled={pagination.current_page === pagination.last_page}
-        >
-          Siguiente
-        </Button>
-      </Box>
+      {!nombre && !yearId && (
+        <Box display="flex" justifyContent="center" mt={3}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handlePageChange(pagination.current_page - 1)}
+            disabled={pagination.current_page === 1}
+          >
+            Anterior
+          </Button>
+          <Typography variant="body1" color="textSecondary" mx={2}>
+            Página {pagination.current_page} de {pagination.last_page}
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => handlePageChange(pagination.current_page + 1)}
+            disabled={pagination.current_page === pagination.last_page}
+          >
+            Siguiente
+          </Button>
+        </Box>
+        
+      )}
       {asignaturaSeleccionada && (
         <ModalAsignaturas
           modalIsOpen={modalIsOpen}

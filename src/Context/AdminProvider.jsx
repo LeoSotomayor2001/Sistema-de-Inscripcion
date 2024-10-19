@@ -202,7 +202,7 @@ const AdminProvider = ({ children }) => {
                 pagination,
                 inscripciones,
                 setAsignaturas,
-                obtenerEstudiantes
+                obtenerEstudiantes,
             }}
         >
             {children}
