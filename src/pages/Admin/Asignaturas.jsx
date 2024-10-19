@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react"
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Box, TextField, MenuItem } from '@mui/material';
 import { Spinner } from "../../components/Spinner";
 import { ModalAsignaturas } from "../../components/ModalAsignaturas";
 import { toast } from "react-toastify";
@@ -9,10 +9,11 @@ import Swal from "sweetalert2";
 import { useAdmin } from "../../Hooks/UseAdmin";
 export const Asignaturas = () => {
 
-  const { fetchAsignaturas, asignaturas, loading } = useAdmin()
+  const { fetchAsignaturas, asignaturas, loading, pagination, setAsignaturas, fetchYears, years } = useAdmin()
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [yearId, setYearId] = useState('');
   const [asignaturaSeleccionada, setAsignaturaSeleccionada] = useState(null);
-
+  const [nombre, setNombre] = useState('');
   const openModal = (asignatura = null) => {
     setAsignaturaSeleccionada(asignatura);
     setIsOpen(true);
@@ -22,6 +23,15 @@ export const Asignaturas = () => {
     setIsOpen(false);
     setAsignaturaSeleccionada(null);
   }
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= pagination.last_page) {
+      fetchAsignaturas(newPage); // Cambiar a la página seleccionada
+    }
+  };
+
+
+
   const deleteAsignatura = async (id) => {
     const resultado = await Swal.fire({
       title: '¿Estás seguro?',
@@ -51,9 +61,28 @@ export const Asignaturas = () => {
       }
     }
   }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+    const url = `${import.meta.env.VITE_API_URL}/asignaturas-buscar`;
+    try {
+        const response = await axios.get(url, {
+            params: { nombre, year_id: yearId },
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        setAsignaturas(response.data);
+    } catch (error) {
+        console.error(error);
+    }
+};
+
   useEffect(() => {
     fetchAsignaturas()
+    fetchYears()
     document.title = 'Asignaturas'
+    // eslint-disable-next-line
   }, [])
 
   if (loading) {
@@ -61,7 +90,51 @@ export const Asignaturas = () => {
   }
   return (
     <div>
-      <h1 className="text-3xl text-center my-5">Asignaturas</h1>
+      <header>
+        <h1 className="text-3xl text-center my-5">Asignaturas</h1>
+        <form className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-2 mb-3" onSubmit={handleSubmit}>
+          <Box display="flex" flexDirection={{ xs: 'column', md: 'row' }} width="100%" alignItems="center">
+            <TextField
+              fullWidth
+              id="nombre"
+              name="nombre"
+              label="Buscar asignaturas por nombre"
+              variant="outlined"
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              sx={{ mb: { xs: 2, md: 0 }, mr: { md: 2 }, width: { md: '300px' } }}
+            />
+            <TextField
+              fullWidth
+              select
+              label="Buscar asignaturas por año"
+              value={yearId}
+              onChange={(e) => setYearId(e.target.value)}
+              variant="outlined"
+              sx={{ mb: { xs: 2, md: 0 }, mr: { md: 2 }, width: { md: '300px' } }}
+            >
+              <MenuItem value="">
+                <em>Seleccione un año académico</em>
+              </MenuItem>
+              {years.map((year) => (
+                <MenuItem key={year.id} value={year.id}>
+                  {year.year} - {year.descripcion}
+                </MenuItem>
+              ))}
+            </TextField>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              sx={{ mt: { xs: 2, md: 0 }, width: { xs: '100%', md: 'auto' }, height: 50 }}
+            >
+              Buscar
+            </Button>
+          </Box>
+        </form>
+
+      </header>
+
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
@@ -103,6 +176,27 @@ export const Asignaturas = () => {
           </TableBody>
         </Table>
       </TableContainer>
+      <Box display="flex" justifyContent="center" mt={3}>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => handlePageChange(pagination.current_page - 1)}
+          disabled={pagination.current_page === 1}
+        >
+          Anterior
+        </Button>
+        <Typography variant="body1" color="textSecondary" mx={2}>
+          Página {pagination.current_page} de {pagination.last_page}
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={() => handlePageChange(pagination.current_page + 1)}
+          disabled={pagination.current_page === pagination.last_page}
+        >
+          Siguiente
+        </Button>
+      </Box>
       {asignaturaSeleccionada && (
         <ModalAsignaturas
           modalIsOpen={modalIsOpen}

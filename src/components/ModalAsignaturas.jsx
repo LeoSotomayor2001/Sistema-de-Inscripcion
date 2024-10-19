@@ -189,7 +189,7 @@ export const ModalAsignaturas = ({ modalIsOpen, closeModal, asignatura = null })
                     color="primary"
                     fullWidth
                 >
-                    Registrar Asignatura
+                    Actualizar Asignatura
                 </Button>
 
             </Box>

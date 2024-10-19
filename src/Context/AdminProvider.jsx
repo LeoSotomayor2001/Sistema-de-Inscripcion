@@ -47,23 +47,7 @@ const AdminProvider = ({ children }) => {
         }
 
     }
-    const fetchAsignaturas = async () => {
-        setLoading(true);
-        try {
-            const token = localStorage.getItem('token')
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/asignaturas`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
-            setAsignaturas(response.data)
-        } catch (error) {
-            console.log(error)
-        }
-        finally {
-            setLoading(false)
-        }
-    }
+  
     const fetchYears = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -97,6 +81,29 @@ const AdminProvider = ({ children }) => {
         }
         finally {
             setLoading(false);
+        }
+    }
+    const fetchAsignaturas = async (page = null) => {
+        setLoading(true);
+        try {
+            const token = localStorage.getItem('token')
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/asignaturas?page=${page}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            })
+            setAsignaturas(response.data.asignaturas)
+            setPagination({
+                current_page: response.data.pagination.current_page,
+                last_page: response.data.pagination.last_page,
+                per_page: response.data.pagination.per_page,
+                total: response.data.pagination.total,
+            });
+        } catch (error) {
+            console.log(error)
+        }
+        finally {
+            setLoading(false)
         }
     }
     const obtenerEstudiantes = async (page=1) => {
@@ -194,6 +201,7 @@ const AdminProvider = ({ children }) => {
                 asignaturasConProfesores,
                 pagination,
                 inscripciones,
+                setAsignaturas,
                 obtenerEstudiantes
             }}
         >
