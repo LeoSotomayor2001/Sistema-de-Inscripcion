@@ -48,6 +48,7 @@ export const ModalListaEstudiantes = ({ modalIsOpenChecklist, closeModalChecklis
 
     useEffect(() => {
         getEstudiantesSeccion();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const handleDownloadPDF = () => {
@@ -63,7 +64,7 @@ export const ModalListaEstudiantes = ({ modalIsOpenChecklist, closeModalChecklis
                 estudiante.genero,
                 estudiante.fecha_nacimiento,
             ]),
-            startY: 40,
+            startY: 20,
             theme: 'grid',
             headStyles: {
                 fillColor: [0, 0, 0], // Color de fondo para el encabezado
@@ -77,9 +78,9 @@ export const ModalListaEstudiantes = ({ modalIsOpenChecklist, closeModalChecklis
             },
             columnStyles: {
                 0: { cellWidth: 20 },
-                1: { cellWidth: 130 },
+                1: { cellWidth: 220 },
                 2: { cellWidth: 80 },
-                3: { cellWidth: 100 },
+                3: { cellWidth: 90 },
                 4: { cellWidth: 120 },
             },
         });
