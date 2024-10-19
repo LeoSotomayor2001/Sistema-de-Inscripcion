@@ -16,6 +16,7 @@ const AdminProvider = ({ children }) => {
     const [asignaturasConProfesores, setAsignaturasConProfesores] = useState([]);
     const [secciones, setSecciones] = useState([]);
     const [listadoProfesores, setListadoProfesores] = useState([]);
+    const [inscripciones, setInscripciones] = useState([]);
     const [listadoEstudiantes, setListadoEstudiantes] = useState([]);
     const [years, setYears] = useState([]);
     const [pagination, setPagination] = useState({
@@ -25,6 +26,7 @@ const AdminProvider = ({ children }) => {
         total: 0,
     });
 
+ 
     const getProfesoresConAsignaturas = async () => {
         setLoading(true)
         const token = localStorage.getItem('token')
@@ -94,6 +96,29 @@ const AdminProvider = ({ children }) => {
             toast.error("Error al obtener los profesores");
         }
         finally {
+            setLoading(false);
+        }
+    }
+    const obtenerEstudiantes = async (page=1) => {
+        setLoading(true);
+        try {
+            const token = localStorage.getItem("token");
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/inscripciones?page=${page}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            setInscripciones(response.data.inscripciones);
+            setPagination({
+                current_page: response.data.pagination.current_page,
+                last_page: response.data.pagination.last_page,
+                per_page: response.data.pagination.per_page,
+                total: response.data.pagination.total,
+            });
+        } catch (error) {
+            console.error(error);
+            toast.error("Error al obtener los estudiantes preinscritos");
+        } finally {
             setLoading(false);
         }
     }
@@ -170,6 +195,8 @@ const AdminProvider = ({ children }) => {
                 getProfesoresConAsignaturas,
                 asignaturasConProfesores,
                 pagination,
+                inscripciones,
+                obtenerEstudiantes
             }}
         >
             {children}

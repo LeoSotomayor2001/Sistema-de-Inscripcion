@@ -40,7 +40,7 @@ export const Estudiantes = () => {
                         {listadoEstudiantes.length > 0 ? (
                             listadoEstudiantes.map((estudiante, index) => (
                                 <TableRow key={index}>
-                                    <TableCell className="md:w-28 sm:w-16">
+                                    <TableCell className="md:w-24 sm:w-16">
                                         <img
                                             src={estudiante.image ? `${import.meta.env.VITE_API_URL}/imagen/${estudiante.image}` : "/img/usuario.svg"}
                                             alt="foto estudiante"

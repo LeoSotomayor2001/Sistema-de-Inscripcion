@@ -1,29 +1,13 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
+
+import { useEffect } from "react";
 import { Spinner } from "../../components/Spinner";
 import { TablaEstudiantesPreinscritos } from "../../components/TablaEstudiantesPreinscritos";
+import { useAdmin } from "../../Hooks/UseAdmin";
 
 export const EstudiantesPreinscritosPage = () => {
-    const [inscripciones, setInscripciones] = useState([]);
-    const [loading, setLoading] = useState(true);
 
-    const obtenerEstudiantes = async () => {
-        try {
-            const token = localStorage.getItem("token");
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/inscripciones`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-            setInscripciones(response.data.inscripciones);
-        } catch (error) {
-            console.error(error);
-            toast.error("Error al obtener los estudiantes preinscritos");
-        } finally {
-            setLoading(false);
-        }
-    }
+    
+    const { loading, inscripciones, obtenerEstudiantes } = useAdmin();
     useEffect(() => {
         obtenerEstudiantes();
         document.title = "Inscripciones";
@@ -34,6 +18,6 @@ export const EstudiantesPreinscritosPage = () => {
     }
 
   return (
-    <TablaEstudiantesPreinscritos inscripciones={inscripciones} admin={true} obtenerEstudiantes={obtenerEstudiantes} />
+    <TablaEstudiantesPreinscritos inscripciones={inscripciones} admin={true}/>
   )
 }

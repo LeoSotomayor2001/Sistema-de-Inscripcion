@@ -1,4 +1,4 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Box } from '@mui/material';
 import PropTypes from 'prop-types';
 import EditIcon from '@mui/icons-material/Edit';
 import { CheckCircle } from '@mui/icons-material';
@@ -8,14 +8,22 @@ import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { ModalInscripciones } from './ModalInscripciones';
 import Swal from 'sweetalert2';
-export const TablaEstudiantesPreinscritos = ({ inscripciones, admin = false, obtenerEstudiantes = () => { } }) => {
+import { useAdmin } from '../Hooks/UseAdmin';
+export const TablaEstudiantesPreinscritos = ({ inscripciones, admin = false }) => {
 
     const [modalIsOpen, setIsOpen] = useState(false);
     const [inscripcionSeleccionada, setInscripcionSeleccionada] = useState(null);
+    const { obtenerEstudiantes, pagination } = useAdmin();
 
     const openModal = (inscripcion = null) => {
         setInscripcionSeleccionada(inscripcion);
         setIsOpen(true);
+    };
+
+    const handlePageChange = (newPage) => {
+        if (newPage >= 1 && newPage <= pagination.last_page) {
+            obtenerEstudiantes(newPage); // Cambiar a la página seleccionada
+        }
     };
 
     const closeModal = () => {
@@ -92,7 +100,7 @@ export const TablaEstudiantesPreinscritos = ({ inscripciones, admin = false, obt
             }
         }
     }
-    
+
     return (
         <>
             <TableContainer component={Paper}>
@@ -133,7 +141,7 @@ export const TablaEstudiantesPreinscritos = ({ inscripciones, admin = false, obt
                                                 size="small"
                                                 onClick={() => openModal(inscripcion)}
                                                 title="Editar inscripción"
-                                                
+
                                             >
                                                 <EditIcon />
                                             </Button>
@@ -174,6 +182,31 @@ export const TablaEstudiantesPreinscritos = ({ inscripciones, admin = false, obt
                     </TableBody>
                 </Table>
             </TableContainer>
+            {/* Paginación */}
+            {admin &&
+                <Box display="flex" justifyContent="center" mt={3}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handlePageChange(pagination.current_page - 1)}
+                        disabled={pagination.current_page === 1}
+                    >
+                        Anterior
+                    </Button>
+                    <Typography variant="body1" color="textSecondary" mx={2}>
+                        Página {pagination.current_page} de {pagination.last_page}
+                    </Typography>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handlePageChange(pagination.current_page + 1)}
+                        disabled={pagination.current_page === pagination.last_page}
+                    >
+                        Siguiente
+                    </Button>
+                </Box>
+            }
+
             {admin && inscripcionSeleccionada && (
                 <ModalInscripciones
                     modalIsOpen={modalIsOpen}
@@ -191,5 +224,4 @@ export const TablaEstudiantesPreinscritos = ({ inscripciones, admin = false, obt
 TablaEstudiantesPreinscritos.propTypes = {
     inscripciones: PropTypes.array.isRequired,
     admin: PropTypes.bool,
-    obtenerEstudiantes: PropTypes.func
 }
