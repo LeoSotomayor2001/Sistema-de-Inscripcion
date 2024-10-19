@@ -17,38 +17,44 @@ export const Secciones = () => {
     const [seccionSeleccionada, setSeccionSeleccionada] = useState(null);
     const [modalIsOpenChecklist, setIsOpenChecklist] = useState(false);
     const [seccionSeleccionadaChecklist, setSeccionSeleccionadaChecklist] = useState(null);
-    
-    const { getSecciones, secciones, loading,pagination } = useAdmin();
+
+    const { getSecciones, secciones, loading, pagination } = useAdmin();
 
     const openModal = (seccion = null) => {
+        if (!modalIsOpen) { // Asegúrate de que el modal no esté ya abierto
         setSeccionSeleccionada(seccion);
         setIsOpen(true);
+        }
     };
+
     const handlePageChange = (newPage) => {
         if (newPage >= 1 && newPage <= pagination.last_page) {
             getSecciones(newPage); // Cambiar a la página seleccionada
         }
     };
+
     const closeModal = () => {
         setIsOpen(false);
         setSeccionSeleccionada(null);
     };
-
     const openModalChecklist = (seccion = null) => {
-        setSeccionSeleccionadaChecklist(seccion);
-        setIsOpenChecklist(true);
-        console.log(seccion,modalIsOpenChecklist);
+        if (!modalIsOpenChecklist) { // Asegúrate de que el modal no esté ya abierto
+            setSeccionSeleccionadaChecklist(seccion);
+            setIsOpenChecklist(true);
+        }
     }
-    
+
+
     const closeModalChecklist = () => {
         setIsOpenChecklist(false);
         setSeccionSeleccionadaChecklist(null);
     }
+
     useEffect(() => {
         document.title = 'Secciones';
         getSecciones();
-
     }, []);
+    
 
     const deleteSeccion = async (id) => {
         // Eliminar seccion
@@ -76,10 +82,8 @@ export const Secciones = () => {
                 console.error(error);
                 if (error.response.data.error) {
                     toast.error(error.response.data.error);
-                }
-                else {
+                } else {
                     toast.error('Error al eliminar la sección');
-
                 }
             }
         }
@@ -88,6 +92,7 @@ export const Secciones = () => {
     if (loading) {
         return <Spinner />
     }
+
     return (
         <>
             <header>
@@ -188,11 +193,11 @@ export const Secciones = () => {
                     Siguiente
                 </Button>
             </Box>
+            
             <ModalSecciones
                 modalIsOpen={modalIsOpen}
                 closeModal={closeModal}
                 seccion={seccionSeleccionada}
-
             />
             {seccionSeleccionadaChecklist && (
                 <ModalListaEstudiantes

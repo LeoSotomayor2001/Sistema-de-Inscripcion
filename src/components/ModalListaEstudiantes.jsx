@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import {  useEffect, useState} from 'react';
 import Modal from 'react-modal';
 import PropTypes from 'prop-types';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography } from '@mui/material';
@@ -15,8 +15,9 @@ const customStyles = {
         bottom: 'auto',
         marginRight: '-50%',
         transform: 'translate(-50%, -50%)',
-        width: '80%',
-        maxWidth: '600px',
+        width: '90%',
+        maxWidth: '900px',
+        
     },
 };
 
@@ -25,7 +26,7 @@ Modal.setAppElement('#root');
 export const ModalListaEstudiantes = ({ modalIsOpenChecklist, closeModalChecklist, seccion }) => {
     const [listadoEstudiantes, setListadoEstudiantes] = useState([]);
     const [loading, setLoading] = useState(true);
-    const tableRef = useRef();
+
 
     const getEstudiantesSeccion = async () => {
         setLoading(true);
@@ -37,7 +38,6 @@ export const ModalListaEstudiantes = ({ modalIsOpenChecklist, closeModalChecklis
                     Authorization: `Bearer ${token}`,
                 },
             });
-            console.log(response);
             setListadoEstudiantes(response.data);
         } catch (error) {
             console.log(error);
@@ -94,11 +94,12 @@ export const ModalListaEstudiantes = ({ modalIsOpenChecklist, closeModalChecklis
             onRequestClose={closeModalChecklist}
             style={customStyles}
             contentLabel={'Lista de estudiantes'}
+            
         >
             <h2 className="text-center text-2xl font-bold my-2">
                 Lista de estudiantes de {seccion?.año + " año " + seccion?.nombre}
             </h2>
-            <TableContainer component={Paper} sx={{ width: '100%', margin: 'auto', marginTop: 2 }} ref={tableRef}>
+            <TableContainer component={Paper} sx={{ width: '100%', margin: 'auto', marginTop: 2,opacity: 1 }}>
                 <Table>
                     <TableHead>
                         <TableRow sx={{ backgroundColor: 'black' }}>
@@ -143,7 +144,7 @@ export const ModalListaEstudiantes = ({ modalIsOpenChecklist, closeModalChecklis
                 type="button" 
                 disabled={listadoEstudiantes.length === 0 || loading}
                 className={
-                    'bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-30 disabled:cursor-not-allowed'}
+                    'mt-5 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-30 disabled:cursor-not-allowed'}
                 >
                     Descargar PDF
             </button>

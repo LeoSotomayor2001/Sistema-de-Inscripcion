@@ -128,7 +128,6 @@ const AdminProvider = ({ children }) => {
 
             const token = localStorage.getItem("token");
             const   url = `${import.meta.env.VITE_API_URL}/secciones?page=${page}`
-            console.log(page)
             const response = await axios.get(url,
                 {
                     headers: {
@@ -136,7 +135,6 @@ const AdminProvider = ({ children }) => {
                     },
                 }
             );
-            console.log(response.data)
             setSecciones(response.data.secciones);
             setPagination({
                 current_page: response.data.pagination.current_page,
