@@ -10,7 +10,7 @@ const AdminContext = createContext();
 
 // Proveedor del contexto que envuelve la aplicación
 const AdminProvider = ({ children }) => {
-
+    const [notificaciones, setNotificaciones] = useState([]);
     const [loading, setLoading] = useState(false);
     const [asignaturas, setAsignaturas] = useState([]);
     const [asignaturasConProfesores, setAsignaturasConProfesores] = useState([]);
@@ -27,6 +27,26 @@ const AdminProvider = ({ children }) => {
     });
 
  
+    const getNotificacionesNoLeidas = async () => {
+        setLoading(true)
+        const url = `${import.meta.env.VITE_API_URL}/notificaciones/unread`;
+        const token = localStorage.getItem('token');
+
+        try {
+            const response = await axios.get(url, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            setNotificaciones(response.data);
+            
+        } catch (error) {
+            console.log(error);
+        }
+        finally {
+            setLoading(false)
+        }
+    }
     const getProfesoresConAsignaturas = async (page = 1) => {
         setLoading(true)
         const token = localStorage.getItem('token')
@@ -210,6 +230,8 @@ const AdminProvider = ({ children }) => {
                 setAsignaturas,
                 obtenerEstudiantes,
                 setAsignaturasConProfesores,
+                getNotificacionesNoLeidas,
+                notificaciones,
             }}
         >
             {children}

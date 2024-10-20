@@ -17,6 +17,8 @@ import { EstudiantesPreinscritosPage } from "./pages/Admin/EstudiantesPreinscrit
 import { Asignaturas } from "./pages/Admin/Asignaturas";
 import { FormAsignaturas } from "./pages/Admin/FormAsignaturas";
 import { AsignarProfesor } from "./pages/Admin/AsignarProfesor";
+import { IndexAdmin } from "./pages/Admin/IndexAdmin";
+import { Notificacion } from "./pages/Admin/Notificacion";
 
 
 const router = createBrowserRouter([
@@ -53,7 +55,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <h1>Index</h1>
+        element: <IndexAdmin />
       },
       {
         path: "estudiantes",
@@ -82,6 +84,10 @@ const router = createBrowserRouter([
       {
         path:'asignatura-profesor', 
         element:<AsignarProfesor/>
+      },
+      {
+        path: "notificaciones",
+        element: <Notificacion/>
       }
     ]
   },

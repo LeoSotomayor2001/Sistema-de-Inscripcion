@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
@@ -27,7 +27,7 @@ import axios from 'axios';
 export const AdminSidebar = () => {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
-
+    const [unreadCount, setUnreadCount] = useState(0);
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
     };
@@ -52,6 +52,24 @@ export const AdminSidebar = () => {
         }
     };
 
+    useEffect(() => {
+        // Obtener la cantidad de notificaciones no leídas
+        const fetchUnreadNotifications = async () => {
+            try {
+                const response = await axios.get(`${import.meta.env.VITE_API_URL}/notificaciones/unread`, {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem("token")}`
+                    }
+                });
+                setUnreadCount(response.data); // Establecer la cantidad de notificaciones no leídas
+            } catch (error) {
+                console.error("Error al obtener notificaciones no leídas", error);
+            }
+        };
+
+        fetchUnreadNotifications();
+    }, []); // Ejecutar una vez al montar el componente
+
     const items = [
         { text: 'Inicio', icon: <HomeIcon />, url: '/index' },
         { text: 'Estudiantes', icon: <SchoolIcon />, url: 'estudiantes' },
@@ -64,7 +82,7 @@ export const AdminSidebar = () => {
         { text: 'Lista de Asignaturas', icon: <AssignmentIcon />, url: 'asignaturas' },
         { text: 'Registrar Asignatura', icon: <InboxIcon />, url: 'registrar-asignatura' },
         { text: 'Asignar Profesor', icon: <PersonIcon />, url: 'asignatura-profesor' },
-        { text: 'Notificaciones', icon: <NotificationsIcon />, url: 'notificaciones' },
+        { text: `Notificaciones (${unreadCount.length})`, icon: <NotificationsIcon />, url: 'notificaciones' },
     ];
 
     const DrawerList = (
