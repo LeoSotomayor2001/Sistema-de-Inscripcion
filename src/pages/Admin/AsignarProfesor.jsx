@@ -7,8 +7,9 @@ import { ModalAsignarProfesor } from "../../components/ModalAsignarProfesor";
 import { useAdmin } from "../../Hooks/UseAdmin";
 export const AsignarProfesor = () => {
     const [modalIsOpen, setIsOpen] = useState(false);
-    const { asignaturasConProfesores, getProfesoresConAsignaturas, years, fetchYears, setAsignaturasConProfesores } = useAdmin();
+    const { asignaturasConProfesores, getProfesoresConAsignaturas, years, fetchYears, setAsignaturasConProfesores, pagination } = useAdmin();
     const [nombre, setNombre] = useState('');
+    const [nombreAsignatura, setNombreAsignatura] = useState('');
     const [yearId, setYearId] = useState('');
     const openModal = () => {
         setIsOpen(true);
@@ -17,6 +18,12 @@ export const AsignarProfesor = () => {
     const closeModal = () => {
         setIsOpen(false);
     }
+
+    const handlePageChange = (newPage) => {
+        if (newPage >= 1 && newPage <= pagination.last_page) {
+            getProfesoresConAsignaturas(newPage); // Cambiar a la página seleccionada
+        }
+    };
     const desasignarProfesor = async (asignatura) => {
         const url = `${import.meta.env.VITE_API_URL}/asignatura-profesor`;
         const data = {
@@ -61,7 +68,7 @@ export const AsignarProfesor = () => {
         const url = `${import.meta.env.VITE_API_URL}/asignatura-profesor/buscar`;
         try {
             const response = await axios.get(url, {
-                params: { nombre, year_id: yearId },
+                params: { nombre, year_id: yearId, nombre_asignatura: nombreAsignatura },
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -121,6 +128,17 @@ export const AsignarProfesor = () => {
                                 </MenuItem>
                             ))}
                         </TextField>
+
+                        <TextField
+                            fullWidth
+                            id="nombre"
+                            name="nombre"
+                            label="Buscar por nombre de la asignatura"
+                            variant="outlined"
+                            value={nombreAsignatura}
+                            onChange={(e) => setNombreAsignatura(e.target.value)}
+                            sx={{ mb: { xs: 2, md: 0 }, mr: { md: 2 }, width: { md: '300px' } }}
+                        />
                         <Button
                             type="submit"
                             variant="contained"
@@ -190,6 +208,30 @@ export const AsignarProfesor = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            {!nombre && !yearId && !nombreAsignatura && (
+                <Box display="flex" justifyContent="center" mt={3}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handlePageChange(pagination.current_page - 1)}
+                        disabled={pagination.current_page === 1}
+                    >
+                        Anterior
+                    </Button>
+                    <Typography variant="body1" color="textSecondary" mx={2}>
+                        Página {pagination.current_page} de {pagination.last_page}
+                    </Typography>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => handlePageChange(pagination.current_page + 1)}
+                        disabled={pagination.current_page === pagination.last_page}
+                    >
+                        Siguiente
+                    </Button>
+                </Box>
+
+            )}
             <ModalAsignarProfesor modalIsOpen={modalIsOpen} closeModal={closeModal} />
         </>
     )

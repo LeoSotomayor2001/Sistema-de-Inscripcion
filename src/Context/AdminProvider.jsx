@@ -27,10 +27,10 @@ const AdminProvider = ({ children }) => {
     });
 
  
-    const getProfesoresConAsignaturas = async () => {
+    const getProfesoresConAsignaturas = async (page = 1) => {
         setLoading(true)
         const token = localStorage.getItem('token')
-        const url = `${import.meta.env.VITE_API_URL}/asignatura-profesor`
+        const url = `${import.meta.env.VITE_API_URL}/asignatura-profesor?page=${page}`
         
         try {
             const response = await axios.get(url, {
@@ -39,7 +39,12 @@ const AdminProvider = ({ children }) => {
                 }
             })
             setAsignaturasConProfesores(response.data.asignaturas)
-            setLoading(false)
+            setPagination({
+                current_page: response.data.pagination.current_page,
+                last_page: response.data.pagination.last_page,
+                per_page: response.data.pagination.per_page,
+                total: response.data.pagination.total,
+            });
         } catch (error) {
             console.log(error)
         }
