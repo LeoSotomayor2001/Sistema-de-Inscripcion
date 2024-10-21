@@ -12,7 +12,7 @@ const AdminContext = createContext();
 const AdminProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
     const [asignaturas, setAsignaturas] = useState([]);
-    const [asignaturasConProfesores, setAsignaturasConProfesores] = useState([]);
+    const [asignaturasConProfesores, setAsignaturasConProfesores] = useState(null);
     const [secciones, setSecciones] = useState([]);
     const [listadoProfesores, setListadoProfesores] = useState([]);
     const [inscripciones, setInscripciones] = useState([]);

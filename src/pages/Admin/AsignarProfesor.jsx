@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { ModalAsignarProfesor } from "../../components/ModalAsignarProfesor";
 import { useAdmin } from "../../Hooks/UseAdmin";
+import { Spinner } from "../../components/Spinner";
 export const AsignarProfesor = () => {
     const [modalIsOpen, setIsOpen] = useState(false);
     const { asignaturasConProfesores, getProfesoresConAsignaturas, years, fetchYears, setAsignaturasConProfesores, pagination } = useAdmin();
@@ -88,6 +89,10 @@ export const AsignarProfesor = () => {
         // eslint-disable-next-line
     }, [])
 
+
+    if (!asignaturasConProfesores){
+        return <Spinner/>
+    }
 
     return (
         <>
