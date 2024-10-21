@@ -37,7 +37,7 @@ const AdminProvider = ({ children }) => {
     const { data: notificaciones, error: notificacionesError, isValidating: isLoadingNotificaciones } = useSWR(
         `${import.meta.env.VITE_API_URL}/notificaciones/unread`,
         fetcher,
-        { refreshInterval: 1000 } // Actualizar cada 60 segundos
+        { refreshInterval: 60000 } // Actualizar cada 60 segundos
     );
 
     const getProfesoresConAsignaturas = async (page = 1) => {
