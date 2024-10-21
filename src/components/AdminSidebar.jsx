@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
@@ -23,52 +23,35 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { useAdmin } from '../Hooks/UseAdmin';
+// Asegúrate de importar el hook correcto
 
 export const AdminSidebar = () => {
     const [open, setOpen] = useState(false);
+    const { notificaciones } = useAdmin();
     const navigate = useNavigate();
-    const [unreadCount, setUnreadCount] = useState(0);
+
     const toggleDrawer = (newOpen) => () => {
         setOpen(newOpen);
     };
 
     const handleLogout = async () => {
         try {
-            const currentToken = localStorage.getItem("token");
+            const currentToken = localStorage.getItem('token');
             const response = await axios.post(`${import.meta.env.VITE_API_URL}/logout`, {}, {
-                headers: {
-                    Authorization: `Bearer ${currentToken}`
-                }
+                headers: { Authorization: `Bearer ${currentToken}` }
             });
             toast.success(response.data.mensaje);
-            localStorage.removeItem("token");
-            localStorage.removeItem("usuario");
+            localStorage.removeItem('token');
+            localStorage.removeItem('usuario');
             setTimeout(() => {
-                navigate("/auth");
+                navigate('/auth');
             }, 1000);
         } catch (error) {
             console.log(error);
-            toast.error("Error al cerrar sesión");
+            toast.error('Error al cerrar sesión');
         }
     };
-
-    useEffect(() => {
-        // Obtener la cantidad de notificaciones no leídas
-        const fetchUnreadNotifications = async () => {
-            try {
-                const response = await axios.get(`${import.meta.env.VITE_API_URL}/notificaciones/unread`, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`
-                    }
-                });
-                setUnreadCount(response.data); // Establecer la cantidad de notificaciones no leídas
-            } catch (error) {
-                console.error("Error al obtener notificaciones no leídas", error);
-            }
-        };
-
-        fetchUnreadNotifications();
-    }, []); // Ejecutar una vez al montar el componente
 
     const items = [
         { text: 'Inicio', icon: <HomeIcon />, url: '/index' },
@@ -82,7 +65,7 @@ export const AdminSidebar = () => {
         { text: 'Lista de Asignaturas', icon: <AssignmentIcon />, url: 'asignaturas' },
         { text: 'Registrar Asignatura', icon: <InboxIcon />, url: 'registrar-asignatura' },
         { text: 'Asignar Profesor', icon: <PersonIcon />, url: 'asignatura-profesor' },
-        { text: `Notificaciones (${unreadCount.length})`, icon: <NotificationsIcon />, url: 'notificaciones' },
+        { text: `Notificaciones (${notificaciones ? notificaciones.length : 0})`, icon: <NotificationsIcon />, url: 'notificaciones' },
     ];
 
     const DrawerList = (

@@ -1,44 +1,38 @@
-import { Box, Button, Paper, Typography } from "@mui/material";
-import axios from "axios";
-import { useEffect } from "react";
+import { Box, Button, Paper, Typography } from '@mui/material';
+import axios from 'axios';
 import { Link, Link as RouterLink } from 'react-router-dom';
-import { toast } from "react-toastify";
-import { useAdmin } from "../../Hooks/UseAdmin";
-import { Spinner } from "../../components/Spinner";
-export const Notificacion = () => {
+import { toast } from 'react-toastify';
+import { useAdmin } from '../../Hooks/UseAdmin';
+import { Spinner } from '../../components/Spinner';
 
-    const { getNotificacionesNoLeidas, notificaciones, loading } = useAdmin();
+export const Notificacion = () => {
+    const { notificaciones, notificacionesError, mutateNotificaciones } = useAdmin();
     const handleRead = async (notificacionId) => {
         const url = `${import.meta.env.VITE_API_URL}/notificaciones/mark-as-read/${notificacionId}`;
         const token = localStorage.getItem('token');
-        console.log(notificacionId)
         try {
             const response = await axios.post(url, {}, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             toast.success(response.data.mensaje);
-            getNotificacionesNoLeidas();
+            mutateNotificaciones(); // Refrescar las notificaciones después de marcar como leída
         } catch (error) {
             toast.error(error.response.data.mensaje);
         }
     };
 
-
-    useEffect(() => {
-        getNotificacionesNoLeidas()
-    }, [])
-
-    if (loading) {
-        return <Spinner />
+    if (!notificaciones || notificacionesError) {
+        return <Spinner />;
     }
+
+
     return (
         <Box display="flex" flexDirection="column" alignItems="center" padding={2}>
             <Typography variant="h4" component="h1" align="center" gutterBottom>
                 Notificaciones
             </Typography>
-            {notificaciones.length > 0 ? (
+            {notificaciones?.length > 0 ? (
                 notificaciones.map((notificacion) => (
-
                     <Paper
                         key={notificacion.id}
                         elevation={3}
@@ -75,5 +69,5 @@ export const Notificacion = () => {
                 </Typography>
             )}
         </Box>
-    )
-}
+    );
+};

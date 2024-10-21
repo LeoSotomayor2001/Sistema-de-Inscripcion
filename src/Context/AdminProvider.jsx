@@ -1,16 +1,15 @@
-// EstudiantesContext.js
 import { createContext, useState } from 'react';
-import PropTypes from "prop-types"
+import PropTypes from "prop-types";
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import useSWR, { mutate } from 'swr'; // Importar mutate
+
 // Crear el contexto
-
-
 const AdminContext = createContext();
+
 
 // Proveedor del contexto que envuelve la aplicación
 const AdminProvider = ({ children }) => {
-    const [notificaciones, setNotificaciones] = useState([]);
     const [loading, setLoading] = useState(false);
     const [asignaturas, setAsignaturas] = useState([]);
     const [asignaturasConProfesores, setAsignaturasConProfesores] = useState([]);
@@ -25,40 +24,33 @@ const AdminProvider = ({ children }) => {
         per_page: 10,
         total: 0,
     });
-
- 
-    const getNotificacionesNoLeidas = async () => {
-        setLoading(true)
-        const url = `${import.meta.env.VITE_API_URL}/notificaciones/unread`;
+    
+    // Fetcher para SWR
+    const fetcher = async(url) => {
         const token = localStorage.getItem('token');
+        return await axios.get(url, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        }).then(res => res.data);
+    };
+    const { data: notificaciones, error: notificacionesError, isValidating: isLoadingNotificaciones } = useSWR(
+        `${import.meta.env.VITE_API_URL}/notificaciones/unread`,
+        fetcher,
+        { refreshInterval: 1000 } // Actualizar cada 60 segundos
+    );
 
-        try {
-            const response = await axios.get(url, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            setNotificaciones(response.data);
-            
-        } catch (error) {
-            console.log(error);
-        }
-        finally {
-            setLoading(false)
-        }
-    }
     const getProfesoresConAsignaturas = async (page = 1) => {
-        setLoading(true)
-        const token = localStorage.getItem('token')
-        const url = `${import.meta.env.VITE_API_URL}/asignatura-profesor?page=${page}`
-        
+        setLoading(true);
+        const token = localStorage.getItem('token');
+        const url = `${import.meta.env.VITE_API_URL}/asignatura-profesor?page=${page}`;
         try {
             const response = await axios.get(url, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            })
-            setAsignaturasConProfesores(response.data.asignaturas)
+            });
+            setAsignaturasConProfesores(response.data.asignaturas);
             setPagination({
                 current_page: response.data.pagination.current_page,
                 last_page: response.data.pagination.last_page,
@@ -66,14 +58,12 @@ const AdminProvider = ({ children }) => {
                 total: response.data.pagination.total,
             });
         } catch (error) {
-            console.log(error)
+            console.log(error);
+        } finally {
+            setLoading(false);
         }
-        finally {
-            setLoading(false)
-        }
+    };
 
-    }
-  
     const fetchYears = async () => {
         try {
             const token = localStorage.getItem('token');
@@ -100,25 +90,24 @@ const AdminProvider = ({ children }) => {
                 }
             });
             setListadoProfesores(response.data.data);
-        }
-        catch (error) {
+        } catch (error) {
             console.error(error);
             toast.error("Error al obtener los profesores");
-        }
-        finally {
+        } finally {
             setLoading(false);
         }
-    }
+    };
+
     const fetchAsignaturas = async (page = null) => {
         setLoading(true);
         try {
-            const token = localStorage.getItem('token')
+            const token = localStorage.getItem('token');
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/asignaturas?page=${page}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
-            })
-            setAsignaturas(response.data.asignaturas)
+            });
+            setAsignaturas(response.data.asignaturas);
             setPagination({
                 current_page: response.data.pagination.current_page,
                 last_page: response.data.pagination.last_page,
@@ -126,13 +115,13 @@ const AdminProvider = ({ children }) => {
                 total: response.data.pagination.total,
             });
         } catch (error) {
-            console.log(error)
+            console.log(error);
+        } finally {
+            setLoading(false);
         }
-        finally {
-            setLoading(false)
-        }
-    }
-    const obtenerEstudiantes = async (page=1) => {
+    };
+
+    const obtenerEstudiantes = async (page = 1) => {
         setLoading(true);
         try {
             const token = localStorage.getItem("token");
@@ -154,20 +143,18 @@ const AdminProvider = ({ children }) => {
         } finally {
             setLoading(false);
         }
-    }
-    const getSecciones = async (page = null) => {
-        setLoading(true)
-        try {
+    };
 
+    const getSecciones = async (page = null) => {
+        setLoading(true);
+        try {
             const token = localStorage.getItem("token");
-            const   url = `${import.meta.env.VITE_API_URL}/secciones?page=${page}`
-            const response = await axios.get(url,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
+            const url = `${import.meta.env.VITE_API_URL}/secciones?page=${page}`;
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             setSecciones(response.data.secciones);
             setPagination({
                 current_page: response.data.pagination.current_page,
@@ -178,11 +165,11 @@ const AdminProvider = ({ children }) => {
         } catch (error) {
             console.error(error);
             toast.error("Error al obtener las secciones");
+        } finally {
+            setLoading(false);
         }
-        finally {
-            setLoading(false)
-        }
-    }
+    };
+
     const mostrarEstudiantes = async (page = 1) => {
         setLoading(true);
         try {
@@ -192,7 +179,6 @@ const AdminProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-
             // Actualiza los estudiantes
             setListadoEstudiantes(response.data.data);
             // Actualiza la paginación
@@ -230,8 +216,10 @@ const AdminProvider = ({ children }) => {
                 setAsignaturas,
                 obtenerEstudiantes,
                 setAsignaturasConProfesores,
-                getNotificacionesNoLeidas,
-                notificaciones,
+                notificaciones: notificaciones,
+                isLoadingNotificaciones,
+                notificacionesError,
+                mutateNotificaciones: () => mutate(`${import.meta.env.VITE_API_URL}/notificaciones/unread`)
             }}
         >
             {children}
@@ -239,10 +227,8 @@ const AdminProvider = ({ children }) => {
     );
 };
 
-
 AdminProvider.propTypes = {
     children: PropTypes.node.isRequired,
-
 };
 
 export { AdminProvider };
