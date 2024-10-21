@@ -13,12 +13,12 @@ export const FormAsignaturas = () => {
         codigo: '',
     };
     const { getAnosEscolares, anosEscolares } = useEstudiantes();
-    const {fetchYears,years}= useAdmin();
+    const { fetchYears, years } = useAdmin();
     const [selectedAnoEscolar, setSelectedAnoEscolar] = useState('');
     const [yearId, setYearId] = useState('');
     const [errors, setErrors] = useState({});
     const [formData, setFormData] = useState(initialState);
-    const navigate= useNavigate();
+    const navigate = useNavigate();
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
@@ -33,21 +33,21 @@ export const FormAsignaturas = () => {
         fetchYears();
     }, [])
 
-    const handleSubmit =async (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        const token=localStorage.getItem('token')
+        const token = localStorage.getItem('token')
         const url = `${import.meta.env.VITE_API_URL}/asignaturas`
 
-        const data={
-            nombre:formData.nombre,
-            descripcion:formData.descripcion,
-            codigo:formData.codigo,
-            year_id:yearId,
-            ano_escolar_id:selectedAnoEscolar
+        const data = {
+            nombre: formData.nombre,
+            descripcion: formData.descripcion,
+            codigo: formData.codigo,
+            year_id: yearId,
+            ano_escolar_id: selectedAnoEscolar
         }
-        
+
         try {
-            const response =await axios.post(url, data, {
+            const response = await axios.post(url, data, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -56,25 +56,28 @@ export const FormAsignaturas = () => {
             setFormData(initialState)
             setSelectedAnoEscolar('')
             setYearId('')
-            
+
             navigate('/index/asignaturas')
-                
-           
+
+
         } catch (error) {
-            if(error.response.data.errors){
+            if (error.response.data.errors) {
                 setErrors(error.response.data.errors)
                 setTimeout(() => {
                     setErrors([])
                 }, 3000);
             }
-            else if(error.response.data.error){
+            else if (error.response.data.error) {
                 toast.error(error.response.data.error)
             }
-            else{
+            else if (error.response.data.message) {
+                toast.error(error.response.data.message)
+            }
+            else {
                 toast.error('Ocurrio un error en el servidor')
             }
             console.log(error)
-            
+
         }
     }
     return (
@@ -152,7 +155,7 @@ export const FormAsignaturas = () => {
                             </MenuItem>
                         ))}
                     </Select>
-                        {errors?.ano_escolar_id && <p className="text-red-500">{errors?.ano_escolar_id[0]}</p>}
+                    {errors?.ano_escolar_id && <p className="text-red-500">{errors?.ano_escolar_id[0]}</p>}
                 </FormControl>
 
                 <Button

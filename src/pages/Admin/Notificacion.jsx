@@ -16,12 +16,10 @@ export const Notificacion = () => {
             const response = await axios.post(url, {}, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            toast.success('Notificación marcada como leída');
-            console.log(response.data)
+            toast.success(response.data.mensaje);
             getNotificacionesNoLeidas();
         } catch (error) {
-            console.error(error);
-            toast.error('Error al marcar la notificación como leída');
+            toast.error(error.response.data.mensaje);
         }
     };
 

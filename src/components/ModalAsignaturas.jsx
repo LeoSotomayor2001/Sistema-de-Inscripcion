@@ -88,6 +88,9 @@ export const ModalAsignaturas = ({ modalIsOpen, closeModal, asignatura = null })
                     setErrors([]);
                 }, 3000);
             }
+            else if(error.response.data.message){
+                toast.error(error.response.data.message);
+            }
             else {
                 toast.error('Ocurrio un error en el servidor');
             }
