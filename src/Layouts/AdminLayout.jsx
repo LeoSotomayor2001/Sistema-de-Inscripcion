@@ -13,6 +13,7 @@ export const AdminLayout = () => {
   useEffect(() => {
     if (!token) {
       navigate("/auth");
+      return
     }
   }, [token, navigate])
 

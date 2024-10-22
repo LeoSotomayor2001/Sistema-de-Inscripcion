@@ -11,7 +11,7 @@ const AdminContext = createContext();
 // Proveedor del contexto que envuelve la aplicación
 const AdminProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
-    const [asignaturas, setAsignaturas] = useState([]);
+    const [asignaturas, setAsignaturas] = useState(null);
     const [asignaturasConProfesores, setAsignaturasConProfesores] = useState(null);
     const [secciones, setSecciones] = useState([]);
     const [listadoProfesores, setListadoProfesores] = useState([]);
@@ -79,6 +79,21 @@ const AdminProvider = ({ children }) => {
         }
     };
 
+    const getAllProfesores=async()=>{
+        const token = localStorage.getItem('token');
+        try {
+            const url = `${import.meta.env.VITE_API_URL}/users-all`
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setListadoProfesores(response.data.data);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const getProfesores = async () => {
         setLoading(true);
         const url = "http://127.0.0.1:8000/api/users";
@@ -97,7 +112,34 @@ const AdminProvider = ({ children }) => {
             setLoading(false);
         }
     };
-
+    const fetchAllStudents=async()=>{
+        const token = localStorage.getItem('token');
+        try {
+            const url = `${import.meta.env.VITE_API_URL}/estudiantes-all`
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setListadoEstudiantes(response.data.data);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    const fetchAllAsignaturas = async () => {
+        const token = localStorage.getItem('token');
+        try {
+            const url = `${import.meta.env.VITE_API_URL}/asignaturas-all`
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setAsignaturas(response.data);
+        } catch (error) {
+            console.log(error)
+        }
+    }
     const fetchAsignaturas = async (page = null) => {
         setLoading(true);
         try {
@@ -141,6 +183,42 @@ const AdminProvider = ({ children }) => {
             console.error(error);
             toast.error("Error al obtener los estudiantes preinscritos");
         } finally {
+            setLoading(false);
+        }
+    };
+
+    const fetchAllInscripciones = async () => {
+        const token = localStorage.getItem("token");
+        try {
+            const url = `${import.meta.env.VITE_API_URL}/inscripciones-all`;
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setInscripciones(response.data.inscripciones);
+        } catch (error) {
+            console.error(error);
+            toast.error("Error al obtener las inscripciones");
+        }
+    };
+
+    const getAllSecciones = async () => {
+        setLoading(true);
+        try {
+            const token = localStorage.getItem("token");
+            const url = `${import.meta.env.VITE_API_URL}/secciones-all`;
+            const response = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            setSecciones(response.data.secciones);
+        } catch (error) {
+            console.error(error);
+            toast.error("Error al obtener las secciones");
+        }
+        finally {
             setLoading(false);
         }
     };
@@ -219,7 +297,13 @@ const AdminProvider = ({ children }) => {
                 notificaciones: notificaciones,
                 isLoadingNotificaciones,
                 notificacionesError,
-                mutateNotificaciones: () => mutate(`${import.meta.env.VITE_API_URL}/notificaciones/unread`)
+                fetchAllAsignaturas,
+                fetchAllStudents,
+                getAllProfesores,
+                getAllSecciones,
+                mutateNotificaciones: () => mutate(`${import.meta.env.VITE_API_URL}/notificaciones/unread`),
+                fetchAllInscripciones
+
             }}
         >
             {children}

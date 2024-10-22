@@ -24,7 +24,7 @@ export const Estudiantes = () => {
 
     return (
         <>
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} sx={{ maxHeight: 800 }}>
                 <Table >
                     <TableHead>
                         <TableRow sx={{ backgroundColor: '#4b0082' }}>

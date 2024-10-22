@@ -22,9 +22,8 @@ const customStyles = {
 Modal.setAppElement('#root');
 
 export const ModalAsignarProfesor = ({ modalIsOpen, closeModal }) => {
-    const { getProfesores, listadoProfesores, getProfesoresConAsignaturas } = useAdmin();
+    const { getProfesores, listadoProfesores, getProfesoresConAsignaturas,asignaturas, fetchAllAsignaturas } = useAdmin();
 
-    const [asignaturas, setAsignaturas] = useState([]);
     const [selectedAsignatura, setSelectedAsignatura] = useState('');
     const [selectedProfesor, setSelectedProfesor] = useState('');
     const [selectedSeccion, setSelectedSeccion] = useState('');
@@ -59,23 +58,6 @@ export const ModalAsignarProfesor = ({ modalIsOpen, closeModal }) => {
             setSelectedSeccion(''); // Asegurar que la sección esté vacía
         }
     }, [selectedAsignatura]);
-
-    const fetchAllAsignaturas = async () => {
-        const token = localStorage.getItem('token');
-        try {
-            const url = `${import.meta.env.VITE_API_URL}/asignaturas-all`
-            const response = await axios.get(url, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            setAsignaturas(response.data);
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-
 
 useEffect(() => {
     getProfesores();

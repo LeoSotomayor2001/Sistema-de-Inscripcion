@@ -6,18 +6,21 @@ import { useAdmin } from "../../Hooks/UseAdmin";
 
 export const EstudiantesPreinscritosPage = () => {
 
-    
-    const { loading, inscripciones, obtenerEstudiantes } = useAdmin();
-    useEffect(() => {
-        obtenerEstudiantes();
-        document.title = "Inscripciones";
-    }, [])
 
-    if (loading) {
-        return <Spinner />
-    }
+  const { loading, inscripciones, obtenerEstudiantes } = useAdmin();
+  useEffect(() => {
+    obtenerEstudiantes();
+    document.title = "Inscripciones";
+  }, [])
+
+  if (loading) {
+    return <Spinner />
+  }
 
   return (
-    <TablaEstudiantesPreinscritos inscripciones={inscripciones} admin={true}/>
+    <>
+      <h1 className="text-3xl text-center my-3">Lista de Estudiantes Inscritos</h1>
+      <TablaEstudiantesPreinscritos inscripciones={inscripciones} admin={true} />
+    </>
   )
 }

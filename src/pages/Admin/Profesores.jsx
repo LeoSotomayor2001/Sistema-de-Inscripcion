@@ -74,7 +74,7 @@ export const Profesores = () => {
 
 
             </header>
-            <TableContainer component={Paper} sx={{ width: '90%', margin: 'auto', marginTop: 2 }}>
+            <TableContainer component={Paper} sx={{ width: '90%', margin: 'auto', marginTop: 2,maxHeight: 700 }}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                         <TableRow sx={{ backgroundColor: '#4b0082' }}>
