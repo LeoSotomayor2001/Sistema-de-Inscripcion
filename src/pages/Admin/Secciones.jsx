@@ -105,7 +105,7 @@ export const Secciones = () => {
 
             </header>
 
-            <TableContainer component={Paper} sx={{ width: '90%', margin: 'auto', marginTop: 2 }}>
+            <TableContainer component={Paper} sx={{ width: '90%', margin: 'auto', marginTop: 2 ,animation: 'fadeIn 1.5s ease-out' }}>
                 <Table>
                     <TableHead>
                         <TableRow sx={{ backgroundColor: '#4b0082' }}>

@@ -19,6 +19,7 @@ import { FormAsignaturas } from "./pages/Admin/FormAsignaturas";
 import { AsignarProfesor } from "./pages/Admin/AsignarProfesor";
 import { IndexAdmin } from "./pages/Admin/IndexAdmin";
 import { Notificacion } from "./pages/Admin/Notificacion";
+import { Configuraciones } from "./pages/Admin/Configuraciones";
 
 
 const router = createBrowserRouter([
@@ -88,6 +89,10 @@ const router = createBrowserRouter([
       {
         path: "notificaciones",
         element: <Notificacion/>
+      },
+      {
+        path:'configuraciones',
+        element: <Configuraciones/>
       }
     ]
   },

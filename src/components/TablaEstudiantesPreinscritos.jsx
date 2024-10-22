@@ -106,7 +106,7 @@ export const TablaEstudiantesPreinscritos = ({ inscripciones, admin = false }) =
 
     return (
         <>
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} sx={{animation: 'fadeIn 1.5s ease-out' }}>
                 <Table>
                     <TableHead>
                         <TableRow sx={{ backgroundColor: '#4b0082' }}>

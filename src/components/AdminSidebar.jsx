@@ -23,6 +23,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { useAdmin } from '../Hooks/UseAdmin';
 // Asegúrate de importar el hook correcto
 
@@ -66,6 +67,7 @@ export const AdminSidebar = () => {
         { text: 'Registrar Asignatura', icon: <InboxIcon />, url: 'registrar-asignatura' },
         { text: 'Asignar Profesor', icon: <PersonIcon />, url: 'asignatura-profesor' },
         { text: `Notificaciones (${notificaciones ? notificaciones.length : 0})`, icon: <NotificationsIcon />, url: 'notificaciones' },
+        { text: 'Configuraciones', icon: <SettingsIcon />, url: 'configuraciones' },
     ];
 
     const DrawerList = (

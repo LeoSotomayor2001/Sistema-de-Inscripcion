@@ -155,7 +155,7 @@ export const AsignarProfesor = () => {
                     </Box>
                 </form>
             </header>
-            <TableContainer component={Paper} sx={{ maxHeight: 600 }}>
+            <TableContainer component={Paper} sx={{ maxHeight: 600,animation: 'fadeIn 1.5s ease-out'  }}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                         <TableRow sx={{ backgroundColor: '#4b0082' }}>

@@ -26,7 +26,7 @@ export const IndexAdmin = () => {
       <h1 className="text-3xl text-center">Inicio</h1>
       <p className="text-center mb-10">Administración</p>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         <CustomCard
           image={'img/asignatura.jpeg'}
           title="Imagen Asignatura"
@@ -38,7 +38,7 @@ export const IndexAdmin = () => {
         <CustomCard
           image={'img/estudiante.jpeg'}
           title="Imagen Estudiantes"
-          description={`Hay un total de: ${listadoEstudiantes.length} estudiantes registrados`}
+          description={`Hay un total de: ${listadoEstudiantes} estudiantes registrados`}
           link={'/index/estudiantes'}
           linkText={'Ver lista de estudiantes'}
         />
@@ -62,7 +62,7 @@ export const IndexAdmin = () => {
       <CustomCard
           image={'img/inscripciones.svg'}
           title="Imagen inscripciones"
-          description={`Hay un total de: ${inscripciones.length} inscripciones registradas`}
+          description={`Hay un total de: ${inscripciones} inscripciones registradas`}
           link={'/index/inscripciones'}
           linkText={'Ver lista de inscripciones'}
         />

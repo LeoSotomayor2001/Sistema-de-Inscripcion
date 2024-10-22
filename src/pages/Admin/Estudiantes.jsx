@@ -24,7 +24,7 @@ export const Estudiantes = () => {
 
     return (
         <>
-            <TableContainer component={Paper} sx={{ maxHeight: 800 }}>
+            <TableContainer component={Paper} sx={{ maxHeight: 800,animation: 'fadeIn 1.5s ease-out' }}>
                 <Table >
                     <TableHead>
                         <TableRow sx={{ backgroundColor: '#4b0082' }}>

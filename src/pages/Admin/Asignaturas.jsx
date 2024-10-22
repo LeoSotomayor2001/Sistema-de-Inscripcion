@@ -96,7 +96,7 @@ export const Asignaturas = () => {
     // eslint-disable-next-line
   }, [])
 
-  if (loading) {
+  if (loading || !asignaturas) {
     return <Spinner />
   }
   return (
@@ -146,7 +146,7 @@ export const Asignaturas = () => {
 
       </header>
 
-      <TableContainer component={Paper}>
+      <TableContainer component={Paper} sx={{animation: 'fadeIn 1.5s ease-out' }}>
         <Table>
           <TableHead>
             <TableRow sx={{ backgroundColor: '#4b0082' }}>
@@ -160,7 +160,7 @@ export const Asignaturas = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {asignaturas.length > 0 ? (
+            {asignaturas?.length > 0 ? (
               asignaturas.map((asignatura, index) => (
                 <TableRow key={asignatura.id}>
                   <TableCell>{index + 1}</TableCell>
