@@ -17,7 +17,7 @@ const AdminProvider = ({ children }) => {
     const [listadoProfesores, setListadoProfesores] = useState([]);
     const [inscripciones, setInscripciones] = useState([]);
     const [listadoEstudiantes, setListadoEstudiantes] = useState([]);
-    const [years, setYears] = useState([]);
+    const [years, setYears] = useState(null);
     const [pagination, setPagination] = useState({
         current_page: 1,
         last_page: 1,

@@ -18,12 +18,12 @@ const EstudiantesContext = createContext();
 // Proveedor del contexto que envuelve la aplicación
 const EstudiantesProvider = ({ children }) => {
   const [listadoEstudiantes, setListadoEstudiantes] = useState([]);
-  const [years, setYears] = useState([]);
+  const [years, setYears] = useState();
   const [estudiantes, setEstudiantes] = useState([]);
   const [loadingSidebar, setloadingSidebar] = useState(true);
   const [representanteObtenido, setRepresentanteObtenido] = useState({});
   const [loading, setLoading] = useState(false);
-  const [anosEscolares, setAnosEscolares] = useState([]);
+  const [anosEscolares, setAnosEscolares] = useState(null);
 
   // Función para limpiar los datos del estado y del localStorage
   const limpiarTodo = () => {
