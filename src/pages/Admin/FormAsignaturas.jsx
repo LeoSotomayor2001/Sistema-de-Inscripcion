@@ -131,7 +131,7 @@ export const FormAsignaturas = () => {
                         <MenuItem value="">
                             <em>Seleccione un año académico</em>
                         </MenuItem>
-                        {years.map((year) => (
+                        {years?.map((year) => (
                             <MenuItem key={year.id} value={year.id}>
                                 {year.year} - {year.descripcion}
                             </MenuItem>
@@ -149,7 +149,8 @@ export const FormAsignaturas = () => {
                         value={selectedAnoEscolar}
                         onChange={(e) => setSelectedAnoEscolar(e.target.value)}
                     >
-                        {anosEscolares.map((ano) => (
+                        {anosEscolares?.filter(ano => ano.habilitado).map((ano) => (
+                            
                             <MenuItem key={ano.id} value={ano.id}>
                                 {ano.nombre}
                             </MenuItem>

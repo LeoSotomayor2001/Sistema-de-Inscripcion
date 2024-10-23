@@ -160,7 +160,7 @@ const PreinscripcionForm = () => {
           value={selectedAnoEscolar}
           onChange={(e) => setSelectedAnoEscolar(e.target.value)}
         >
-          {anosEscolares.map((ano) => (
+          {anosEscolares?.filter(ano => ano.habilitado).map((ano) => (
             <MenuItem key={ano.id} value={ano.id}>
               {ano.nombre}
             </MenuItem>

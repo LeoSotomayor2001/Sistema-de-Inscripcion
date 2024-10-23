@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Container, Typography, Table, TableHead, TableRow, TableCell, TableBody, TableContainer, Paper, Button, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -10,11 +10,23 @@ import { useAdmin } from '../../Hooks/UseAdmin';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import { ModalAnioEscolar } from '../../components/ModalAnioEscolar';
 
 export const Configuraciones = () => {
     const { anosEscolares, getAnosEscolares } = useEstudiantes();
     const { years, fetchYears } = useAdmin();
+    const [anioEscolarSeleccionado,setAnioEscolarSeleccionado]=useState()
+    const [modalIsOpen, setIsOpen] = useState(false);
 
+    const openModal = (anioEscolar=null) => {
+        setAnioEscolarSeleccionado(anioEscolar);
+        setIsOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsOpen(false);
+        setAnioEscolarSeleccionado(null);
+    };
     const deleteYear=async (id) => {
         const respuesta=await Swal.fire({
             title: '¿Deseas eliminar este año academico?',
@@ -57,7 +69,7 @@ export const Configuraciones = () => {
             <Typography variant="h5" component="h4" align="center" gutterBottom>
                 Periodos Escolares
             </Typography>
-            <Button variant="contained" color="primary" startIcon={<AddIcon />}>
+            <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={openModal}>
                 Crear Nuevo Periodo Escolar
             </Button>
             <TableContainer component={Paper} sx={{ mt: 1 }}>
@@ -84,7 +96,7 @@ export const Configuraciones = () => {
                                         {new Date(anio.fin).toLocaleDateString('es-ES')}
                                     </TableCell>
                                     <TableCell align="center">
-                                        <IconButton aria-label="editar" color="primary">
+                                        <IconButton aria-label="editar" color="primary" onClick={() =>openModal(anio)}>
                                             <EditIcon />
                                         </IconButton>
                                         <IconButton aria-label="eliminar" color="secondary">
@@ -139,7 +151,7 @@ export const Configuraciones = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-
+            <ModalAnioEscolar modalIsOpen={modalIsOpen} closeModal={closeModal} anoEscolar={anioEscolarSeleccionado} />      
         </Container>
     );
 };

@@ -36,7 +36,7 @@ export const ModalAsignaturas = ({ modalIsOpen, closeModal, asignatura = null })
     const [yearId, setYearId] = useState('');
     const [errors, setErrors] = useState({});
     const { getAnosEscolares, anosEscolares } = useEstudiantes();
-    const {years,fetchYears,fetchAsignaturas}= useAdmin();
+    const { years, fetchYears, fetchAsignaturas } = useAdmin();
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
@@ -53,7 +53,7 @@ export const ModalAsignaturas = ({ modalIsOpen, closeModal, asignatura = null })
         setSelectedAnoEscolar(asignatura?.ano_escolar_id || '');
     }, []);
 
-    const handleSubmit = async(event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         const token = localStorage.getItem('token');
@@ -82,13 +82,13 @@ export const ModalAsignaturas = ({ modalIsOpen, closeModal, asignatura = null })
             if (error.response.data.error) {
                 toast.error(error.response.data.error);
             }
-            else if(error.response.data.errors){
+            else if (error.response.data.errors) {
                 setErrors(error.response.data.errors);
                 setTimeout(() => {
                     setErrors([]);
                 }, 3000);
             }
-            else if(error.response.data.message){
+            else if (error.response.data.message) {
                 toast.error(error.response.data.message);
             }
             else {
@@ -99,7 +99,7 @@ export const ModalAsignaturas = ({ modalIsOpen, closeModal, asignatura = null })
 
     }
 
-    
+
     return (
         <Modal
             isOpen={modalIsOpen}
@@ -177,14 +177,14 @@ export const ModalAsignaturas = ({ modalIsOpen, closeModal, asignatura = null })
                         value={selectedAnoEscolar}
                         onChange={(e) => setSelectedAnoEscolar(e.target.value)}
                     >
-                        {anosEscolares.map((ano) => (
+                        {anosEscolares?.filter(ano => ano.habilitado).map((ano) => (
                             <MenuItem key={ano.id} value={ano.id}>
                                 {ano.nombre}
                             </MenuItem>
                         ))}
                     </Select>
                 </FormControl>
-                    {errors?.ano_escolar_id && <p className='text-red-500'>{errors?.ano_escolar_id[0]}</p>}
+                {errors?.ano_escolar_id && <p className='text-red-500'>{errors?.ano_escolar_id[0]}</p>}
 
                 <Button
                     type="submit"
