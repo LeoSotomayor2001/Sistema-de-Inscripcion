@@ -95,9 +95,10 @@ export const Asignaturas = () => {
     // eslint-disable-next-line
   }, [])
 
-  if (loading || asignaturas===null) {
+  if (loading || !asignaturas || !years) {
     return <Spinner />
   }
+
   return (
     <div>
       <header>
@@ -126,11 +127,13 @@ export const Asignaturas = () => {
               <MenuItem value="">
                 <em>Seleccione un año académico</em>
               </MenuItem>
-              {years.map((year) => (
-                <MenuItem key={year.id} value={year.id}>
-                  {year.year} - {year.descripcion}
-                </MenuItem>
-              ))}
+              {
+                years?.map((year) => (
+                  <MenuItem key={year.id} value={year.id}>
+                    {year.year} - {year.descripcion}
+                  </MenuItem>
+                ))
+              }
             </TextField>
             <Button
               type="submit"
@@ -159,7 +162,8 @@ export const Asignaturas = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {asignaturas?.length > 0 ? (
+            {
+            asignaturas?.length > 0 ?  ( 
               asignaturas?.map((asignatura, index) => (
                 <TableRow key={asignatura.id}>
                   <TableCell>{index + 1}</TableCell>

@@ -163,7 +163,7 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
             <MenuItem value="">
               <em>Seleccione un año académico</em>
             </MenuItem>
-            {years.map((year) => (
+            {years?.map((year) => (
               <MenuItem key={year.id} value={year.id}>
                 {year.year} - {year.descripcion}
               </MenuItem>

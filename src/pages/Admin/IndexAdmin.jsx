@@ -20,7 +20,8 @@ export const IndexAdmin = () => {
     document.title = "Inicio"
   }, [])
 
-  if (!asignaturasContadas || !listadoEstudiantes || !listadoProfesores || !secciones || !inscripciones || loading) return <Spinner />;
+
+  if (loading) return <Spinner />;
   return (
     <div>
       <h1 className="text-3xl text-center">Inicio</h1>

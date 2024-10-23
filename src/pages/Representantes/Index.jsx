@@ -148,17 +148,17 @@ export const Index = () => {
                     {estudiante.name} {estudiante.apellido}
                   </Typography>
                   <Typography variant="body2" color="text.secondary" className="flex flex-col">
-                    <p className="text-gray-500">Cédula:</p>
+                    Cédula:
                     {estudiante.cedula}
                   </Typography>
 
-                  <Typography variant="body2" color="text.primary" className="flex flex-col">
-                    <p className="text-gray-500">Fecha de nacimiento:</p>
+                  <Typography variant="body2" color="text.secondary" className="flex flex-col">
+                    Fecha de nacimiento:
                     { formatDate(estudiante.fecha_nacimiento)}
                   </Typography>
 
-                  <Typography variant="body2" color="text.primary" className="flex flex-col">
-                    <p className="text-gray-500">Género:</p>
+                  <Typography variant="body2" color="text.secondary" className="flex flex-col">
+                    Género:
                     { estudiante.genero}
                   </Typography>
                 </CardContent>
