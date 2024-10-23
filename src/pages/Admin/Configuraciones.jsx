@@ -61,6 +61,7 @@ export const Configuraciones = () => {
     useEffect(() => {
         getAnosEscolares();
         fetchYears();
+        document.title = 'Configuraciones';
     }, []);
     if (!anosEscolares || !years) return <Spinner />
 

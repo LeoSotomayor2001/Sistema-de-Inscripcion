@@ -6,7 +6,7 @@ import CustomCard from "../../components/CustomCard";
 
 export const IndexAdmin = () => {
 
-  const { asignaturas, fetchAllAsignaturas, fetchAllStudents, listadoEstudiantes, getAllProfesores, listadoProfesores
+  const { asignaturasContadas, fetchAllAsignaturas, fetchAllStudents, listadoEstudiantes, getAllProfesores, listadoProfesores
     , secciones, getAllSecciones,fetchAllInscripciones,inscripciones,loading
   } = useAdmin();
 
@@ -20,7 +20,7 @@ export const IndexAdmin = () => {
     document.title = "Inicio"
   }, [])
 
-  if (!asignaturas || !listadoEstudiantes || !listadoProfesores || !secciones || !inscripciones || loading) return <Spinner />;
+  if (!asignaturasContadas || !listadoEstudiantes || !listadoProfesores || !secciones || !inscripciones || loading) return <Spinner />;
   return (
     <div>
       <h1 className="text-3xl text-center">Inicio</h1>
@@ -30,7 +30,7 @@ export const IndexAdmin = () => {
         <CustomCard
           image={'img/asignatura.jpeg'}
           title="Imagen Asignatura"
-          description={`Hay un total de: ${asignaturas.length} asignaturas registradas`}
+          description={`Hay un total de: ${asignaturasContadas} asignaturas registradas`}
           link={'/index/asignaturas'}
           linkText={'Ver lista de asignaturas'}
         />

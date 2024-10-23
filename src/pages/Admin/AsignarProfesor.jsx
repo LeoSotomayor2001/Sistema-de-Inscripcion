@@ -127,7 +127,7 @@ export const AsignarProfesor = () => {
                             <MenuItem value="">
                                 <em>Seleccione un año académico</em>
                             </MenuItem>
-                            {years.map((year) => (
+                            {years?.map((year) => (
                                 <MenuItem key={year.id} value={year.id}>
                                     {year.year} - {year.descripcion}
                                 </MenuItem>
@@ -169,8 +169,8 @@ export const AsignarProfesor = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {asignaturasConProfesores.length > 0 ? (
-                            asignaturasConProfesores.map((asignatura, index) => (
+                        {asignaturasConProfesores?.length > 0 ? (
+                            asignaturasConProfesores?.map((asignatura, index) => (
                                 <TableRow key={index}>
                                     <TableCell>{asignatura.nombre}</TableCell>
                                     <TableCell>{asignatura.codigo}</TableCell>

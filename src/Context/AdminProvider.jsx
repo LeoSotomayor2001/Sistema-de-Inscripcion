@@ -11,6 +11,7 @@ const AdminContext = createContext();
 // Proveedor del contexto que envuelve la aplicación
 const AdminProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
+    const [asignaturasContadas, setAsignaturasContadas] = useState(null);
     const [asignaturas, setAsignaturas] = useState(null);
     const [asignaturasConProfesores, setAsignaturasConProfesores] = useState(null);
     const [secciones, setSecciones] = useState([]);
@@ -127,6 +128,7 @@ const AdminProvider = ({ children }) => {
         }
     }
     const fetchAllAsignaturas = async () => {
+        setLoading(true);
         const token = localStorage.getItem('token');
         try {
             const url = `${import.meta.env.VITE_API_URL}/asignaturas-all`
@@ -135,9 +137,14 @@ const AdminProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            setAsignaturas(response.data);
+            setAsignaturas(response.data.asignaturas);
+            setAsignaturasContadas(response.data.asignaturasContadas);
+            
         } catch (error) {
             console.log(error)
+        }
+        finally {
+            setLoading(false);
         }
     }
     const fetchAsignaturas = async (page = null) => {
@@ -302,7 +309,8 @@ const AdminProvider = ({ children }) => {
                 getAllProfesores,
                 getAllSecciones,
                 mutateNotificaciones: () => mutate(`${import.meta.env.VITE_API_URL}/notificaciones/unread`),
-                fetchAllInscripciones
+                fetchAllInscripciones,
+                asignaturasContadas
 
             }}
         >

@@ -30,8 +30,6 @@ export const Asignaturas = () => {
     }
   };
 
-
-
   const deleteAsignatura = async (id) => {
     const resultado = await Swal.fire({
       title: '¿Estás seguro?',
@@ -92,11 +90,12 @@ export const Asignaturas = () => {
   useEffect(() => {
     fetchAsignaturas()
     fetchYears()
+
     document.title = 'Asignaturas'
     // eslint-disable-next-line
   }, [])
 
-  if (loading || !asignaturas) {
+  if (loading || asignaturas===null) {
     return <Spinner />
   }
   return (
@@ -161,7 +160,7 @@ export const Asignaturas = () => {
           </TableHead>
           <TableBody>
             {asignaturas?.length > 0 ? (
-              asignaturas.map((asignatura, index) => (
+              asignaturas?.map((asignatura, index) => (
                 <TableRow key={asignatura.id}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{asignatura.nombre}</TableCell>

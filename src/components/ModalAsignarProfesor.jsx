@@ -126,7 +126,7 @@ return (
                     value={selectedAsignatura}
                     onChange={(e) => setSelectedAsignatura(e.target.value)}
                 >
-                    {asignaturas.map((asignatura) => (
+                    {asignaturas?.map((asignatura) => (
                         <MenuItem key={asignatura.id} value={asignatura}>
                             {asignatura.nombre + ' - ' + asignatura.year + ' año'}
                         </MenuItem>
