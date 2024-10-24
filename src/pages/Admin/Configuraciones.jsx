@@ -27,6 +27,38 @@ export const Configuraciones = () => {
         setIsOpen(false);
         setAnioEscolarSeleccionado(null);
     };
+
+    const deleteAnioEscolar=async(id) =>{
+        const respuesta=await Swal.fire({
+            title: '¿Deseas eliminar este periodo escolar?',
+            text: '¡No podras recuperarlo!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, eliminar',
+            cancelButtonText: 'Cancelar',
+        })
+
+        if (respuesta.isConfirmed) {
+            const url= `${import.meta.env.VITE_API_URL}/anos-escolares/${id}`;
+            const token = localStorage.getItem('token');
+            try {
+                const response= await axios.delete(url, {
+                    headers:{
+                        'Authorization': `Bearer ${token}`
+                    }
+                    
+                })
+                toast.success(response.data.message);
+                getAnosEscolares();
+            }
+            catch (error) {
+                console.log(error)
+                toast.error(error.response.data.error);
+            }
+        }
+    }
     const deleteYear=async (id) => {
         const respuesta=await Swal.fire({
             title: '¿Deseas eliminar este año academico?',
@@ -100,7 +132,7 @@ export const Configuraciones = () => {
                                         <IconButton aria-label="editar" color="primary" onClick={() =>openModal(anio)}>
                                             <EditIcon />
                                         </IconButton>
-                                        <IconButton aria-label="eliminar" color="secondary">
+                                        <IconButton aria-label="eliminar" color="secondary" onClick={() => deleteAnioEscolar(anio.id)}>
                                             <DeleteIcon />
                                         </IconButton>
                                     </TableCell>
