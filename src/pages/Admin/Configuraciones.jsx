@@ -11,16 +11,30 @@ import Swal from 'sweetalert2';
 import { toast } from 'react-toastify';
 import axios from 'axios';
 import { ModalAnioEscolar } from '../../components/ModalAnioEscolar';
+import { ModalNivelAcademico } from '../../components/ModalNivelAcademico';
 
 export const Configuraciones = () => {
     const { anosEscolares, getAnosEscolares } = useEstudiantes();
     const { years, fetchYears } = useAdmin();
     const [anioEscolarSeleccionado,setAnioEscolarSeleccionado]=useState()
     const [modalIsOpen, setIsOpen] = useState(false);
+    const [modalIsOpenYear, setIsOpenYear] = useState(false);
+    const [nivelAcademicoSeleccionado,setNivelAcademicoSeleccionado]=useState()
+
 
     const openModal = (anioEscolar=null) => {
         setAnioEscolarSeleccionado(anioEscolar);
         setIsOpen(true);
+    };
+
+    const openModalYear = (anio=null) => {
+        setNivelAcademicoSeleccionado(anio);
+        setIsOpenYear(true);
+    };
+
+    const closeModalYear = () => {
+        setIsOpenYear(false);
+        setNivelAcademicoSeleccionado(null);
     };
 
     const closeModal = () => {
@@ -85,7 +99,6 @@ export const Configuraciones = () => {
                 fetchYears();
             }
             catch (error) {
-                console.log(error)
                 toast.error(error.response.data.message);
             }
         }
@@ -113,6 +126,9 @@ export const Configuraciones = () => {
                             <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Estado</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Inicio</TableCell>
                             <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Fin</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Secciones Registradas</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Asignaturas Registradas</TableCell>
+                            <TableCell sx={{ color: 'white', fontWeight: 'bold' }}>Estudiantes Inscritos</TableCell>
                             <TableCell align="center" sx={{ color: 'white', fontWeight: 'bold' }}>Acciones</TableCell>
                         </TableRow>
                     </TableHead>
@@ -127,6 +143,15 @@ export const Configuraciones = () => {
                                     </TableCell>
                                     <TableCell>
                                         {new Date(anio.fin).toLocaleDateString('es-ES')}
+                                    </TableCell>
+                                    <TableCell>
+                                        {anio.secciones}
+                                    </TableCell>
+                                    <TableCell>
+                                        {anio.asignaturas}
+                                    </TableCell>
+                                    <TableCell>
+                                        {anio.inscripciones}
                                     </TableCell>
                                     <TableCell align="center">
                                         <IconButton aria-label="editar" color="primary" onClick={() =>openModal(anio)}>
@@ -147,7 +172,7 @@ export const Configuraciones = () => {
             <Typography variant="h5" component="h4" align="center" gutterBottom sx={{ mt: 2 }}>
                 Niveles Académicos
             </Typography>
-            <Button variant="contained" color="primary" startIcon={<AddIcon />}>
+            <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={openModalYear}>
                 Crear Nuevo Nivel Académico
             </Button>
             <TableContainer component={Paper} sx={{ mt: 1 }}>
@@ -172,7 +197,7 @@ export const Configuraciones = () => {
                                     <TableCell>{year.asignaturas}</TableCell>
                                     <TableCell>{year.inscripciones}</TableCell>
                                     <TableCell align="center">
-                                        <IconButton aria-label="editar" color="primary">
+                                        <IconButton aria-label="editar" color="primary" onClick={() => openModalYear(year)}>
                                             <EditIcon />
                                         </IconButton>
                                         <IconButton aria-label="eliminar" color="secondary" onClick={() => deleteYear(year.id)}>
@@ -185,6 +210,7 @@ export const Configuraciones = () => {
                 </Table>
             </TableContainer>
             <ModalAnioEscolar modalIsOpen={modalIsOpen} closeModal={closeModal} anoEscolar={anioEscolarSeleccionado} />      
+            <ModalNivelAcademico modalIsOpen={modalIsOpenYear} closeModal={closeModalYear} nivelAcademico={nivelAcademicoSeleccionado} />
         </Container>
     );
 };
