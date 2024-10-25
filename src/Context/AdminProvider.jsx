@@ -12,6 +12,7 @@ const AdminContext = createContext();
 const AdminProvider = ({ children }) => {
     const [loading, setLoading] = useState(false);
     const [asignaturasContadas, setAsignaturasContadas] = useState(null);
+    const [profesoresContados, setProfesoresContados] = useState(null);
     const [asignaturas, setAsignaturas] = useState(null);
     const [asignaturasConProfesores, setAsignaturasConProfesores] = useState(null);
     const [secciones, setSecciones] = useState([]);
@@ -89,7 +90,7 @@ const AdminProvider = ({ children }) => {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            setListadoProfesores(response.data.data);
+            setProfesoresContados(response.data);
         } catch (error) {
             console.log(error)
         }
@@ -107,7 +108,9 @@ const AdminProvider = ({ children }) => {
             });
             setListadoProfesores(response.data.data);
         } catch (error) {
-            console.error(error);
+            if(error.response.data.message){
+                toast.error(error.response.data.message);
+            }
             toast.error("Error al obtener los profesores");
         } finally {
             setLoading(false);
@@ -310,6 +313,7 @@ const AdminProvider = ({ children }) => {
                 getAllSecciones,
                 mutateNotificaciones: () => mutate(`${import.meta.env.VITE_API_URL}/notificaciones/unread`),
                 fetchAllInscripciones,
+                profesoresContados,
                 asignaturasContadas
 
             }}

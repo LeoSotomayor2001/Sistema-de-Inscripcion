@@ -60,7 +60,7 @@ export const Profesores = () => {
         }
             }
 
-    if (loading) {
+    if (loading || listadoProfesores.length === 0) {
         return <Spinner />
     }
     return (

@@ -69,7 +69,17 @@ export const Configuraciones = () => {
             }
             catch (error) {
                 console.log(error)
-                toast.error(error.response.data.error);
+                if(error.response.data.error){
+                    
+                    toast.error(error.response.data.error);
+                }
+                else if(error.response.data.message){
+
+                    toast.error(error.response.data.message);
+                }
+                else{
+                    toast.error('Oops algo salio mal');
+                }
             }
         }
     }
@@ -100,6 +110,7 @@ export const Configuraciones = () => {
             }
             catch (error) {
                 toast.error(error.response.data.message);
+                
             }
         }
     }

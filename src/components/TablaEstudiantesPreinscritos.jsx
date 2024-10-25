@@ -97,6 +97,9 @@ export const TablaEstudiantesPreinscritos = ({ inscripciones, admin = false }) =
                 console.log(error);
                 if (error.response?.data?.error) {
                     toast.error(error.response.data.error);
+                }
+                else if(error.response.data.message){
+                    toast.error(error.response.data.message);
                 } else {
                     toast.error("Error al eliminar la inscripción");
                 }

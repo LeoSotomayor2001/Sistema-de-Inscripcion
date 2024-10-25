@@ -116,6 +116,9 @@ export const ModalSecciones = ({ modalIsOpen, closeModal, seccion = null }) => {
       if (error.response.data.error) {
         toast.error(error.response.data.error);
       }
+      if (error.response.data.message) {
+        toast.error(error.response.data.message);
+      }
     }
   };
 

@@ -6,6 +6,7 @@ import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
 import axios from 'axios';
 import { Spinner } from './Spinner';
+import { toast } from 'react-toastify';
 
 const customStyles = {
     content: {
@@ -40,7 +41,9 @@ export const ModalListaEstudiantes = ({ modalIsOpenChecklist, closeModalChecklis
             });
             setListadoEstudiantes(response.data);
         } catch (error) {
-            console.log(error);
+            if(error.response.data.message) {
+                toast.error(error.response.data.message);
+            }
         } finally {
             setLoading(false);
         }

@@ -92,8 +92,14 @@ export const ModalAnioEscolar = ({ modalIsOpen, closeModal, anoEscolar = null })
                     setErrors([])
                 }, 3000);
             }
-            if (error.response.data.error) {
+            else if (error.response.data.error) {
                 toast.error(error.response.data.error)
+            }
+            else if(error.response.data.message){
+                toast.error(error.response.data.message)
+            }
+            else {
+                toast.error('Ocurrio un error inesperado')
             }
         }
     };

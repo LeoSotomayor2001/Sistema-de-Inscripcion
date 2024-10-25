@@ -80,6 +80,9 @@ export const ModalInscripciones = ({ modalIsOpen, closeModal, inscripcion, obten
             obtenerEstudiantes();
         } catch (error) {
             console.error('Error al preinscribir estudiante:', error);
+            if(error.response.data.message){
+                toast.error(error.response.data.message);
+            }
             toast.error(error.response?.data?.mensaje || 'Error al preinscribir');
         } finally {
             setSelectedYear("");
